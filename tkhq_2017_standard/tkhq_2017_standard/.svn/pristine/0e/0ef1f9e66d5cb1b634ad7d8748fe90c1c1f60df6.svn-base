@@ -1,0 +1,179 @@
+package com.tkhq.cmc.controller.rest;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tkhq.cmc.common.PagerInfo;
+import com.tkhq.cmc.dto.TbsCapnhatTygiaDTO;
+import com.tkhq.cmc.dto.Tbs_BieuThueDTO;
+import com.tkhq.cmc.model.TbsCapnhatTygia;
+import com.tkhq.cmc.model.Tbs_BieuThue;
+import com.tkhq.cmc.services.TBS_BieuThueService;
+import com.tkhq.cmc.services.TbsCapnhatTygiaService;
+import com.tkhq.cmc.utils.Utils;
+
+
+@RestController
+public class TbsCapnhatTygiaRestController {
+	@Autowired
+	TbsCapnhatTygiaService tbsCapnhatTygiaService;
+	
+	@RequestMapping(value="/tbscapnhattygia/",method=RequestMethod.GET)
+	public ResponseEntity<List<TbsCapnhatTygia>> getAllTygia(){
+		List<TbsCapnhatTygia> listTygia = new ArrayList<TbsCapnhatTygia>();
+		System.out.println("Find all");
+		listTygia = tbsCapnhatTygiaService.findAll();
+        if (listTygia == null) {
+            System.out.println("Khong tim duoc ban ghi nao!");
+            return new ResponseEntity<List<TbsCapnhatTygia>>(HttpStatus.NOT_FOUND);
+        }
+		
+		return new ResponseEntity<List<TbsCapnhatTygia>>(listTygia,HttpStatus.ACCEPTED);
+	}
+	
+	@RequestMapping(value = "/tbscapnhattygia/", method = RequestMethod.POST)
+    public ResponseEntity<String> createTygia(@RequestBody TbsCapnhatTygiaDTO tbsCapnhatTygiaDTO,
+    		UriComponentsBuilder ucBuilder) {
+        
+		TbsCapnhatTygia entity = new TbsCapnhatTygia();
+        
+        try{
+        	entity.setTygiaId(tbsCapnhatTygiaDTO.getTygiaId());
+	        entity.setMaNt(tbsCapnhatTygiaDTO.getMaNt());
+	        entity.setNgay((Utils.getSqlDate(Utils.convertStringtoDate(tbsCapnhatTygiaDTO.getNgay(), "dd/MM/yyyy"))));
+	        entity.setTygiaUsd(tbsCapnhatTygiaDTO.getTygiaUsd());
+	        entity.setTygiaVnd(tbsCapnhatTygiaDTO.getTygiaVnd());
+        
+	        tbsCapnhatTygiaService.insertTbsCapnhatTygia(entity);
+        }catch(Exception ex){
+        	ex.printStackTrace();
+        }
+ 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ucBuilder.path("/tbscapnhattygia/{maNt}").buildAndExpand(entity.getMaNt()).toUri());
+        return new ResponseEntity<String>(headers, HttpStatus.CREATED);
+    }
+	
+	@RequestMapping(value = "/tbscapnhattygia/{tygiaId}", method = RequestMethod.PUT)
+    public ResponseEntity<TbsCapnhatTygia> updateTygia(@PathVariable("tygiaId") Long tygiaId,
+    		@RequestBody TbsCapnhatTygiaDTO tbsCapnhatTygiaDTO) {
+        System.out.println("Updating data with id:" + tygiaId);
+         
+        TbsCapnhatTygia tbsCapnhatTygia = tbsCapnhatTygiaService.findById(tygiaId);
+         
+        if (tbsCapnhatTygia == null) {
+            System.out.println("Data not found");
+            return new ResponseEntity<TbsCapnhatTygia>(HttpStatus.NOT_FOUND);
+        }
+ 
+        try{
+        	tbsCapnhatTygia.setMaNt(tbsCapnhatTygiaDTO.getMaNt());	              
+        	tbsCapnhatTygia.setNgay(Utils.getSqlDate(Utils.convertStringtoDate(tbsCapnhatTygiaDTO.getNgay(), "dd/MM/yyyy")));
+        	tbsCapnhatTygia.setTygiaUsd(tbsCapnhatTygiaDTO.getTygiaUsd());
+        	tbsCapnhatTygia.setTygiaVnd(tbsCapnhatTygiaDTO.getTygiaVnd());
+	        
+        	tbsCapnhatTygiaService.updateTbsCapnhatTygia(tbsCapnhatTygia);
+        }catch(Exception ex){
+        	ex.printStackTrace();
+        }
+        return new ResponseEntity<TbsCapnhatTygia>(tbsCapnhatTygia, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/tbscapnhattygia/", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TbsCapnhatTygia> deleteTygia(@RequestParam(value = "lstTygia") String lstTygia) {
+    	
+    	ObjectMapper objectMapper = new ObjectMapper();
+    	List<String> lstId = new ArrayList<String>();
+    	
+    	try{
+    		lstId = objectMapper.readValue(
+    				lstTygia, objectMapper.getTypeFactory().constructCollectionType(List.class, String.class));
+    	}catch(Exception ex){
+    		ex.printStackTrace();
+    	}
+    	
+        System.out.println("Deleting data: " + lstId);
+        
+        for(int i = 0; i < lstId.size(); i++){
+        	TbsCapnhatTygia tbsCapnhatTygia = tbsCapnhatTygiaService.findById(Long.parseLong(lstId.get(i)));
+	        if (tbsCapnhatTygia == null) {
+	            System.out.println("Unable to delete. Data not found with id: " + lstId.get(i));
+	            return new ResponseEntity<TbsCapnhatTygia>(HttpStatus.NOT_FOUND);
+	        }
+        }
+        
+        for(int i = 0; i < lstId.size(); i++){
+	        try{
+	        	tbsCapnhatTygiaService.deleteById(Long.parseLong(lstId.get(i)));
+	        }catch(Exception ex){
+	        	ex.printStackTrace();
+	        }
+        }
+        return new ResponseEntity<TbsCapnhatTygia>(HttpStatus.NO_CONTENT);
+    }
+    
+    @RequestMapping(value = "/tbscapnhattygia/search", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PagerInfo> schTygia(@RequestBody Hashtable<String, String> params) {
+    	System.out.println("schTygia@Params: " + params);
+    	
+    	List<TbsCapnhatTygia> listTygia = new ArrayList<TbsCapnhatTygia>();
+    	Map<String, Object> returnData = new HashMap<String, Object>();
+    	PagerInfo pager = new PagerInfo();
+    	
+    	String currentPage = params.get("currentPage");
+    	String pageSize = params.get("pageSize");
+    	String maNt = params.get("maNt");
+    	String ngay = params.get("ngay");    	
+    	
+    	try{
+	    	int minRow = (Integer.valueOf(currentPage) - 1) * Integer.valueOf(pageSize);	    	
+	    	int maxRow = Integer.valueOf(pageSize);
+	    	
+	    	long totalCount = tbsCapnhatTygiaService.countTotal(ngay, maNt);
+	    	
+	    	if(totalCount == 0){
+	    		System.out.println("Khong tim duoc ban ghi nao!");
+	    		pager.setContent(null);
+		    	pager.setCurrentPage(Integer.valueOf("1"));
+		    	pager.setMaxPage(5);
+		    	pager.setPageSize(Integer.valueOf("10"));
+		    	pager.setTotalItems(0);
+	    		
+	            return new ResponseEntity<PagerInfo>(pager,HttpStatus.ACCEPTED);
+	    	}
+	    	
+	    	listTygia = tbsCapnhatTygiaService.searchTygia(ngay, maNt, minRow, maxRow);
+	    	
+	    	int maxPage = (int) Math.ceil(totalCount / Integer.valueOf(pageSize));	    		    		   
+	    	
+	    	pager.setContent(listTygia);
+	    	pager.setCurrentPage(Integer.valueOf(currentPage));
+	    	pager.setMaxPage(maxPage);
+	    	pager.setPageSize(Integer.valueOf(pageSize));
+	    	pager.setTotalItems(totalCount);
+	    		    	
+    	}catch(Exception ex){
+    		ex.printStackTrace();
+    	}   	
+    	
+    	return new ResponseEntity<PagerInfo>(pager,HttpStatus.ACCEPTED);
+    }
+}

@@ -1,0 +1,235 @@
+package com.tkhq.cmc.common;
+
+import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.HtmlExporter;
+import net.sf.jasperreports.engine.export.HtmlResourceHandler;
+import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+import net.sf.jasperreports.engine.util.JRProperties;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
+import net.sf.jasperreports.export.SimpleHtmlReportConfiguration;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
+import com.lowagie.text.pdf.codec.Base64;
+import com.tkhq.cmc.common.Constants.ExportType;
+
+@SuppressWarnings("deprecation")
+public class JasperExport {
+	
+	static Map<String, String> images = new HashMap<String, String>();
+	
+	public static ResponseEntity<byte[]> ExportReport(String reportName,
+			JRBeanCollectionDataSource dataSource,
+			Map<String, Object> parameter, String exportType, boolean hasRole){
+		if(hasRole){
+			return ExportReport(reportName, dataSource, parameter, exportType);
+		}else{
+			return ExportReport("ChuaPheDuyet", dataSource, parameter, ExportType.HTML);
+		}
+		
+	}
+	
+	public static ResponseEntity<byte[]> ExportReport(String reportName,
+			JRBeanCollectionDataSource dataSource,
+			Map<String, Object> parameter, String exportType){
+		if(exportType != null && !exportType.isEmpty())
+			return ExportReport(reportName, dataSource, parameter,  ExportType.valueOf(exportType));
+		else
+			return ExportReport(reportName, dataSource, parameter, ExportType.HTML);
+	}
+			
+	public static ResponseEntity<byte[]> ExportReport(String reportName,
+			JRBeanCollectionDataSource dataSource,
+			Map<String, Object> parameter, ExportType exportType) {
+		if(dataSource.getData().isEmpty() || dataSource.getData().size()==0)
+			return errorReport(parameter, ExportType.HTML);
+		
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		String reportPath = loader.getResource("Reports/" + reportName + ".jrxml").getPath();
+		String fontPath = loader.getResource("Reports/times.ttf").getPath();
+		JRProperties.setProperty("net.sf.jasperreports.default.pdf.font.name", fontPath);
+		JRProperties.setProperty("net.sf.jasperreports.default.pdf.encoding", "Identity-H");
+		JRProperties.setProperty("net.sf.jasperreports.default.pdf.embedded", "true");
+		JRProperties.setProperty("net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.1", "columnHeader");
+		JRProperties.setProperty("net.sf.jasperreports.export.xlsx.exclude.origin.band.2", "pageFooter");
+		try {
+
+			JasperReport jreport1 = JasperCompileManager.compileReport(reportPath);
+
+			JasperPrint jprint = JasperFillManager.fillReport(jreport1, parameter, dataSource);
+			HttpHeaders headers;
+			switch (exportType) {
+			case EXCEL:
+				ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
+				JRXlsxExporter exporterXls = new JRXlsxExporter();
+				
+				exporterXls.setParameter(JRExporterParameter.JASPER_PRINT, jprint);
+				exporterXls.setParameter(JRExporterParameter.OUTPUT_STREAM, baos1);
+				exporterXls.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
+				exporterXls.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
+				exporterXls.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS, Boolean.TRUE);
+				exporterXls.setParameter(JRXlsExporterParameter.IS_COLLAPSE_ROW_SPAN, Boolean.TRUE);
+				exporterXls.setParameter(JRXlsExporterParameter.IGNORE_PAGE_MARGINS, Boolean.TRUE);
+				exporterXls.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
+				exporterXls.exportReport();
+
+				headers = new HttpHeaders();
+				headers.setContentType(new MediaType("application", "vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+				headers.set("Content-Disposition",
+	                           "attachment; filename=" + reportName + ".xlsx");
+		        return new ResponseEntity<byte[]>(baos1.toByteArray(), headers, HttpStatus.OK);
+			case HTML:
+				HtmlExporter exporterHTML = new HtmlExporter();
+		        SimpleExporterInput exporterInput = new SimpleExporterInput(jprint);
+		        exporterHTML.setExporterInput(exporterInput);
+		        SimpleHtmlReportConfiguration reportExportConfiguration = new SimpleHtmlReportConfiguration();
+		        
+		        exporterHTML.setConfiguration(reportExportConfiguration);
+		        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+		        SimpleHtmlExporterOutput simpleHtmlExporterOutput = new SimpleHtmlExporterOutput(outputStream);
+		        images = new HashMap<String, String>();
+		        simpleHtmlExporterOutput.setImageHandler(new HtmlResourceHandler() {
+
+		            public void handleResource(String id, byte[] data) {
+		                System.err.println("id" + id);
+		                images.put(id, "data:image/jpg;base64," + Base64.encodeBytes(data));
+		            }
+
+		            public String getResourcePath(String id) {
+		                return images.get(id);
+		            }
+		        });
+		        exporterHTML.setExporterOutput(simpleHtmlExporterOutput);
+		        exporterHTML.exportReport();
+		        
+		        headers = new HttpHeaders();
+		        headers.setContentType(MediaType.TEXT_HTML);
+		        return new ResponseEntity<byte[]>(outputStream.toByteArray(), headers, HttpStatus.OK);
+		        
+
+		        
+			case CHART:
+				HtmlExporter exporterChart = new HtmlExporter();
+		        SimpleExporterInput exporterInputChart = new SimpleExporterInput(jprint);
+		        exporterChart.setExporterInput(exporterInputChart);
+		        SimpleHtmlReportConfiguration reportExportConfigurationChart = new SimpleHtmlReportConfiguration();
+		        
+		        exporterChart.setConfiguration(reportExportConfigurationChart);
+		        ByteArrayOutputStream outputStream1 = new ByteArrayOutputStream();
+
+		        SimpleHtmlExporterOutput simpleHtmlExporterOutput1 = new SimpleHtmlExporterOutput(outputStream1);
+		        images = new HashMap<String, String>();
+		        simpleHtmlExporterOutput1.setImageHandler(new HtmlResourceHandler() {
+
+		            public void handleResource(String id, byte[] data) {
+		                System.err.println("id" + id);
+		                images.put(id, "data:image/jpg;base64," + Base64.encodeBytes(data));
+		            }
+
+		            public String getResourcePath(String id) {
+		                return images.get(id);
+		            }
+		        });
+		        exporterChart.setExporterOutput(simpleHtmlExporterOutput1);
+		        
+		        
+		        exporterChart.exportReport();
+		        StringBuffer image= new StringBuffer();
+		        image.append("<img src=");
+		        image.append('"');
+		        image.append(images.get("img_0_0_0"));
+		        image.append('"');
+		        image.append(" style=");
+		        image.append('"');
+		        image.append("width: 100%; height: 95%;");
+		        image.append('"');
+		        image.append(">");
+		        
+		        headers = new HttpHeaders();
+		        headers.setContentType(MediaType.TEXT_HTML);
+		        return new ResponseEntity<byte[]>(image.toString().getBytes(), headers, HttpStatus.OK);
+
+			case PDFATTACH:
+			case PDFINLINE:
+			default:
+				byte[] pdf = null;
+				pdf = JasperExportManager.exportReportToPdf(jprint);
+				headers = new HttpHeaders();
+		        headers.setContentType(MediaType.parseMediaType("application/pdf"));
+		        if(exportType==exportType.PDFINLINE)
+		        	headers.add("content-disposition", "inline; filename=" + reportName + ".pdf");
+		        if(exportType==exportType.PDFATTACH)
+		        	headers.add("content-disposition", "attachment; filename=" + reportName + ".pdf");
+		        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+		        return new ResponseEntity<byte[]>(pdf, headers, HttpStatus.OK);
+			}
+		} catch (JRException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private static ResponseEntity<byte[]> errorReport(Map<String, Object> parameter, ExportType exportType){
+		String reportName = "NoData";
+		JREmptyDataSource dataSource = new JREmptyDataSource(); 
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		String reportPath = loader.getResource("Reports/" + reportName + ".jrxml").getPath();
+		String fontPath = loader.getResource("Reports/times.ttf").getPath();
+		JRProperties.setProperty("net.sf.jasperreports.default.pdf.font.name", fontPath);
+		JRProperties.setProperty("net.sf.jasperreports.default.pdf.encoding", "Identity-H");
+		JRProperties.setProperty("net.sf.jasperreports.default.pdf.embedded", "true");
+
+		try {
+
+			JasperReport jreport1 = JasperCompileManager.compileReport(reportPath);
+
+			JasperPrint jprint = JasperFillManager.fillReport(jreport1, parameter, dataSource);
+			HttpHeaders headers;
+			switch (exportType) {
+			case HTML:
+			default:
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				HtmlExporter exporter = new HtmlExporter();
+
+				exporter.setExporterInput(new SimpleExporterInput(jprint));
+				exporter.setExporterOutput(new SimpleHtmlExporterOutput(baos));
+
+				exporter.exportReport();
+
+				headers = new HttpHeaders();
+		        headers.setContentType(MediaType.TEXT_HTML);
+		        return new ResponseEntity<byte[]>(baos.toByteArray(), headers, HttpStatus.OK);
+
+			case PDFINLINE:
+				byte[] pdf = null;
+				pdf = JasperExportManager.exportReportToPdf(jprint);
+				headers = new HttpHeaders();
+		        headers.setContentType(MediaType.parseMediaType("application/pdf"));
+		        headers.add("content-disposition", "inline; filename=" + reportName);
+		        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+		        return new ResponseEntity<byte[]>(pdf, headers, HttpStatus.OK);
+			}
+		} catch (JRException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+}

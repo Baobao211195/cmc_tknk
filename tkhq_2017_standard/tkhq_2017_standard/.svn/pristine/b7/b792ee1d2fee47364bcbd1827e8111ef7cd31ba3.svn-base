@@ -1,0 +1,298 @@
+/**
+ * Controller of TBD_KetXuatTNHT
+ */
+
+'use strict';
+
+var myApp = angular.module('myApp');
+
+myApp.controller('ketXuatTNHTController', 
+  				['$scope',
+  				 '$window',
+  				 '$uibModal',
+  				 '$PopupMessage',
+  				 'contextPath',
+  				 'ketXuatTNHTService',
+  				  function ($scope,
+  				  			$window,
+  				  			$uibModal,
+  				  			$PopupMessage,
+  				  			contextPath,
+  				  			ketXuatTNHTService) {
+
+  	var DA_PHE_DUYET = 1;
+  	var KHONG_PHE_DUYET = 0;
+  	var CHO_PHE_DUYET = 2;
+
+  	$scope.listData = [];
+  	$scope.tuNgay = "";
+  	$scope.denNgay = "";
+
+  	$scope.strListId = "";
+  	$scope.strListLoaiHangHoaKx = "";
+  	$scope.showReport = false;
+  	$scope.showModal = false;
+  	$scope.message = "";
+
+  	init();
+  	
+  	//Date picker
+	$scope.popup1 = {
+		opened: false
+	};
+	
+    $scope.popup2 = {
+		opened: false
+    };
+    
+    $scope.open1 = function() {
+        $scope.popup1.opened = true;
+    };
+    
+    $scope.open2 = function() {
+        $scope.popup2.opened = true;
+    };
+    
+    $scope.DayOptions = {
+        	datepickerMode: 'day',
+    	    formatYear: 'yy',
+    	    startingDay: 1,
+    	    'show-weeks' : false
+        };
+
+  	$scope.doSearch = function () {
+  		if ($scope.tuNgay === undefined){
+  			$scope.tuNgay = "";
+  		}
+  		if ($scope.denNgay === undefined){
+  			$scope.denNgay = "";
+  		}
+  		
+  		if ($scope.tuNgay !== ""){
+			if ($scope.tuNgay.getFullYear() < 1990){
+				$PopupMessage.Error("Từ ngày lớn hơn năm 1990!");
+				return;
+			}
+			if(!checkDateItem($scope.tuNgay)){
+				$PopupMessage.Error("Từ ngày không hợp lệ.");
+				return;
+			}
+  		}
+  		if($scope.denNgay !== ""){
+  			if(!checkDateItem($scope.denNgay)){
+  				$PopupMessage.Error("Đến ngày không hợp lệ.");
+  				return;
+  			}
+  		}
+  		if(($scope.tuNgay !== "") && ($scope.denNgay !== "")){
+	  		if($scope.tuNgay.getTime() > $scope.denNgay.getTime()){
+	  			$PopupMessage.Error("Từ ngày phải nhỏ hơn đến ngày.");
+				return;
+	  		}
+  		}
+  		filterAllKetXuatTNHT($scope.tuNgay, $scope.denNgay);
+  	}
+  	
+  	$scope.pheDuyet = function (trangThaiPheDuyet) {
+  		if (kiemTraTrangThaiPheDuyet()){  		
+  			$PopupMessage.Error($scope.message);
+  		}else {
+  			setDataKeXuat();
+  			updateTrangThaiPheDuyet(trangThaiPheDuyet);
+  		}
+	}
+
+	$scope.doExport = function (typeKetXuat) {
+
+		if ($scope.tuNgay != "" ){
+  			$scope.tuNgay = formatDateToString($scope.tuNgay);
+  		}
+  		if ($scope.denNgay != "") {
+	  		$scope.denNgay= formatDateToString($scope.denNgay);
+  		} 
+  		ExportKetXuatNTHT($scope.tuNgay, $scope.denNgay, typeKetXuat );
+		
+	}
+	
+	$scope.hideReport = function () {
+		$scope.srcReport = "";	
+		$scope.showReport = false;
+
+	}
+
+	$scope.doClose = function () {
+		window.history.back();
+	}
+
+	function init() {
+		$scope.showReport = false;
+		filterAllKetXuatTNHT($scope.tuNgay, $scope.denNgay);
+	}
+	
+	function ExportKetXuatNTHT(tuNgay, denNgay, typeKetXuat ){
+		$scope.srcReport =  contextPath + "/kxTnHT/printKetXuatTNHT?" + "tungay="
+							+  tuNgay +"&denNgay=" + denNgay + "&typeKetXuat=" +  typeKetXuat;
+		if(typeKetXuat === 1){
+			var modalInstance = $uibModal.open({
+				animation : self.animationsEnabled,
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				controller : 'ModalInstanceCtrl',
+				templateUrl : 'ReportPheDuyetKTDL',
+				windowClass : 'app-modal-window',
+				resolve : {
+					Url : function() {
+						return $scope.srcReport
+					}
+				}
+			});
+			
+		}
+		
+	}
+
+  	function checkDateItem(dateCompare){
+  		var currentDate = new Date();
+  		var dateC = new Date(dateCompare);
+  		
+  		if (dateC.getFullYear() > currentDate.getFullYear()){
+  			return false;
+  		}else {
+  			return true;
+  		}
+  		
+  		if((dateC.getMonth() + 1) > (currentDate.getMonth() + 1)){
+  			return false;
+  		}else {
+  			return true;
+  		}
+  		
+  		if ((dateC.getMonth() + 1) > 12 || (dateC.getMonth() + 1) < 1){
+  			return false;
+  		}else {
+  			return true;
+  		}
+  		
+  		if (dateC.getDate() > currentDate.getDate()){
+  			return false;
+  		}else {
+  			return true;
+  		}
+  		
+  		if(dateC.getDate() > 31 || dateC.getDate() < 1){
+  			return false;
+  		}else {
+  			return true;
+  		}
+  	}
+  	
+	function filterAllKetXuatTNHT (tuNgay, denNgay) {
+
+		if (tuNgay != "" ){
+  			tuNgay = formatDateToString(tuNgay);
+  		}
+  		if (denNgay != "") {
+	  		denNgay= formatDateToString(denNgay);
+  		}
+
+  		ketXuatTNHTService.GetListKetXuatTNHT(tuNgay, denNgay)
+  			.then(
+  				function(deferred) {
+  					$scope.listData = deferred;
+  					displayKetXuatTNHT($scope.listData);
+  				},
+  				function (errResponse) {
+  					console.error('Error while fetching data');
+  				}
+  			);
+  	}
+
+	function updateTrangThaiPheDuyet (trangThaiPheDuyet) {
+		ketXuatTNHTService.UpdateKetXuatTNHT($scope.strListId, $scope.strListLoaiHangHoaKx,trangThaiPheDuyet)
+			.then(
+				function (deferred) {
+					if(deferred === 1) {
+						filterAllKetXuatTNHT($scope.tuNgay, $scope.denNgay);
+						$PopupMessage.Success("Cập nhật trạng thái phê duyệt thành công!")
+					} else if (deferred === 0){
+						$PopupMessage.Error("Cập nhật trạng thái phê duyệt không thành công!");
+					}
+				},
+				function (errResponse) {
+					console.error('Error while updating data');
+				}
+			);
+	}
+
+	function displayKetXuatTNHT (listData) {
+		for (var i = 0; i < listData.length; i++) {
+			if(listData[i].trangThaiPheDuyet === DA_PHE_DUYET) {
+				listData[i].trangThaiPheDuyet = "Phê duyệt";
+				continue;
+			} 
+  			if (listData[i].trangThaiPheDuyet === KHONG_PHE_DUYET) {
+  				listData[i].trangThaiPheDuyet = "Không phê duyệt";
+  				continue;
+  			} 
+  			if (listData[i].trangThaiPheDuyet === CHO_PHE_DUYET)  {
+  				listData[i].trangThaiPheDuyet = "Chờ phê duyệt";
+  				continue;
+  			}
+  		}
+  	}
+
+	function setDataKeXuat () {
+		for (var i = 0; i < $scope.listData.length; i++) {
+			if ($scope.listData[i].isChecked == true) {
+				$scope.strListId += $scope.listData[i].ketXuatId + ",";
+				$scope.strListLoaiHangHoaKx += $scope.listData[i].loaiHangHoaKetXuat + ",";
+			}
+
+		}
+	}
+
+	function kiemTraTrangThaiPheDuyet () {
+		for (var i = 0; i < $scope.listData.length; i++) {
+			if ($scope.listData[i].isChecked == true) {
+				if ($scope.listData[i].trangThaiPheDuyet === "Phê duyệt") {
+					$scope.message = "Tập tin đã được phê duyệt";
+					$scope.listData[i].isChecked = false;
+	  				return true;
+				}
+				if ($scope.listData[i].trangThaiPheDuyet === "Không phê duyệt") {
+					$scope.message = "Tập tin không được phê duyệt";
+					$scope.listData[i].isChecked = false;
+	  				return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	function formatDateToString(dateCondition) {
+		var date = new Date(dateCondition);
+		return date.getDate() + "/" + (date.getMonth()+ 1) + "/" + date.getFullYear();
+	}
+
+}]);
+
+myApp.controller('ModalInstanceCtrl', 
+		['$scope',
+		 '$window',
+		 '$uibModal',
+		 '$PopupMessage',
+		 '$modalInstance',
+		 'Url',
+		  function ($scope,
+		  			$window,
+		  			$uibModal,
+		  			$PopupMessage,
+		  			$modalInstance,
+		  			Url) {
+			
+$scope.Url = Url;
+$scope.UrlPDF=Url+"&type=PDFATTACH";
+$scope.cancel = function() {
+	$modalInstance.dismiss('cancel');
+};
+}]);

@@ -1,0 +1,90 @@
+package com.tkhq.cmc.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
+import com.tkhq.cmc.model.TbdSysUsers;
+import com.tkhq.cmc.model.Tbd_Sys_Resource;
+
+@Repository
+public class Tbd_Sys_ResourceDAOImpl extends BaseDAO<Integer, Tbd_Sys_Resource> implements Tbd_Sys_ResourceDAO{
+
+	public Tbd_Sys_Resource findById(Integer resourceId) {
+		Criteria cr = this.createCriteria();
+		cr.add(Restrictions.eq("resourceId", resourceId));
+		List results = cr.list();
+		if (results.size() > 0)
+			return (Tbd_Sys_Resource) results.get(0);
+		else
+			return null;
+	}
+
+	public void insertTbdSysResource(Tbd_Sys_Resource tbdSysResource) throws Exception {
+		try {
+			this.persist(tbdSysResource);
+		} catch (Exception ex) {
+			throw ex;
+		}
+	}
+
+	public void updateTbdSysResource(Tbd_Sys_Resource tbdSysResource) throws Exception {
+		try {
+			this.update(tbdSysResource);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public void deleteById(Integer resourceId) {
+		Tbd_Sys_Resource entity = new Tbd_Sys_Resource();
+		entity.setResourceId(resourceId);
+		try {
+			this.delete(entity);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public void deleteAll() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public List<Tbd_Sys_Resource> search(int firstRow, int maxRow) {
+		Criteria cr = this.createCriteria();
+
+		cr.setFirstResult(firstRow);
+		cr.setMaxResults(maxRow);
+
+		List<Tbd_Sys_Resource> results = (List<Tbd_Sys_Resource>) cr.list();
+		if (results.size() > 0)
+			return results;
+		else
+			return new ArrayList<Tbd_Sys_Resource>();
+	}
+
+	public long countTotal() {
+		Criteria cr = this.createCriteria();
+
+		cr.setProjection(Projections.rowCount());
+		long count = (Long) cr.uniqueResult();
+
+		return count;
+	}
+
+	public List<TbdSysUsers> getLstUser() {
+		Criteria cr = this.getSession().createCriteria(TbdSysUsers.class);
+		
+		List<TbdSysUsers> results = (List<TbdSysUsers>)cr.list();
+		if (results.size() > 0)
+			return results;
+		else
+			return null;
+	}
+
+}

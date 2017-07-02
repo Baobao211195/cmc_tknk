@@ -1,0 +1,15 @@
+package com.tkhq.cmc.services;
+
+import java.sql.Date;
+import java.util.List;
+
+import com.tkhq.cmc.model.TbdSysparameters;
+
+public interface TbdSysParametersService {
+	List<TbdSysparameters> getAll();
+	List<TbdSysparameters> Search(String ten_param,String giatri,String nguoi_capnhap,String ngay_capnhap);
+	void  InsertParameters(TbdSysparameters paramters) throws Exception;
+	void  DeleteParameters(int ma) ;
+	void  UpdateParameters(TbdSysparameters paramters) ;
+	TbdSysparameters findParamById(int ma);
+}

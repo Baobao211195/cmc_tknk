@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE tiles-definitions PUBLIC  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	<definition name="baseDefinition" template="/WEB-INF/pages/layout/layout.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="header" value="/WEB-INF/pages/layout/header.jsp" />
+		<put-attribute name="leftmenu" value="/WEB-INF/pages/layout/leftmenu.jsp"></put-attribute>
+		<put-attribute name="content" value="" />
+	</definition>
+
+	<definition name="index" extends="baseDefinition">
+		<put-attribute name="title" value="welcome"></put-attribute>
+		<put-attribute name="content" value="/WEB-INF/pages/index.jsp"></put-attribute>
+	</definition>
+
+	<definition name="dm_tonghop" extends="baseDefinition">
+		<put-attribute name="title" value="DANH MỤC TỔNG HỢP" />
+		<put-attribute name="content" value="/WEB-INF/pages/dm_tonghop.jsp" />
+	</definition>
+
+	<definition name="bieuThueEdit" template="/WEB-INF/pages/bieuthue/bieuThueEdit.jsp">
+	</definition>
+
+
+	<definition name="dienbienHHXNK" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Phân tích dữ liệu tổng hợp sử dụng bảng biểu" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/dienbienhanghoaxnk/dienbienHangHoa_Home.jsp" />
+	</definition>
+	<definition name="dmCangNN" extends="baseDefinition">
+		<put-attribute name="title" value="Danh mục cảng nước ngoài VNACCS" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/cangnnVnaccs/tbs_cangnn_vnaccs.jsp" />
+	</definition>
+	<!-- <definition name="cangnnVnaccsEdit" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Thêm mới/Cập nhật cửa khẩu nước ngoài" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/cangnnVnaccs/cangnnVnaccsEdit.jsp" />
+	</definition> -->
+
+	<definition name="dmchuyende" extends="baseDefinition">
+		<put-attribute name="title" value="Danh mục chuyên đề" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/chuyende/tbs_chuyende.jsp" />
+	</definition>
+
+
+	<definition name="dienBienSoLieuChiTieuTK" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Hiển thị và cảnh báo bất thường của diễn biến số liệu theo các chỉ tiêu thống kê tổng hợp theo thời gian" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/dienBienSoLieuChiTieuTK/dienBienSoLieuChiTieuTK_home.jsp" />
+	</definition>
+
+	<definition name="thayDoiBoSungToKhaiHeThong" extends="baseDefinition">
+		<put-attribute name="title" value="PHÂN TÍCH DỮ LIỆU TỔNG HỢP" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/thayDoiBosungTokhaiHeThong/thayDoiBoSungToKhaiHeThong_home.jsp" />
+	</definition>
+
+	<definition name="tinhTPEdit" template="/WEB-INF/pages/tinhTP/tinhTPEdit.jsp">
+	</definition>
+
+	<definition name="thaydoiBSTT" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Xem thay đổi do bổ sung TT nhập và cập nhật" />
+		<put-attribute name="content" value="/WEB-INF/pages/thaydoiBSTT/thaydoiBSTT.jsp" />
+	</definition>
+
+	<!-- <definition name="chuyendeEdit" extends="baseDefinition">
+		<put-attribute name="title" value="Thêm mới/Cập nhật Chuyên Đề" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/chuyende/chuyendeEdit.jsp" />
+	</definition> -->
+
+	<definition name="themNSD" extends="baseDefinition">
+		<put-attribute name="title" value="Thêm mới người sử dụng" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/quantrihethong/themnguoidung.jsp" />
+	</definition>
+	<definition name="thayDoiDoNVHQ" extends="baseDefinition">
+		<put-attribute name="title"
+			value="PHÂN TÍCH THAY ĐỔI DO NGHIỆP VỤ HẢI QUAN" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/thayDoiDoNVHQ/thayDoiDoNVHQMaster.jsp" />
+	</definition>
+	<definition name="thietlapthamso" extends="baseDefinition">
+		<put-attribute name="title"
+			value="THIẾT LẬP THAM SỐ HỆ THÓNG" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/quantrihethong/thietlapthamsohethong.jsp" />
+	</definition>
+
+	<definition name="thayDoiDoTHQTNV" extends="baseDefinition">
+		<put-attribute name="title"
+			value="THAY ĐỔI DO THỰC HIỆN CÁC QUY TRÌNH, NGHIỆP VỤ, BƯỚC NGHIỆP VỤ THỐNG KÊ" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/thayDoiDoTHQTNV/thayDoiDoTHQTNVMaster.jsp" />
+	</definition>
+
+	<definition name="canhBaoDienbienSLTK" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Diễn biến và xu thế số lượng tờ khai XNK theo Cục và chi cục HQ" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/CanhBaoSLToKhaiXNK/canhBao_SLToKhaiXNK.jsp" />
+	</definition>
+
+	<!-- Khuongpv Plan TKNC-13 -->
+	<definition name="HTCBTGTXNK" extends="baseDefinition">
+		<put-attribute name="title"
+			value="HIỂN THỊ VÀ CẢNH BÁO BẤT THƯỜNG CỦA
+     DIỄN BIẾN VỀ LƯỢNG, ĐƠN GIÁ, TRỊ GIÁ MẶT HÀNG CỦA THỊ TRƯỜNG XNK" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/HTCBTGTXNK/HTCBTGTXNKMaster.jsp" />
+	</definition>
+
+	<definition name="phanHoiQuyTrinhXLDL" template="/WEB-INF/pages/phanHoiQuyTrinhXLDL.jsp">
+	</definition>
+	<definition name="tbs_haiquan" extends="baseDefinition">
+		<put-attribute name="title" value="HẢI QUAN" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/haiquan/tbs_haiquan.jsp" />
+	</definition>
+	<definition name="dienBienXuTheChiSo" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Hiển thị và cảnh báo bất thường của diễn biến số liệu theo định gốc, liên hoàn" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/dienBienXuTheChiSo/dienBienXuTheChiSo_home.jsp" />
+	</definition>
+
+	<!-- Khuongpv Plan TKNC-16 -->
+	<definition name="HTCBBTGTMHSITC" extends="baseDefinition">
+		<put-attribute name="title"
+			value="HIỂN THỊ VÀ CẢNH BÁO BẤT THƯỜNG CỦA DIỄN BIẾN VÀ XU THẾ TRỊ GIÁ MẶT HÀNG THEO PHÂN TỔ SITC XUẤT NHẬP KHẨU THEO CÁC CHỈ TIÊU THỐNG KÊ MÔ TẢ, THEO THỜI GIAN, CÓ SO SÁNH VỚI KỲ TRƯỚC VÀ CÙNG KỲ CÁC NĂM TRƯỚC, THEO TRẠNG THÁI CỦA DỮ LIỆU" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/HTCBBTGTMHSITC/HTCBBTGTMHSITCMaster.jsp" />
+	</definition>
+
+	<!--Khuongpv Plan TKNC-19 -->
+	<definition name="HTCBBTDBXTL" extends="baseDefinition">
+		<put-attribute name="title"
+			value="HIỂN THỊ VÀ CẢNH BÁO BẤT THƯỜNG CỦA DIỄN BIẾN VÀ XU THẾ LƯỢNG, ĐƠN GIÁ, TRỊ GIÁ MẶT HÀNG-THỊ TRƯỜNG XUẤT NHẬP KHẨU THEO CÁC CHỈ TIÊU THỐNG KÊ MÔ TẢ, THEO THỜI GIAN, CÓ SO SÁNH VỚI KỲ TRƯỚC VÀ CÙNG KỲ CÁC NĂM TRƯỚC, THEO TRẠNG THÁI CỦA DỮ LIỆU" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/HTCBBTDBXTL/HTCBBTDBXTLMaster.jsp" />
+	</definition>
+
+	<definition name="dienBienSLDoanhNghiepFDI" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Hiển thị và cảnh báo bất thường của diễn biến về lượng, đơn giá, trị giá của các doanh nghiệp FDI" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/dienBienSLDoanhNghiepFDI/dienBienSLDoanhNghiepFDI_home.jsp" />
+	</definition>
+	<definition name="danhsachNSD" extends="baseDefinition">
+		<put-attribute name="title" value="DANH SÁCH NGƯỜI SỬ DỤNG" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/quantrihethong/danhsachNSD.jsp" />
+	</definition>
+	<definition name="danhsachNhomNSD" extends="baseDefinition">
+		<put-attribute name="title" value="DANH SÁCH NHÓM NGƯỜI SỬ DỤNG" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/quantrihethong/dsNhomNSD.jsp" />
+	</definition>
+
+	<definition name="phobienbangbieuQD15" extends="baseDefinition">
+		<put-attribute name="title" value="PHÂN HỆ PHỔ BIẾN" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/phanhephobien/phobienbangbieuQD15.jsp" />
+	</definition>
+	<definition name="phobienbangbieuBTC" extends="baseDefinition">
+		<put-attribute name="title"
+			value="PHÂN HỆ BẢNG BIỂU THEO BỘ TÀI CHÍNH" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/phanhephobien/phobienbangbieuBTC.jsp" />
+	</definition>
+	<definition name="phobienbangbieuTC" extends="baseDefinition">
+		<put-attribute name="title" value="PHÂN HỆ BẢNG BIỂU THEO TỔNG CỤC" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/phanhephobien/phobienbangbieuTC.jsp" />
+	</definition>
+	<definition name="phobienbangbieuCQK" extends="baseDefinition">
+		<put-attribute name="title"
+			value="PHÂN HỆ BẢNG BIỂU THEO CƠ QUAN KHÁC" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/phanhephobien/phobienbangbieuCQK.jsp" />
+	</definition>
+	<definition name="phobienbangbieuCHQ" extends="baseDefinition">
+		<put-attribute name="title"
+			value="PHÂN HỆ BẢNG BIỂU THEO CỤC HẢI QUÁN" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/phanhephobien/phobienbangbieuCHQ.jsp" />
+	</definition>
+
+	<definition name="phanHoiQuyTrinhXLDL" template="/WEB-INF/pages/phanHoiQuyTrinhXLDL.jsp"></definition>
+	<definition name="themnguoidung"
+		template="/WEB-INF/pages/quantrihethong/themnguoidung.jsp"></definition>
+	<definition name="themnhomNSD"
+		template="/WEB-INF/pages/quantrihethong/themnhomNSD.jsp"></definition>
+	<definition name="quanlynhomNSD" extends="baseDefinition">
+		<put-attribute name="title"
+			value="QUẢN LÝ NHÓM NGƯỜI SỬ DỤNG" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/quantrihethong/quanlynhomNSD.jsp"/>
+		</definition>
+
+	<definition name="dienBienXNKVanTai" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Hiển thị và cảnh báo bất thường của diễn biến về trị giá xuất nhập khẩu theo phương thức vận tải" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/dienBienXNKVanTai/dienBienXNKVanTai_home.jsp" />
+	</definition>
+
+	<definition name="pageReportChart"
+		template="/WEB-INF/pages/dienBienSoLieuChiTieuTK/pageReportChart.jsp">
+	</definition>
+	<definition name="pageReport"
+		template="/WEB-INF/pages/phanhephobien/pageReport.jsp">
+	</definition>
+
+	<definition name="qlUserSDTK" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Quản lý tổ chức cá nhân sử dụng sản phẩm thống kê" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/qlUserSDSPTK/qlUserSDSPTK.jsp" />
+	</definition>
+
+	<definition name="EditUserSDTK" template="/WEB-INF/pages/qlUserSDSPTK/Edit.jsp">
+	</definition>
+
+	<definition name="canhBaoTriGiaMHPTHS" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Diễn biến và xu thế về trị giá mặt hàng theo phân tổ HS 02, 04 số" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/canhBaoTGMHPTHS/canhBao_TriGiaMH_PTHS_XNK.jsp" />
+	</definition>
+
+	<definition name="canhBaoTriGiaTT" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Diễn biến về trị giá theo thị trường, khối kinh tế" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/canhBaoTGTT/canhBao_TriGiaTT.jsp" />
+	</definition>
+
+	<definition name="canhBaoTriGiaXNKTTP" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Diễn biến về trị giá xuất nhập khẩu của tỉnh, thành phố" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/canhBaoTGXNKTinhTP/canhBao_TriGiaXNKTinhTP.jsp" />
+	</definition>
+
+	<definition name="canhBaoSoTKTTG" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Diễn biến số tờ khai, trị giá theo ngày, tuần, tháng, quý, năm" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/canhBaoSTKTGTTG/canhBao_SoTK_TG_TTG.jsp" />
+	</definition>
+
+
+	<definition name="login" template="/WEB-INF/pages/login.jsp">
+		<put-attribute name="title" value="ĐĂNG NHẬP" />
+	</definition>
+
+	<definition name="errors" extends="baseDefinition">
+		<put-attribute name="title" value="Access denided" />
+		<put-attribute name="content" value="/WEB-INF/pages/errors.jsp"></put-attribute>
+	</definition>
+
+	<definition name="phanquyenNSD" extends="baseDefinition">
+		<put-attribute name="title" value="Phân quyền NSD" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/quantrihethong/phanquyenNSD.jsp"></put-attribute>
+	</definition>
+
+	<definition name="phanquyenNSDchitiet" extends="baseDefinition">
+		<put-attribute name="title" value="Phân quyền NSD" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/quantrihethong/phanquyenNSDchitiet.jsp"></put-attribute>
+	</definition>
+
+	<definition name="profileNSD" extends="baseDefinition">
+		<put-attribute name="title" value="Phân quyền NSD" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/quantrihethong/profileNSD.jsp"></put-attribute>
+	</definition>
+
+	<definition name="dienBienSoLieuChiTieuTK_chart" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Hiển thị và cảnh báo bất thường của diễn biến số liệu theo các chỉ tiêu thống kê tổng hợp theo thời gian" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/dienBienSoLieuChiTieuTK_chart/dienBienSoLieuChiTieuTK_home_chart.jsp" />
+	</definition>
+	<!-- <definition name="dienBienSoLieuChiTieuTK_chart" template="/WEB-INF/pages/dienBienSoLieuChiTieuTK_chart/dienBienSoLieuChiTieuTK_home_chart.jsp"> 
+		</definition> -->
+
+	<!--Khuongpv Plan TKNC-22 -->
+	<definition name="HTCBBTTGXNKHQ" extends="baseDefinition">
+		<put-attribute name="title"
+			value="HIỂN THỊ VÀ CẢNH BÁO BẤT THƯỜNG CỦA DIỄN BIẾN SỐ LIỆU THEO CÁC CHỈ TIÊU THỐNG KÊ TỔNG HỢP THEO THỜI GIAN, CÓ SO SÁNH VỚI KỲ TRƯỚC VÀ CÙNG KỲ CÁC NĂM TRƯỚC, THEO TRẠNG THÁI CỦA DỮ LIỆU" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/HTCBBTTGXNKHQ/HTCBBTTGXNKHQMaster.jsp" />
+	</definition>
+	<definition name="HTCBBTTGXNKHQBieuDo" extends="baseDefinition">
+		<put-attribute name="title"
+			value="HIỂN THỊ VÀ CẢNH BÁO BẤT THƯỜNG CỦA DIỄN BIẾN SỐ LIỆU THEO CÁC CHỈ TIÊU THỐNG KÊ TỔNG HỢP THEO THỜI GIAN, CÓ SO SÁNH VỚI KỲ TRƯỚC VÀ CÙNG KỲ CÁC NĂM TRƯỚC, THEO TRẠNG THÁI CỦA DỮ LIỆU" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/HTCBBTTGXNKHQ/BieuDoMaster.jsp" />
+	</definition>
+	<!--Khuongpv Plan TKNC-25 -->
+	<definition name="HTCBBTTTCK" extends="baseDefinition">
+		<put-attribute name="title"
+			value="HIỂN THỊ VÀ CẢNH BÁO BẤT THƯỜNG CỦA DIỄN BIẾN VÀ XU THẾ LƯỢNG, ĐƠN GIÁ, TRỊ GIÁ MẶT HÀNG-THỊ TRƯỜNG XUẤT NHẬP KHẨU THEO CÁC CHỈ TIÊU THỐNG KÊ MÔ TẢ, THEO THỜI GIAN, CÓ SO SÁNH VỚI KỲ TRƯỚC VÀ CÙNG KỲ CÁC NĂM TRƯỚC, THEO TRẠNG THÁI CỦA DỮ LIỆU" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/HTCBBTTTCK/PageMaster.jsp" />
+	</definition>
+
+	<definition name="HTCBBTGTMHSITCBieuDo" extends="baseDefinition">
+		<put-attribute name="title"
+			value="HIỂN THỊ VÀ CẢNH BÁO BẤT THƯỜNG CỦA DIỄN BIẾN VÀ XU THẾ TRỊ GIÁ MẶT HÀNG THEO PHÂN TỔ SITC XUẤT NHẬP KHẨU THEO CÁC CHỈ TIÊU THỐNG KÊ MÔ TẢ, THEO THỜI GIAN, CÓ SO SÁNH VỚI KỲ TRƯỚC VÀ CÙNG KỲ CÁC NĂM TRƯỚC, THEO TRẠNG THÁI CỦA DỮ LIỆU" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/HTCBBTGTMHSITC/BieuDoMaster.jsp" />
+	</definition>
+	<definition name="HTCBBTDBXTLBieuDo" extends="baseDefinition">
+		<put-attribute name="title"
+			value="HIỂN THỊ VÀ CẢNH BÁO BẤT THƯỜNG CỦA DIỄN BIẾN VÀ XU THẾ LƯỢNG, ĐƠN GIÁ, TRỊ GIÁ MẶT HÀNG-THỊ TRƯỜNG XUẤT NHẬP KHẨU THEO CÁC CHỈ TIÊU THỐNG KÊ MÔ TẢ, THEO THỜI GIAN, CÓ SO SÁNH VỚI KỲ TRƯỚC VÀ CÙNG KỲ CÁC NĂM TRƯỚC, THEO TRẠNG THÁI CỦA DỮ LIỆU" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/HTCBBTDBXTL/BieuDoMaster.jsp" />
+	</definition>
+	<definition name="canhBaoTriGiaMHPTHSBD" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Diễn biến và xu thế về trị giá mặt hàng theo phân tổ HS 02, 04 số" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/canhBaoTGMHPTHS/canhBao_TriGiaMH_PTHS_BD.jsp" />
+	</definition>
+
+	<definition name="dienBienSLDoanhNghiepFDI_chart" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Hiển thị và cảnh báo bất thường của diễn biến về lượng, đơn giá, trị giá của các doanh nghiệp FDI" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/dienBienSLDoanhNghiepFDI_chart/dienBienSLDoanhNghiepFDI_home_chart.jsp" />
+	</definition>
+
+	<definition name="dienBienXNKVanTai_chart" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Hiển thị và cảnh báo bất thường của diễn biến về lượng, đơn giá, trị giá của các doanh nghiệp FDI" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/dienBienXNKVanTai_chart/dienBienXNKVanTai_home_chart.jsp" />
+	</definition>
+
+	<definition name="HTCBTGTXNKBieuDo" extends="baseDefinition">
+		<put-attribute name="title"
+			value="HIỂN THỊ VÀ CẢNH BÁO BẤT THƯỜNG CỦA
+     DIỄN BIẾN VỀ LƯỢNG, ĐƠN GIÁ, TRỊ GIÁ MẶT HÀNG CỦA THỊ TRƯỜNG XNK" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/HTCBTGTXNK/BieuDoMaster.jsp" />
+	</definition>
+
+	<definition name="canhBao_SLToKhaiXNK_chart" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Diễn biến và xu thế số lượng tờ khai XNK theo Cục và chi cục HQ" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/canhBao_SLToKhaiXNK_chart/canhBao_SLToKhaiXNK_home_chart.jsp" />
+	</definition>
+
+	<definition name="HTCBTGTXNK_chart" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Hiển thị và cảnh báo bất thường của diễn biến tổng trị giá xuất nhập khẩu" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/HTCBTGTXNK_chart/HTCBTGTXNK_home_chart.jsp" />
+	</definition>
+
+	<definition name="dienBienHangHoaXNK_chart" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Hiển thị và cảnh báo bất thường của diễn biến về lượng, đơn giá, trị giá mặt hàng" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/dienBienHangHoaXNK_chart/dienBienHangHoaXNK_home_chart.jsp" />
+	</definition>
+
+	<definition name="HTCBBTTTCKBieuDo" extends="baseDefinition">
+		<put-attribute name="title"
+			value="HIỂN THỊ VÀ CẢNH BÁO BẤT THƯỜNG CỦA DIỄN BIẾN VÀ XU THẾ LƯỢNG, ĐƠN GIÁ, TRỊ GIÁ MẶT HÀNG-THỊ TRƯỜNG XUẤT NHẬP KHẨU THEO CÁC CHỈ TIÊU THỐNG KÊ MÔ TẢ, THEO THỜI GIAN, CÓ SO SÁNH VỚI KỲ TRƯỚC VÀ CÙNG KỲ CÁC NĂM TRƯỚC, THEO TRẠNG THÁI CỦA DỮ LIỆU" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/HTCBBTTTCK/BieuDoMaster.jsp" />
+	</definition>
+
+	<definition name="pheDuyetKhaiThacDuLieu" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Phê duyệt và quản lý khai thác dữ liệu" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/pheDuyetKetXuatTNHT/pheDuyetKhaiThacDuLieu.jsp" />
+	</definition>
+	
+	<definition name="ReportPheDuyetKTDL"
+		template="/WEB-INF/pages/pheDuyetKetXuatTNHT/ReportPheDuyetKTDL.jsp">
+	</definition>
+
+	<definition name="canhBaoTriGiaTTBD" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Diễn biến về trị giá theo thị trường, khối kinh tế" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/canhBaoTGTT/canhBao_TriGiaTT_BD.jsp" />
+	</definition>
+
+	<definition name="canhBaoTriGiaXNKTTPBD" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Diễn biến về trị giá xuất nhập khẩu của tỉnh, thành phố" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/canhBaoTGXNKTinhTP/canhBao_TriGiaXNKTinhTP_BD.jsp" />
+	</definition>
+		<definition name="doimatkhau" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Thay đổi mật khẩu" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/quantrihethong/doimatkhau.jsp" />
+	</definition>
+
+	<definition name="hoanThanhRaXoatSanPhamThongKeDauRaMaster"
+		extends="baseDefinition">
+		<put-attribute name="title"
+			value="Hoàn thành rà xoát sản phẩm thống kê đầu ra" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/hoanThanhRaXoatSanPhamTkDauRa/hoanThanhRaXoatSanPhamThongKeDauRaMaster.jsp" />
+	</definition>
+
+	<definition name="canhBaoSoTKTTGBD" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Diễn biến số tờ khai, trị giá theo ngày, tuần, tháng, quý, năm" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/canhBaoSTKTGTTG/canhBao_SoTK_TG_TTG_BD.jsp" />
+	</definition>
+
+	<definition name="displayImportFilePhiCauTruc" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Upload file phi cấu trúc xuất nhập khẩu" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/tbdImportFilePhiCauTruc/displayImportFilePhiCauTruc.jsp" />
+	</definition>
+
+	<definition name="dienBienXuTheChiSo_chart" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Hiển thị và cảnh báo bất thường của diễn biến số liệu theo định gốc, liên hoàn" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/dienBienXuTheChiSo_chart/dienBienXuTheChiSo_home_chart.jsp" />
+	</definition>
+
+	<definition name="displayImportFilePhiCauTruc" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Upload file phi cấu trúc xuất nhập khẩu" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/tbdImportFilePhiCauTruc/displayImportFilePhiCauTruc.jsp" />
+	</definition>
+
+	<definition name="importFilePhiCauTrucHome"
+		template="/WEB-INF/pages/tbdImportFilePhiCauTruc/importFilePhiCauTrucHome.jsp">
+	</definition>
+
+	<definition name="lichCBTTTK" extends="baseDefinition">
+		<put-attribute name="title" value="Lịch công bố thông tin thống kê" />
+		<put-attribute name="content" value="/WEB-INF/pages/lichCBTTTK/lichCBTTTK.jsp" />
+	</definition>
+	
+	<definition name="rasoatqd15" extends="baseDefinition">
+		<put-attribute name="title" value="Rà soát số liệu quyết định 15" />
+		<put-attribute name="content" value="/WEB-INF/pages/RaSoatSanPham/phobienbangbieuQD15.jsp" />
+	</definition>
+	
+	<definition name="rasoatbaocaokhac" extends="baseDefinition">
+		<put-attribute name="title" value="Rà soát các báo cáo khác" />
+		<put-attribute name="content" value="/WEB-INF/pages/RaSoatSanPham/baocaokhac.jsp" />
+	</definition>
+
+	<definition name="pageReport_thayDoiBosungTokhaiHeThong"
+		template="/WEB-INF/pages/thayDoiBosungTokhaiHeThong/pageReport_thayDoiBosungTokhaiHeThong.jsp">
+	</definition>
+	
+	<definition name="displayFileCauTrucScreen" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Hiển thị danh sách file cấu trúc xuất nhập khẩu" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/tbdImportFileCauTruc/displayFileCauTrucScreen.jsp" />
+	</definition>
+	
+	<definition name="uploadFileCauTrucScreen" 
+		template="/WEB-INF/pages/tbdImportFileCauTruc/uploadFileCauTrucScreen.jsp">
+	</definition>
+	
+	<definition name="thaoTacFileCauTrucScreen" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Màn hình nhập mới" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/tbdImportFileCauTruc/thaoTacFileCauTrucScreen.jsp" />
+	</definition>
+	
+	<definition name="phancongcongviecEdit" extends="baseDefinition">
+		<put-attribute name="title" value="Cập nhật phân công công việc" />
+		<put-attribute name="content" value="/WEB-INF/pages/phancongcongviec/phancongcongviecEdit.jsp" />
+	</definition>
+
+	<definition name="quanLyToChucCaNhanTK" extends="baseDefinition">
+		<put-attribute name="title"
+			value="Quản lý tổ chức cá nhân làm công tác thống kê" />
+		<put-attribute name="content"
+			value="/WEB-INF/pages/quanLyTCCaNhanCTTK/quanLyToChucCNCTTK.jsp" />
+	</definition>
+	
+	<definition name="QLLDTPB" extends="baseDefinition">
+		<put-attribute name="title" value="Quản lý của lãnh đạo trước khi phổ biến" />
+		<put-attribute name="content" value="/WEB-INF/pages/qlLDTPhobien/qlLDTPhoBien.jsp" />
+	</definition>
+	
+	<definition name="phobienbangbieuSP" extends="baseDefinition">
+		<put-attribute name="title" value="Phổ biến song phương, khu vực và quốc tế" />
+		<put-attribute name="content" value="/WEB-INF/pages/phanhephobien/phobienbangbieuSP.jsp" />
+	</definition>
+
+	<definition name="Report"
+		template="/WEB-INF/pages/quanLyTCCaNhanCTTK/Report.jsp">
+	</definition>
+	
+	<definition name="QuanLyNhatKyHT" extends="baseDefinition">
+		<put-attribute name="title" value="Quản lý nhật ký hệ thống" />
+		<put-attribute name="content" value="/WEB-INF/pages/quanLyNhatKyHT/QuanLyNhatKyHT.jsp" />
+	</definition>
+	
+	<definition name="ReportQuanLyNhatKyHT"
+		template="/WEB-INF/pages/quanLyNhatKyHT/ReportQuanLyNhatKyHT.jsp">
+	</definition>
+	
+	<definition name="deleteLockUsers" extends="baseDefinition">
+		<put-attribute name="title" value="Xóa và cảnh báo người sử dụng treo" />
+		<put-attribute name="content" value="/WEB-INF/pages/xoaVaCanhBaoNsdTreo/deleteLockUsers.jsp" />
+	</definition>
+	
+	<definition name="cuaKhaunnVnaccsEdit" template="/WEB-INF/pages/cuakhaunnVnaccs/cuaKhaunnVnaccsEdit.jsp">
+	</definition>
+	<definition name="dvtVnaccsEdit" template="/WEB-INF/pages/dvtVnaccs/dvtVnaccsEdit.jsp">
+	</definition>
+	<definition name="tygiaEdit" template="/WEB-INF/pages/tyGia/tygiaEdit.jsp">
+	</definition>
+	<definition name="chuyendeEdit" template="/WEB-INF/pages/chuyende/chuyendeEdit.jsp">
+	</definition>
+	<definition name="cangnnVnaccsEdit" template="/WEB-INF/pages/cangnnVnaccs/cangnnVnaccsEdit.jsp">
+	</definition>
+	
+	<definition name="phanCong" extends="baseDefinition">
+		<put-attribute name="title" value="Phân công công việc." />
+		<put-attribute name="content" value="/WEB-INF/pages/phancongcongviec/phancong.jsp" />
+	</definition>
+	
+	<definition name="danhsachcongviec" extends="baseDefinition">
+		<put-attribute name="title" value="Danh sách công việc của tôi." />
+		<put-attribute name="content" value="/WEB-INF/pages/DanhSachCongViec/danhsachcongviec.jsp" />
+	</definition>
+	
+	<definition name="thaydoiCongViec"
+		template="/WEB-INF/pages/phancongcongviec/thaydoiCongViec.jsp">
+	</definition>		
+	
+	<definition name="logoutPage" template="/WEB-INF/pages/logoutPage.jsp" ></definition>
+
+		
+	<definition name="ReportPhanCong"
+		template="/WEB-INF/pages/phancongcongviec/ReportPhanCong.jsp">
+	</definition>
+	
+</tiles-definitions>
+	

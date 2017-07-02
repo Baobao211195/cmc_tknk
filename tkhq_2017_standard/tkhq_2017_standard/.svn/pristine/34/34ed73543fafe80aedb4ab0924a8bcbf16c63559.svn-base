@@ -1,0 +1,245 @@
+/**
+ * 
+ */
+
+'use strict';
+
+angular.module('myApp').controller('CanhBao_TriGiaTTController', CanhBao_TriGiaTTController);
+CanhBao_TriGiaTTController.$inject = ['$rootScope','$scope', 'CanhBao_TriGiaTTService', '$uibModal', '$PopupMessage',
+      '$timeout', 'contextPath'];
+
+function CanhBao_TriGiaTTController($rootScope, $scope, CanhBao_TriGiaTTService, $uibModal, $PopupMessage, $timeout,
+		contextPath) {
+	var self = this;
+	self.loai_bc = '8';
+	
+	$scope.lstNuoc = [];
+	$scope.lstKhoiKT = [];
+	$scope.lstWarnTGTTXNK = [];
+	
+	self.nuocSelected = null;
+	self.khoiKTSelected = null;
+	self.TTSelected = null;
+	
+	$scope.loaiHinh = 'X';
+	$scope.rbLoaiKy = {value: 'ky'};
+	
+	$scope.showDataTable = false;
+	$scope.showChart = false;
+	$scope.showGrid = true;
+	$scope.showButton = true;
+	$scope.btnDisable = true;
+	
+	function initComponent(){
+		//Reset value
+		self.nuocSelected = null;
+		self.khoiKTSelected = null;
+		self.TTSelected = null;
+		
+		$scope.showDataTable = false;
+		$scope.showChart = false;
+		$scope.showGrid = true;
+		$scope.btnDisable = true;
+		
+		$scope.lstWarnTGMHPTHSXNK = [];
+		$rootScope.$emit('PhanHoiQuyTrinhXLDL', self.loai_bc);
+		
+		CanhBao_TriGiaTTService.getLstKhoiKT()
+			.then(
+				function (deferred) {
+					$scope.lstKhoiKT = deferred;
+	            },
+	            function (errResponse) {
+	                console.error(errResponse);
+	            }
+			);
+	}
+	
+	$scope.changeKhoi = function(){
+		CanhBao_TriGiaTTService.getLstNuoc(self.khoiKTSelected)
+		.then(
+			function (deferred) {
+				$scope.lstNuoc = deferred;
+            },
+            function (errResponse) {
+                console.error(errResponse);
+            }
+		);
+	}
+	
+	$scope.changeTab = function(index){
+		console.log("Tab selected: " + index);
+		if(index == 0){
+			$scope.loaiHinh = 'X';
+			initComponent();
+		}
+		else if(index == 1){
+			$scope.loaiHinh = 'N';
+			initComponent();
+		}
+		else if(index == 2){
+			$scope.loaiHinh = 'NX';
+			initComponent();
+		}
+		else{
+			console.error("No tab index found!");
+		}
+	};
+	
+	$scope.search = function(){
+    	var param = {};
+    	param["trangthai"] = self.TTSelected == null ? '' : self.TTSelected;
+    	param["nhx"] = $scope.loaiHinh;
+    	param["khoi"] = self.khoiKTSelected == null ? '' : self.khoiKTSelected;
+    	param["nuoc"] = self.nuocSelected == null ? '' : self.nuocSelected;
+    	
+    	$rootScope.showLoading = true;
+    	
+    	CanhBao_TriGiaTTService.getTTCanhBaoTriGiaTTXNK(param)
+    		.then(function(response){
+    				$scope.lstWarnTGTTXNK = response;
+    				angular.forEach($scope.lstWarnTGTTXNK, function(value, key) {
+						if((value.group_data[0].data_ky.data.length%2)!=0)
+							{
+							value.data_ky.data.push({"gia_tri":null,"ky":null});
+							}
+						
+						});
+    				
+    				$scope.showDataTable = true;
+    				$rootScope.showLoading = false;
+    				if($scope.lstWarnTGTTXNK.length == 0){
+    					$scope.btnDisable = true;
+    				}
+    				else{
+    					$scope.btnDisable = false;
+    				}
+    			},
+    			function(errResponse){
+    				console.error(errResponse);
+    				if(errResponse == 404){
+    					$scope.lstWarnTGTTXNK = [];
+    				}
+    				$scope.showDataTable = true;
+    				$rootScope.showLoading = false;
+    				$scope.btnDisable = true;
+    			}
+    		);
+	};
+	
+	$scope.showFeedback = function(){
+//		var modalInstance = $uibModal.open({
+//			animation: true,
+//			ariaLabelledBy: 'modal-title',
+//			ariaDescribedBy: 'modal-body',
+//			size: 'lg',
+//			templateUrl: '',
+//			controller: 'feedbackQTXLDLModalCtrl',
+//			controllerAs: 'self',
+//			resolve: {
+//			}
+//		});
+//		
+//		modalInstance.result.then(function (data) {
+//				
+//		    }, function () {
+//		    	
+//		    });
+	};
+	
+	$scope.doExport = function(){
+		if($scope.lstWarnTGTTXNK.length == 0){
+			return;
+		}
+		var param = {};
+		param["trangthai"] = self.TTSelected == null ? '' : self.TTSelected;
+    	param["nhx"] = $scope.loaiHinh;
+    	param["khoi"] = self.khoiKTSelected == null ? '' : self.khoiKTSelected;
+    	param["nuoc"] = self.nuocSelected == null ? '' : self.nuocSelected;
+    	
+    	CanhBao_TriGiaTTService.doExport(param);
+	};
+	
+	$scope.doPrint = function() {
+		$scope.doExport();
+	};
+	
+	$scope.showChartInfo = function(){
+		$scope.showChart = true;
+		$scope.showGrid = false;
+		
+		$timeout(function(){
+			var param = {};
+	    	param["trangthai"] = self.TTSelected == null ? '' : self.TTSelected;
+	    	param["nhx"] = $scope.loaiHinh;
+	    	param["khoi"] = self.khoiKTSelected == null ? '' : self.khoiKTSelected;
+	    	param["nuoc"] = self.nuocSelected == null ? '' : self.nuocSelected;
+	    	param["loaiKy"] = $scope.rbLoaiKy.value;
+	    	
+	    	var api = contextPath + "/bcpt/CanhBaoTGTT/doChart?trangthai=" + param["trangthai"] + "&nhx=" + param["nhx"]
+	    		+ "&khoi=" + param["khoi"] + "&nuoc=" + param["nuoc"] + "&loaiKy=" + param["loaiKy"];
+	    	$scope.srcBieuDo = api;
+	    	
+	    	var iframe;
+	    	
+	    	iframe = document.getElementById('frReportXNK');
+	    	iframe.src = iframe.src;
+	    	
+	    	$scope.showData = true;
+		}, 500);
+	};
+	
+	$scope.closeChart = function(){
+		$scope.showChart = false;
+		$scope.showGrid = true;
+	};
+	
+	$scope.searchChart = function(){
+		var param = {};
+    	param["trangthai"] = self.TTSelected == null ? '' : self.TTSelected;
+    	param["nhx"] = $scope.loaiHinh;
+    	param["khoi"] = self.khoiKTSelected == null ? '' : self.khoiKTSelected;
+    	param["nuoc"] = self.nuocSelected == null ? '' : self.nuocSelected;
+    	param["loaiKy"] = $scope.rbLoaiKy.value;
+    	
+    	var api = contextPath + "/bcpt/CanhBaoTGTT/doChart?trangthai=" + param["trangthai"] + "&nhx=" + param["nhx"]
+    		+ "&khoi=" + param["khoi"] + "&nuoc=" + param["nuoc"] + "&loaiKy=" + param["loaiKy"];
+    	$scope.srcBieuDo = api;
+    	
+    	var iframe;
+    	
+    	iframe = document.getElementById('frReportXNK');
+    	iframe.src = iframe.src;
+    	
+    	$scope.showData = true;
+	};
+}
+
+angular.module('myApp').controller('feedbackQTXLDLModalCtrl', feedbackQTXLDLModalCtrl);
+feedbackQTXLDLModalCtrl.$inject = ['$scope', '$uibModalInstance', 'CanhBao_TriGiaTTService', '$PopupMessage']
+function feedbackQTXLDLModalCtrl($scope, $uibModalInstance, CanhBao_TriGiaTTService, $PopupMessage) {
+	var self = this;
+	self.content = '';
+	self.manager = null;
+	self.lstManager = [];
+	self.lstFeedbackInfo = [];
+
+	self.cancel = function () {
+	    $uibModalInstance.dismiss('cancel');
+	};
+	
+	self.doFeedbackInfo = function(){
+		var param = {};
+		param["content"] = self.content;
+		param["manager"] = self.manager;
+		
+		CanhBao_TriGiaTTService.doFeedbackInfo(param)
+			.then(function(response){
+				console.log("Respone received: " +  response);
+			},
+			function(errResponse){
+				console.error(errResponse);
+			}
+		);
+	};
+}

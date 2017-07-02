@@ -1,0 +1,220 @@
+<%@page language="java" pageEncoding="UTF-8"
+	contentType="text/html; charset=UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+
+<script
+	src="<c:url value='/static/js/service/dienBienHangHoaXNKService.js' />"></script>
+<script
+	src="<c:url value='/static/js/controller/dienbienHangHoaXNKController.js' />"></script>
+
+<style type="text/css">
+form.tab-form-demo .tab-pane {
+	margin: 5px 20px;
+}
+
+.middle {
+	vertical-align: middle !important;
+}
+</style>
+<script
+	src="<c:url value='/static/js/controller/PhanHoiQuyTrinhXLDLController.js' />"></script>
+<script
+	src="<c:url value='/static/js/service/PhanHoiQuyTrinhXLDLService.js' />"></script>
+
+<script>
+	function openXuatKhau() {
+		var xuatkhau = document.getElementById('xuatkhau');
+		var nhapkhau = document.getElementById('nhapkhau');
+
+		if (xuatkhau.style.display == "none") {
+			xuatkhau.style.display = 'block';
+			nhapkhau.style.display = 'none';
+		}
+	}
+	function openNhapKhau() {
+		var xuatkhau = document.getElementById('xuatkhau');
+		var nhapkhau = document.getElementById('nhapkhau');
+		if (nhapkhau.style.display == "none") {
+			nhapkhau.style.display = 'block';
+			xuatkhau.style.display = 'none';
+		}
+	}
+</script>
+<div class="content-wrapper" ng-app="myApp" ng-controller="TabsDemoCtrl">
+	<section class="content-header panel panel-success">
+		<h5 class="title">Diễn biến và xu thế mặt hàng chủ yếu xuất nhập
+			khẩu</h5>
+	</section>
+	<section class="content">
+		<form name="outerForm" class="tab-form-demo">
+			<uib-tabset active="activeForm"> <uib-tab index="1"
+				heading="Xuất khẩu" select="tabSelected1()"> </uib-tab> <uib-tab
+				index="2" heading="Nhập khẩu" select="tabSelected2()"> </uib-tab> </uib-tabset>
+		</form>
+		<div ng-controller="PhanHoiQuyTrinhXLDLController">
+			<%@ include file="../PhanHoiQuyTrinhXLDL/PhanHoiQuyTrinhXLDL.jsp"%>
+		</div>
+		<div class="row">
+			<div class="fade-in-out" ng-show="showLoading">
+				<uib-progressbar class="progress-striped active progressBar"
+					type="info"></uib-progressbar>
+			</div>
+		</div>
+		<div
+			ng-controller="dienBienHangHoaXNKController as dienBienHangHoaXNKCtrl"
+			class="modal-body">
+			<div ng-hide="dienBienHangHoaXNKCtrl.showChart1">
+				<fieldset class="form-group form-wrapper">
+					<div class="form-search">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-md-6">
+									<label class="col-md-4">Trạng thái:</label>
+									<div class="col-md-8">
+										<select class="form-control"
+											ng-options="item as item.ten for item in dienBienHangHoaXNKCtrl.lstTrangThai"
+											ng-model="trangThai" ng-change=""></select>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<label class="col-md-4">Mặt hàng:</label>
+									<div class="col-md-8">
+										<select class="form-control"
+											ng-options="item as item.ten for item in dienBienHangHoaXNKCtrl.lstMatHang"
+											ng-model="matHang" ng-change=""></select>
+									</div>
+								</div>
+
+
+								<div class="col-md-6">
+									<label class="col-md-4">Cục hải quan:</label>
+									<div class="col-md-8">
+										<select class="form-control"
+											ng-options="item as item.ten for item in dienBienHangHoaXNKCtrl.lstCucHQ"
+											ng-model="cucHQSeletected" ng-change="GetChiCucHQByCuc()"></select>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<label class="col-md-4">Chi cục hải quan</label>
+									<div class="col-md-8">
+										<select class="form-control"
+											ng-options="item as item.ten for item in dienBienHangHoaXNKCtrl.lstChiCuc"
+											ng-model="chicucHQSeletected" ng-change=""></select>
+									</div>
+								</div>
+
+							</div>
+							<br />
+							<div class="form-group row form-btn-align" align="center">
+								<button type="submit" id="btnSearch"
+									ng-click="dienBienHangHoaXNKCtrl.GetSoLieuTheoChiTieuThongKe04()"
+									class="btn btn-primary">
+									<i class="glyphicon"></i>Xem báo cáo
+								</button>
+							</div>
+							</br>
+						</div>
+					</div>
+				</fieldset>
+				<div id="xuatkhau" ng-if="dienBienHangHoaXNKCtrl.soLieuChiTieuTK">
+					<div style="width: 100%; overflow-x: scroll;">
+						<table id="tblSoLieuChiTieu"
+							class="table table-bordered table-striped table-responsive">
+							<thead>
+								<th class="middle">Chỉ tiêu</th>
+								<th class="middle">Kỳ</th>
+								<th class="middle"
+									colspan={{dienBienHangHoaXNKCtrl.soLieuChiTieuTK.group_data[0].data_ky.data.length}}>Thời
+									gian</th>
+								<th class="middle">So sánh với kỳ trước</th>
+								<th class="middle">So sánh cùng kỳ năm trước</th>
+								<th class="middle">Số liệu năm hiện thời</th>
+								<th class="middle">Dự báo năm tiếp theo - <br /> Hàm Trend
+								</th>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="middle"
+										colspan="{{dienBienHangHoaXNKCtrl.soLieuChiTieuTK.group_data[0].data_ky.data.length}}">
+										{{dienBienHangHoaXNKCtrl.soLieuChiTieuTK.group_name}}</td>
+								</tr>
+								<tr
+									ng-repeat-start="row in dienBienHangHoaXNKCtrl.soLieuChiTieuTK.group_data">
+									<td rowspan="2" style="white-space: nowrap;" class="middle"
+										ng-bind="row.sub_name"></td>
+									<td class="middle">Kỳ</td>
+									<td ng-repeat="ky in row.data_ky.data"
+										ng-class='{red : (ky.gia_tri == row.data_ky.maxKy), yellow : (ky.gia_tri == row.data_ky.minKy)}'>
+										<center ng-bind="ky.ky">dd</center> <br />
+										<center ng-bind="ky.gia_tri"></center>
+									</td>
+									<td ng-bind="row.data_ky.ss_ky_truoc" align="center"></td>
+									<td ng-bind="row.data_ky.ss_ky_nam_truoc" align="center"></td>
+									<td ng-bind="row.data_ky.forecast" align="center"></td>
+									<td ng-bind="row.data_ky.trend" align="center"></td>
+								</tr>
+								<tr>
+									<td class="middle">Tháng</td>
+									<td ng-repeat="thang in row.data_thang.data" colspan="2"
+										ng-class='{red : (thang.gia_tri == row.data_thang.maxThang), yellow : (thang.gia_tri == row.data_thang.minThang)}'>
+										<center>{{thang.thang}}</center> <br />
+										<center>{{thang.gia_tri}}</center>
+									</td>
+									<td ng-bind="row.data_thang.ss_thang_truoc" align="center"></td>
+									<td ng-bind="row.data_thang.ss_thang_nam_truoc" align="center"></td>
+									<td ng-bind="row.data_thang.forecast" align="center"></td>
+									<td ng-bind="row.data_thang.trend" align="center"></td>
+								</tr>
+								<tr ng-repeat-end ng-if="row.sub_name != 'Đơn vị tính'">
+									<td class="middle">AVG</td>
+									<!-- <td ng-class='{green : true}'  -->
+									<td class="green" colspan="{{row.data_ky.data.length +1}}"
+										ng-bind="row.avg"></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="form-group row form-btn-align" align="center">
+						<button type="button" class="btn btn-primary" data-toggle="modal"
+							data-target="#myModal" ng-click="btnPhanHoi_Click()">
+							<!-- ng-click="dienBienHangHoaXNKCtrl.feedBack()"> -->
+							<i class="glyphicon icon-white"></i>Phản hồi
+						</button>
+						<button type="submit" id="btnSearch" ng-click="doExport()"
+							class="btn btn-primary">
+							<i class="glyphicon icon-white"></i>Kết xuất
+						</button>
+						<button type="button" id="addRow" class="btn btn-primary"
+							ng-click="doExport()">
+							<i class="glyphicon icon-white"></i>In
+						</button>
+						<!-- <button type="button" id="btnDel" class="btn btn-primary" ng-click="">
+					<i class="glyphicon icon-white"></i>Đóng
+				</button> -->
+					</div>
+					<br /> <br /> <br /> <a ng-click="showChart()"
+						style="text-decoration: underline; font-weight: bold" class="btn">
+						<u>Biểu đồ</u>
+					</a>
+				</div>
+				<!--Tab 2  -->
+
+			</div>
+			<div ng-show="dienBienHangHoaXNKCtrl.showChart1">
+				<%@ include
+					file="../dienBienHangHoaXNK_chart/dienBienHangHoaXNK_chart.jsp"%>
+			</div>
+		</div>
+	</section>
+
+</div>
+<style type="text/css">
+.avg {
+	background-color: green !important;
+}
+</style>

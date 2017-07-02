@@ -1,0 +1,235 @@
+package com.tkhq.cmc.model;
+
+import java.io.Serializable;
+import java.sql.Date;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.hibernate.annotations.GenericGenerator;
+
+@Entity
+@Table(name = "TBD_LICHCB_TTTK")
+@XmlRootElement
+public class Tbd_LichCB_TTTK implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
+	@Id
+    @Basic(optional = false)
+    @NotNull
+    @GenericGenerator(name="LichCBTTTKSeq" , strategy="increment")
+    @GeneratedValue(generator="LichCBTTTKSeq")
+    @Column(name = "LICHCBTT_ID")
+    private Integer lichCBTTId;
+	
+	@Size(max = 4)
+    @Column(name = "NAMCB")
+    private String namCB;
+	
+    @Column(name = "COQUANCB")
+    private String coquanCB;
+	
+    @Column(name = "HINHTHUCCB")
+    private String hinhthucCB;
+    
+    @Column(name = "FORMAT_FILEDL")
+    private String formatFileDL;
+    
+    @Column(name = "NIENGIAMTK")
+    private String niengiamTK;
+    
+    @Column(name = "LOAIBCCB")
+    private String loaiBCCB;
+    
+    @Column(name = "MALOAIBC")
+    private String maLoaiBC;
+    
+    @Column(name = "SOLIEUSB")
+    private Date solieuSB;
+    
+    @Column(name = "SOLIEU6TDN")
+    private Date solieu6TDN;
+    
+    @Column(name = "SOLIEUCT")
+    private Date solieuCT;
+    
+    @Column(name = "THANGBC")
+    private Integer thangBC;
+    
+    @Column(name = "LOAI_LICHCB")
+    private String loaiLichCB;
+    
+    @Column(name = "USER_ID")
+    private Integer userId;
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	@ManyToOne(optional=false)
+    @JoinColumn(name="MALOAIBC", referencedColumnName="MA", insertable = false, updatable = false)
+    private Tbs_dmbaocao tbsDmBaocao;
+
+	@ManyToOne(optional=false)
+    @JoinColumn(name="USER_ID", referencedColumnName="USER_ID", insertable = false, updatable = false)
+    private TbdSysUsers tbdSysUser;
+	
+	public Tbs_dmbaocao getTbsDmBaocao() {
+		return tbsDmBaocao;
+	}
+
+	public void setTbsDmBaocao(Tbs_dmbaocao tbsDmBaocao) {
+		this.tbsDmBaocao = tbsDmBaocao;
+	}
+    
+    public TbdSysUsers getTbdSysUser() {
+		return tbdSysUser;
+	}
+
+	public void setTbdSysUser(TbdSysUsers tbdSysUser) {
+		this.tbdSysUser = tbdSysUser;
+	}
+
+	public Integer getThangBC() {
+		return thangBC;
+	}
+
+	public void setThangBC(Integer thangBC) {
+		this.thangBC = thangBC;
+	}
+
+	public Integer getLichCBTTId() {
+		return lichCBTTId;
+	}
+
+	public void setLichCBTTId(Integer lichCBTTId) {
+		this.lichCBTTId = lichCBTTId;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((lichCBTTId == null) ? 0 : lichCBTTId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Tbd_LichCB_TTTK other = (Tbd_LichCB_TTTK) obj;
+		if (lichCBTTId == null) {
+			if (other.lichCBTTId != null)
+				return false;
+		} else if (!lichCBTTId.equals(other.lichCBTTId))
+			return false;
+		return true;
+	}
+	
+	public String getNamCB() {
+		return namCB;
+	}
+
+	public void setNamCB(String namCB) {
+		this.namCB = namCB;
+	}
+
+	public String getCoquanCB() {
+		return coquanCB;
+	}
+
+	public void setCoquanCB(String coquanCB) {
+		this.coquanCB = coquanCB;
+	}
+
+	public String getHinhthucCB() {
+		return hinhthucCB;
+	}
+
+	public void setHinhthucCB(String hinhthucCB) {
+		this.hinhthucCB = hinhthucCB;
+	}
+
+	public String getFormatFileDL() {
+		return formatFileDL;
+	}
+
+	public void setFormatFileDL(String formatFileDL) {
+		this.formatFileDL = formatFileDL;
+	}
+
+	public String getNiengiamTK() {
+		return niengiamTK;
+	}
+
+	public void setNiengiamTK(String niengiamTK) {
+		this.niengiamTK = niengiamTK;
+	}
+
+	public String getLoaiBCCB() {
+		return loaiBCCB;
+	}
+
+	public void setLoaiBCCB(String loaiBCCB) {
+		this.loaiBCCB = loaiBCCB;
+	}
+
+	public String getMaLoaiBC() {
+		return maLoaiBC;
+	}
+
+	public void setMaLoaiBC(String maLoaiBC) {
+		this.maLoaiBC = maLoaiBC;
+	}
+
+	public Date getSolieuSB() {
+		return solieuSB;
+	}
+
+	public void setSolieuSB(Date solieuSB) {
+		this.solieuSB = solieuSB;
+	}
+
+	public Date getSolieu6TDN() {
+		return solieu6TDN;
+	}
+
+	public void setSolieu6TDN(Date solieu6tdn) {
+		solieu6TDN = solieu6tdn;
+	}
+
+	public Date getSolieuCT() {
+		return solieuCT;
+	}
+
+	public void setSolieuCT(Date solieuCT) {
+		this.solieuCT = solieuCT;
+	}
+	
+	public String getLoaiLichCB() {
+		return loaiLichCB;
+	}
+
+	public void setLoaiLichCB(String loaiLichCB) {
+		this.loaiLichCB = loaiLichCB;
+	}
+}

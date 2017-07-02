@@ -1,0 +1,89 @@
+/**
+ * Service of model TBD_KetXuatTNHT
+ * 
+ */
+
+'use strict';
+App.factory('quanLyToChucCNCTTKService',['$http','$q', 'contextPath', quanLyToChucCNCTTKService]);
+
+function quanLyToChucCNCTTKService($http, $q, contextPath) {
+
+//	var contextPath = "http://localhost:8080/tkhq_2017_standard";
+	
+	var factory = {
+		GetListThôngTinQL: GetListThôngTinQL,
+		ExportThôngTinQL : ExportThôngTinQL,
+		GetCucHQ		 : GetCucHQ,
+		GetChiCucHQByCuc : GetChiCucHQByCuc
+	};
+
+	return factory;
+
+	function GetListThôngTinQL(nhomNgSd, trangThai, maTongCuc, maChiCuc) {
+		var deferred = $q.defer();
+		$http.get(contextPath + "/lisThongTinQuanLy?" + "&nhomId="+ nhomNgSd +
+															"&trangThai=" + trangThai + 
+															"&maTongCuc=" + maTongCuc + 
+															"&maChiCuc=" + maChiCuc)
+			.then(
+				function(response) {
+					deferred.resolve(response.data)
+				},
+				function (errResponse) {
+					console.log("Có lỗi xảy ra trong khi lấy thông tin");
+					deferred.reject(errResponse);
+				}
+		);
+		return deferred.promise;
+	}
+
+	function ExportThôngTinQL(typeKetXuat, nhomId, trangThai, maTongCuc, maChiCuc) {
+		var deferred = $q.defer();
+		$http.get(contextPath + "/exportThongTinQL?" + "&typeKetXuat="+ typeKetXuat +
+															"&nhomId="+ nhomId +
+															"&trangThai=" + trangThai + 
+															"&maTongCuc=" + maTongCuc + 
+															"&maChiCuc=" + maChiCuc)
+			.then (
+				function (response) {
+					deferred.resolve(response.data);
+				},
+				function (errResponse) {
+					console.log("Có lỗi xảy ra trong khi kết xuất thông tin ra file.");
+					deferred.reject(errResponse);	
+				}
+		);
+		return deferred.promise;
+	}
+	
+	function GetCucHQ() {
+        var deferred = $q.defer();
+        $http.get(contextPath + '/bcpt/GetCustom')
+            .then(
+            function (response) {
+                deferred.resolve(response.data);
+            },
+            function(errResponse){
+                console.error('Có lỗi xảy ra trong khi get HQ');
+                deferred.reject(errResponse);
+            }
+        );
+        
+        return deferred.promise;
+    }
+
+    function GetChiCucHQByCuc(maCuc) {
+        var deferred = $q.defer();
+        $http.get(contextPath + '/tbs_hqkttxnk_getchicucbycuc?maCuc=' + maCuc)
+            .then(
+            function (response) {
+                deferred.resolve(response.data);
+            },
+            function(errResponse){
+                console.error('Lỗi trong quá trình get chi cục HQ');
+                deferred.reject(errResponse);
+            }
+        );
+        return deferred.promise;
+    }
+}

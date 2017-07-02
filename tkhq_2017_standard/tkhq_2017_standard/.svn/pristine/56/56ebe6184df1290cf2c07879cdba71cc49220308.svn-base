@@ -1,0 +1,33 @@
+package com.tkhq.cmc.dto;
+
+import com.tkhq.cmc.common.PagerInfo;
+
+public class TbsQtacDnTrigiaXuatkhauDTO extends PagerInfo {
+	private Long id;
+	private String masodn;
+	private Long trigiaxuatkhau;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getMasodn() {
+		return masodn;
+	}
+
+	public void setMasodn(String masodn) {
+		this.masodn = masodn;
+	}
+
+	public Long getTrigiaxuatkhau() {
+		return trigiaxuatkhau;
+	}
+
+	public void setTrigiaxuatkhau(Long trigiaxuatkhau) {
+		this.trigiaxuatkhau = trigiaxuatkhau;
+	}
+}

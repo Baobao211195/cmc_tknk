@@ -1,0 +1,156 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<div ng-controller="PhanHoiQuyTrinhXLDLController">
+	<%@ include file="../PhanHoiQuyTrinhXLDL/PhanHoiQuyTrinhXLDL.jsp"%>
+</div>
+
+<div class="row">
+	<div class="fade-in-out" ng-show="showLoading">
+		<uib-progressbar class="progress-striped active progressBar" type="info"></uib-progressbar>
+	</div>
+</div>
+
+<div style="border: 0px !important;" ng-hide="showChart1">
+	<div class="generic-container">
+		<fieldset class="form-group form-wrapper">
+			<form class="form-search">
+				</br>
+				<table
+					style="width: 100%; border-spacing: 10px; border-collapse: separate;">
+					<tr>
+						<td class="col-md-4"><label class="col-md-4">Trạng thái</label>
+							<div class="col-md-8">
+								<select class="form-control"
+									ng-options="item as item.Ten for item in lstTrangThai"
+									ng-model="cmbTrangThai"></select>
+							</div></td>
+						<td class="col-md-4"><label class="col-md-4">Cục hải quan</label>
+							<div class="col-md-8">
+								<select class="form-control"
+									ng-options="item as item.ten for item in lstCucHQ"
+									ng-model="cmbCucHQ" ng-change="CucHQSelected(cmbCucHQ)"></select>
+							</div></td>
+						<td class="col-md-4"><label class="col-md-4">Chi cục hải quan</label>
+							<div class="col-md-8">
+								<select class="form-control"
+									ng-options="item as item.ten for item in lstChiCucHQ"
+									ng-model="cmbChiCucHQ"></select>
+							</div></td>
+					</tr>
+				</table>
+				</br>
+			</form>
+		</fieldset>
+	</div>
+	<div class="form-group row form-btn-align" align="center">
+		<button type="submit" id="btnPhanHoi" ng-click="btnXemBC_Click()"
+			class="btn btn-primary">
+			<i class="glyphicon icon-white"></i>Xem báo cáo
+		</button>
+	</div>
+	</br>
+	<div ng-hide="showReport1">
+	<div class="row">
+		<!-- <div>Total: {{Scope.totalItems}}</div> -->
+		<div>
+			<!-- <pagination total-items="Scope.totalItems" ng-change="pageChanged()" ng-model="Scope.currentPage" max-size="Scope.maxSize" class="pagination" boundary-links="true" rotate="false"></pagination> -->
+		</div>
+	</div>
+	<div style="width: 100%; overflow-x: scroll; overflow-y: scroll;">
+		<table id="tbTongThe" class="table table-bordered table-responsive">
+			<thead>
+				<tr>
+					<th>Chỉ tiêu</th>
+					<th>Kỳ</th>
+					<th colspan="{{lstResult[0].group_data[0].data_ky.data.length}}">Thời
+						gian</th>
+					<th>So sánh với kỳ trước</th>
+					<th>So sánh với cùng kỳ năm trước</th>
+					<!-- <th>Dự báo năm tiếp theo – Hàm Trend</th>
+					<th>So sánh với cùng kỳ năm trước</th> -->
+
+				</tr>
+			</thead>
+			<tbody ng-repeat="row in lstResult">
+				<tr>
+					<td colspan="{{row.group_data[0].data_ky.data.length}} +5">{{row.group_name}}</td>
+				</tr>
+				<tr ng-repeat-start="row1 in row.group_data">
+					<td rowspan="2">{{row1.sub_name}}</td>
+					<td>Kỳ</td>
+					<td ng-repeat="ky in row1.data_ky.data"
+					ng-class='{red : (ky.gia_tri == row1.data_ky.maxKy), yellow : (ky.gia_tri == row1.data_ky.minKy)}'>
+						<center>{{ky.ky}}</center> <br />
+						<center>{{ky.gia_tri}}</center>
+					</td>
+					<td ng-bind="row1.data_ky.ss_ky_truoc"></td>
+					<td ng-bind="row1.data_ky.ss_ky_nam_truoc"></td>
+					<!-- <td ng-bind="row1.data_ky.trend"></td>
+					<td ng-bind="row1.data_ky.forecast"></td> -->
+				</tr>
+
+				<tr>
+					<td>Tháng</td>
+					<td ng-repeat="thang in row1.data_thang.data" colspan="2"
+					ng-class='{red : (thang.gia_tri == row1.data_thang.maxThang), yellow : (thang.gia_tri == row1.data_thang.minThang)}'>
+						<center>{{thang.thang}}</center> <br />
+						<center>{{thang.gia_tri}}</center>
+					</td>
+					<td ng-bind="row1.data_thang.ss_thang_truoc"></td>
+					<td ng-bind="row1.data_thang.ss_thang_nam_truoc"></td>
+					<!-- <td ng-bind="row1.data_thang.trend"></td>
+					<td ng-bind="row1.data_thang.forecast"></td> -->
+				</tr>
+				<tr ng-repeat-end>
+					<td>AVG</td>
+					<!-- <td ng-class='{green : true}' -->
+					<td class="green"
+						colspan="{{row1.data_ky.data.length +1}}" ng-bind="row1.avg"></td>
+					<td></td>
+					<td></td>
+					<!-- <td></td>
+					<td></td> -->
+				</tr>
+
+			</tbody>
+		</table>
+	</div>
+	</br>
+	<div class="form-group row form-btn-align" align="center">
+		<button type="button" class="btn btn-primary" data-toggle="modal"
+			data-target="#myModal">
+			<i class="glyphicon icon-white"></i> Phản hồi
+		</button>
+		<button type="submit" id="btnKetXuat" ng-click="doExport()"
+			class="btn btn-primary">
+			<i class="glyphicon icon-white"></i> Kết xuất
+		</button>
+		<button type="button" id="btnIn" class="btn btn-primary"
+			ng-click="btnIn_Click()">
+			<i class="glyphicon icon-white"></i> In
+		</button>
+		<!-- <button type="button" id="btnClose" class="btn btn-primary"
+			ng-click="btnClose_Click()">
+			<i class="glyphicon icon-white"></i> Đóng
+		</button> -->
+	</div>
+	<!-- </br>
+	<div class="form-group row form-btn-align" align="center">
+		<div class="row">
+			<div></div>
+			<div></div>
+		</div>
+	</div> -->
+	<br/>	
+	<div>
+	   	<a ng-click="showChart()" style="text-decoration: underline; font-weight: bold" class="btn"><span>Biểu đồ</span></a>
+	</div>
+	<br/>	
+	<br/>		
+	</div>	
+</div>
+<div ng-show="showChart1">
+	<%@ include file="BieuDo.jsp"%>
+</div>
+

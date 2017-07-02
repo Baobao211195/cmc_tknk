@@ -1,0 +1,239 @@
+/**
+ * Controller of model TBS_BIEUTHUE
+ */
+
+'use strict';
+
+angular.module('myApp').controller('dienBienSLDoanhNghiepFDIController', dienBienSLDoanhNghiepFDIController);
+dienBienSLDoanhNghiepFDIController.$inject = ['$scope', 'dienBienSLDoanhNghiepFDIService', 'pagerService', '$uibModal', '$PopupMessage', '$rootScope', 'contextPath'];
+
+function dienBienSLDoanhNghiepFDIController($scope, dienBienSLDoanhNghiepFDIService, 
+		pagerService, $uibModal, $PopupMessage, $rootScope, contextPath) {		
+	console.log('start dienBienSLDoanhNghiepFDIController');
+		var self = this;
+		self.lstTrangThai = [];
+		self.lstManager = [];		
+		self.soLieuChiTieuTK = [];               
+		self.lstCucHQ = [];
+		self.lstChiCucHQ = [];
+        self.feedBack = feedBack;                
+        self.showPopup = showPopup;
+        self.animationsEnabled = true;
+        self.nhx = 'X';
+        self.showChart1 = false;
+        self.linkAPI_LuongTK = contextPath+'/pbtk/API_dienBienSLDoanhNghiepFDI_ky?nhx=X&trangThai=SB&radioBox=KY&maCucHQ=29&loaiTK=luongTK';
+        self.linkAPI_DongiaTK = contextPath+'/pbtk/API_dienBienSLDoanhNghiepFDI_ky?nhx=X&trangThai=SB&radioBox=KY&maCucHQ=29&loaiTK=dongiaTK';
+        self.linkAPI_TrigiaTK = contextPath+'/pbtk/API_dienBienSLDoanhNghiepFDI_ky?nhx=X&trangThai=SB&radioBox=KY&maCucHQ=29&loaiTK=trigiaTK';
+        self.loai_bc = '10';
+        self.tenCucHQ = '';
+        self.CucHQSelect = CucHQSelect;
+        GetCucHQ();
+        GetNewPage();
+        $scope.showReport1 = true;
+//        GetSoLieuChiTieuTK01();
+        
+        function GetCucHQ() {
+        	dienBienSLDoanhNghiepFDIService.GetCucHQ()
+            	.then(
+        			function (deferred) {
+        				self.lstCucHQ = deferred;
+        				$scope.CucHQ = self.lstCucHQ[0];
+        				self.CucHQSelect($scope.CucHQ);
+                    },
+                    function (errResponse) {
+                        console.error('Error while fetching data');
+                    }
+                );
+        	$rootScope.$emit('PhanHoiQuyTrinhXLDL', self.loai_bc);
+        }  
+        
+        function CucHQSelect(Item) {
+        	console.log("CucHQSelect@Item:"+Item);
+        	dienBienSLDoanhNghiepFDIService.GetChiCucHQByCuc(Item.ma)
+            	.then(
+        			function (deferred) {
+        				self.lstChiCucHQ = deferred;
+        				self.lstChiCucHQ = [{"ma": "","ten": "---chọn---"}].concat(self.lstChiCucHQ);
+        				$scope.ChiCucHQ = self.lstChiCucHQ[0];
+                    },
+                    function (errResponse) {
+                        console.error('Error while fetching data');
+                    }
+                );        	
+        }
+        
+        function GetSoLieuChiTieuTK10() {
+        	$rootScope.showLoading = true;
+        	console.log('Controller GetSoLieuChiTieuTK10@trangThai:'+$scope.trangThai.ma+'|self.nhx:'+self.nhx+
+        			'|ChiCucHQ:'+$scope.ChiCucHQ.ma+'|CucHQ:'+$scope.CucHQ.ma);        	
+        	dienBienSLDoanhNghiepFDIService.GetSoLieuChiTieuTK10($scope.trangThai.ma, 
+        			self.nhx, $scope.CucHQ.ma, $scope.ChiCucHQ.ma)
+    		.then(function(respone){        			
+    			self.soLieuChiTieuTK = respone;    			    			
+    			console.log('Controller GetSoLieuChiTieuTK10@length respone:'+self.soLieuChiTieuTK[0].data_ky.data.length);
+    			
+    			for(var i = 0; i < self.soLieuChiTieuTK.length; i++){
+					var maxKy = 0;
+					var minKy = self.soLieuChiTieuTK[i].data_ky.data[0].gia_tri;
+					var maxThang = 0;
+					var minThang = self.soLieuChiTieuTK[i].data_thang.data[0].gia_tri;
+					
+					var lengthKY = self.soLieuChiTieuTK[i].data_ky.data.length;
+					var lengthTHANG = self.soLieuChiTieuTK[i].data_thang.data.length;
+					var tenKY = '';
+					var tenTHANG = '';
+					if (self.soLieuChiTieuTK[i].data_ky.data.length % 2 == 1) {
+						lengthKY = self.soLieuChiTieuTK[i].data_ky.data.length -1;
+						lengthTHANG = self.soLieuChiTieuTK[i].data_thang.data.length -1;
+						tenKY = self.soLieuChiTieuTK[i].data_ky.data[lengthKY].ky;
+						tenTHANG = self.soLieuChiTieuTK[i].data_thang.data[lengthTHANG].thang;
+					}
+					
+					for(var j = 0; j < self.soLieuChiTieuTK[i].data_ky.data.length; j++){
+						if(parseFloat(self.soLieuChiTieuTK[i].data_ky.data[j].gia_tri) > parseFloat(maxKy)){
+							maxKy = self.soLieuChiTieuTK[i].data_ky.data[j].gia_tri;
+						}
+						if(parseFloat(self.soLieuChiTieuTK[i].data_ky.data[j].gia_tri) < parseFloat(minKy)){
+							minKy = self.soLieuChiTieuTK[i].data_ky.data[j].gia_tri;
+						}
+					}
+					for(var k = 0; k < self.soLieuChiTieuTK[i].data_thang.data.length; k++){
+						if(parseFloat(self.soLieuChiTieuTK[i].data_thang.data[k].gia_tri) > parseFloat(maxThang)){
+							maxThang = self.soLieuChiTieuTK[i].data_thang.data[k].gia_tri;
+						}
+						if(parseFloat(self.soLieuChiTieuTK[i].data_thang.data[k].gia_tri) < parseFloat(minThang)){
+							minThang = self.soLieuChiTieuTK[i].data_thang.data[k].gia_tri;
+						}
+					}
+					self.soLieuChiTieuTK[i].data_ky["maxKy"] = maxKy;
+					self.soLieuChiTieuTK[i].data_ky["minKy"] = minKy;
+					self.soLieuChiTieuTK[i].data_thang["maxThang"] = maxThang;
+					self.soLieuChiTieuTK[i].data_thang["minThang"] = minThang;
+					
+					self.soLieuChiTieuTK[i].data_ky["tenKY"] = tenKY;
+					self.soLieuChiTieuTK[i].data_thang["tenTHANG"] = tenTHANG;
+				}
+    			
+    			for(var i = 0; i<self.soLieuChiTieuTK.length; i++)
+				{
+	    			if (self.soLieuChiTieuTK[i].data_ky.data.length > 0 && self.soLieuChiTieuTK[i].data_ky.data.length %2 != 0 ) {
+	    				self.soLieuChiTieuTK[i].data_ky.data.push({"ky":null, "gia_tri":null});
+	    			}
+				}
+    			if($scope.ChiCucHQ == self.lstChiCucHQ[0]){
+    				self.tenCucHQ = $scope.CucHQ.ten;
+				} else{							
+					self.tenCucHQ = $scope.ChiCucHQ.ten;
+				}
+    			$scope.showReport1 = false;
+    			$rootScope.showLoading = false;
+    			console.log('Controller GetSoLieuChiTieuTK10@length respone123:'+self.soLieuChiTieuTK[0].data_ky.data.length);
+    			},
+    			function(errResponse){
+    				console.error(errResponse);
+    				$rootScope.showLoading = false;
+    			}
+    		); 
+        }
+        
+        function GetNewPage() {
+        	self.lstTrangThai = [{
+    	                	    "ma": "SB",
+    	                	    "ten": "Sơ bộ"
+    	                	  },
+    	                	  {
+    	                	    "ma": "DC",
+    	                	    "ten": "Điều chỉnh"
+    	                	  },
+    	                	  {
+    	                	    "ma": "CT",
+    	                	    "ten": "Chính thức"
+    	                	  }];
+        	$scope.trangThai = self.lstTrangThai[0];
+        	$scope.radioBox = 'KY';
+        }                                           
+        
+        $rootScope.$on('childEmit', function(event, data) {
+            console.log(data);
+            self.nhx = data;
+          });
+        
+        $scope.getBaoCao = function() {            
+        	GetSoLieuChiTieuTK10();
+//        	self.tenCucHQ = $scope.CucHQ.ten;
+        	console.log('self.tenCucHQ:'+self.tenCucHQ);
+        };
+        
+        $scope.showChart = function() {        	
+        	self.linkAPI_LuongTK = contextPath+'/pbtk/API_dienBienSLDoanhNghiepFDI_ky?nhx='
+        		+self.nhx+'&trangThai='+$scope.trangThai.ma+'&radioBox='+$scope.radioBox+'&maCucHQ='+$scope.CucHQ.ma+'&maChicucHQ='+$scope.ChiCucHQ.ma+'&loaiTK=luongTK';
+            self.linkAPI_DongiaTK = contextPath+'/pbtk/API_dienBienSLDoanhNghiepFDI_ky?nhx='
+            	+self.nhx+'&trangThai='+$scope.trangThai.ma+'&radioBox='+$scope.radioBox+'&maCucHQ='+$scope.CucHQ.ma+'&maChicucHQ='+$scope.ChiCucHQ.ma+'&loaiTK=dongiaTK';
+            self.linkAPI_TrigiaTK = contextPath+'/pbtk/API_dienBienSLDoanhNghiepFDI_ky?nhx='
+            	+self.nhx+'&trangThai='+$scope.trangThai.ma+'&radioBox='+$scope.radioBox+'&maCucHQ='+$scope.CucHQ.ma+'&maChicucHQ='+$scope.ChiCucHQ.ma+'&loaiTK=trigiaTK';
+                    	
+            console.log('showChart@self.linkAPI_LuongTK:'+self.linkAPI_LuongTK+'||'+self.linkAPI_DongiaTK+'||'+self.linkAPI_TrigiaTK);
+            $scope.showChart2 = true;  
+            self.showChart1 = true;
+        };
+        
+        $scope.clickDongButton = function() {
+        	self.showChart1 = false;
+        };
+        
+        $scope.doExport = function(){
+    		var param = {};
+        	param["trangthai"] = $scope.trangThai.ma == null ? '' : $scope.trangThai.ma;
+        	param["maCucHQ"] = $scope.CucHQ.ma;
+        	param["maChiCucHQ"] = $scope.ChiCucHQ.ma;
+        	param["nhx"] = self.nhx;
+        	console.log('$scope.trangThai.ma:'+$scope.trangThai.ma+'|self.nhx:'+self.nhx);   
+        	dienBienSLDoanhNghiepFDIService.doExport(param);
+    	};
+    	
+    	$scope.btnPhanHoi_Click = function () {
+			$rootScope.$emit('PhanHoiQuyTrinhXLDL', self.loai_bc);
+		};
+    	
+    	function feedBack(){
+    		console.log('Id to be edited');            
+            self.showPopup(self.soLieuChiTieuTK);
+    	}    	
+    	
+    	function showPopup(grid){
+    		var modalInstance = $uibModal.open({
+    			animation: self.animationsEnabled,
+    			ariaLabelledBy: 'modal-title',
+    			ariaDescribedBy: 'modal-body',
+    			templateUrl: 'phanHoiQuyTrinhXLDL',
+    			controller: 'dienBienSLDoanhNghiepFDIModalCtrl',
+    			controllerAs: 'self',
+    			resolve: {
+    				grid : function() {
+						return grid;
+					}
+    			}
+    		});
+    		
+    		modalInstance.result.then(function (data) {
+//				if(data == 'success'){
+//					self.currentPage = 1;
+//					search(self.currentPage, self.pageSize);
+//				}else{
+//					console.log('Có lỗi xảy ra');
+//				}
+		    }, function () {
+		    	});
+    	} 
+}
+
+angular.module('myApp').controller('dienBienSLDoanhNghiepFDIModalCtrl', dienBienSLDoanhNghiepFDIModalCtrl);
+dienBienSLDoanhNghiepFDIModalCtrl.$inject = ['$uibModalInstance', 'grid', 'dienBienSLDoanhNghiepFDIService']
+function dienBienSLDoanhNghiepFDIModalCtrl($uibModalInstance, grid, dienBienSLDoanhNghiepFDIService) {
+	var self = this;
+//	self.soLieuChiTieuTK = angular.copy(grid);
+	self.cancel = function () {
+	    $uibModalInstance.dismiss('cancel');
+	};	  
+	
+}

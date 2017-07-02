@@ -1,0 +1,109 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.tkhq.cmc.model;
+
+import java.io.Serializable;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ *
+ * @author TUANDIEP
+ */
+@Entity
+@Table(name = "TBS_QTAC_CUAKHAU_DB_VN")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "TbsQtacCuakhauDbVn.findAll", query = "SELECT t FROM TbsQtacCuakhauDbVn t")
+    , @NamedQuery(name = "TbsQtacCuakhauDbVn.findById", query = "SELECT t FROM TbsQtacCuakhauDbVn t WHERE t.id = :id")
+    , @NamedQuery(name = "TbsQtacCuakhauDbVn.findByMacuakhau", query = "SELECT t FROM TbsQtacCuakhauDbVn t WHERE t.macuakhau = :macuakhau")
+    , @NamedQuery(name = "TbsQtacCuakhauDbVn.findByManuocden", query = "SELECT t FROM TbsQtacCuakhauDbVn t WHERE t.manuocden = :manuocden")
+    , @NamedQuery(name = "TbsQtacCuakhauDbVn.findByMacuakhauden", query = "SELECT t FROM TbsQtacCuakhauDbVn t WHERE t.macuakhauden = :macuakhauden")})
+public class TbsQtacCuakhauDbVn implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @Column(name = "ID")
+    private Long id;
+    @Column(name = "MACUAKHAU")
+    private String macuakhau;
+    @Column(name = "MANUOCDEN")
+    private String manuocden;
+    @Column(name = "MACUAKHAUDEN")
+    private String macuakhauden;
+
+    public TbsQtacCuakhauDbVn() {
+    }
+
+    public TbsQtacCuakhauDbVn(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getMacuakhau() {
+        return macuakhau;
+    }
+
+    public void setMacuakhau(String macuakhau) {
+        this.macuakhau = macuakhau;
+    }
+
+    public String getManuocden() {
+        return manuocden;
+    }
+
+    public void setManuocden(String manuocden) {
+        this.manuocden = manuocden;
+    }
+
+    public String getMacuakhauden() {
+        return macuakhauden;
+    }
+
+    public void setMacuakhauden(String macuakhauden) {
+        this.macuakhauden = macuakhauden;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof TbsQtacCuakhauDbVn)) {
+            return false;
+        }
+        TbsQtacCuakhauDbVn other = (TbsQtacCuakhauDbVn) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "com.tkhq.cmc.model.TbsQtacCuakhauDbVn[ id=" + id + " ]";
+    }
+    
+}

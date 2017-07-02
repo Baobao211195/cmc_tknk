@@ -1,0 +1,168 @@
+package com.tkhq.cmc.dto;
+
+import java.util.Date;
+
+import org.springframework.web.multipart.MultipartFile;
+
+public class ImportFilePhiCauTrucDto {
+	
+	private int fileId ;
+	
+	private String fileTitle;
+	
+	private String fileUrl;
+	
+	private String fileName;
+	
+	private String typeNhapXuat;
+	
+	private String fileDescription;
+	
+	private byte [] fileSize;
+	
+	private String updateLoadDate;
+	
+	private String nguoiTaiLen;
+	
+	private MultipartFile fileUpLoad;
+
+	/**
+	 * @return the fileId
+	 */
+	public int getFileId() {
+		return fileId;
+	}
+
+	/**
+	 * @param fileId the fileId to set
+	 */
+	public void setFileId(int fileId) {
+		this.fileId = fileId;
+	}
+
+	/**
+	 * @return the fileTitle
+	 */
+	public String getFileTitle() {
+		return fileTitle;
+	}
+
+	/**
+	 * @param fileTitle the fileTitle to set
+	 */
+	public void setFileTitle(String fileTitle) {
+		this.fileTitle = fileTitle;
+	}
+
+	/**
+	 * @return the fileUrl
+	 */
+	public String getFileUrl() {
+		return fileUrl;
+	}
+
+	/**
+	 * @param fileUrl the fileUrl to set
+	 */
+	public void setFileUrl(String fileUrl) {
+		this.fileUrl = fileUrl;
+	}
+
+	/**
+	 * @return the fileName
+	 */
+	public String getFileName() {
+		return fileName;
+	}
+
+	/**
+	 * @param fileName the fileName to set
+	 */
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	/**
+	 * @return the typeNhapXuat
+	 */
+	public String getTypeNhapXuat() {
+		return typeNhapXuat;
+	}
+
+	/**
+	 * @param typeNhapXuat the typeNhapXuat to set
+	 */
+	public void setTypeNhapXuat(String typeNhapXuat) {
+		this.typeNhapXuat = typeNhapXuat;
+	}
+
+	/**
+	 * @return the fileDescription
+	 */
+	public String getFileDescription() {
+		return fileDescription;
+	}
+
+	/**
+	 * @param fileDescription the fileDescription to set
+	 */
+	public void setFileDescription(String fileDescription) {
+		this.fileDescription = fileDescription;
+	}
+
+	/**
+	 * @return the fileSize
+	 */
+	public byte[] getFileSize() {
+		return fileSize;
+	}
+
+	/**
+	 * @param fileSize the fileSize to set
+	 */
+	public void setFileSize(byte[] fileSize) {
+		this.fileSize = fileSize;
+	}
+
+	/**
+	 * @return the updateLoadDate
+	 */
+	public String getUpdateLoadDate() {
+		return updateLoadDate;
+	}
+
+	/**
+	 * @param updateLoadDate the updateLoadDate to set
+	 */
+	public void setUpdateLoadDate(String updateLoadDate) {
+		this.updateLoadDate = updateLoadDate;
+	}
+
+	/**
+	 * @return the nguoiTaiLen
+	 */
+	public String getNguoiTaiLen() {
+		return nguoiTaiLen;
+	}
+
+	/**
+	 * @param nguoiTaiLen the nguoiTaiLen to set
+	 */
+	public void setNguoiTaiLen(String nguoiTaiLen) {
+		this.nguoiTaiLen = nguoiTaiLen;
+	}
+
+	/**
+	 * @return the fileUpLoad
+	 */
+	public MultipartFile getFileUpLoad() {
+		return fileUpLoad;
+	}
+
+	/**
+	 * @param fileUpLoad the fileUpLoad to set
+	 */
+	public void setFileUpLoad(MultipartFile fileUpLoad) {
+		this.fileUpLoad = fileUpLoad;
+	}
+}

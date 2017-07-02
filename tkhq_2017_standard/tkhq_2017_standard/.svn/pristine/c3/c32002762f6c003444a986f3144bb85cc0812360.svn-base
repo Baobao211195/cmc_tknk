@@ -1,0 +1,396 @@
+package com.tkhq.global.dao;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.jdbc.ReturningWork;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tkhq.cmc.utils.Utils;
+import com.tkhq.global.model.DonviHQ;
+import com.tkhq.global.model.DanhMucChung;
+import com.tkhq.global.model.MatHangChuYeu;
+import com.tkhq.global.model.TinhTP;
+
+import oracle.jdbc.OracleTypes;
+
+@Repository
+@Transactional
+public class DanhMucDaoImpl extends GlobalBaseDao implements DanhMucDao {
+
+	@Override
+	public List<TinhTP> getAllTinhTP() {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<TinhTP>>() {
+
+			@Override
+			public List<TinhTP> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn.prepareCall("{call " + Utils.readProperties("GetAllTinhTP") + "(?)}");
+				statement.registerOutParameter(1, OracleTypes.CURSOR);
+				statement.execute();
+				ResultSet rs = (ResultSet) statement.getObject(1);
+				List<TinhTP> list = new ArrayList<TinhTP>();
+				while (rs.next()) {
+					list.add(new TinhTP(rs.getString("ma"), rs.getString("ten")));
+				}
+				rs.close();
+				rs = null;
+				return list;
+			}
+		});
+	}
+
+	@Override
+	public List<DonviHQ> getAllCucHQ(final String requestingUsername) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<DonviHQ>>() {
+
+			@Override
+			public List<DonviHQ> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn.prepareCall("{call " + Utils.readProperties("GETALL_CUCHQ") + "(?, ?)}");
+				statement.setString(1, requestingUsername);
+				statement.registerOutParameter(2, OracleTypes.CURSOR);
+				statement.execute();
+				ResultSet rs = (ResultSet) statement.getObject(2);
+				List<DonviHQ> list = new ArrayList<DonviHQ>();
+				while (rs.next()) {
+					list.add(new DonviHQ(rs.getString("ma"), rs.getString("ten")));
+				}
+				rs.close();
+				rs = null;
+				return list;
+			}
+		});
+	}
+
+	@Override
+	public List<DonviHQ> getAllChiCucHQByParentCode(final String maCucHQ, final String requestingUsername) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<DonviHQ>>() {
+
+			@Override
+			public List<DonviHQ> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn.prepareCall("{call " + Utils.readProperties("GETALL_CHICUCHQ_BYPARENTCODE") + "(?,?, ?)}");
+				statement.setString(1, maCucHQ);
+				statement.setString(2, requestingUsername);
+				statement.registerOutParameter(3, OracleTypes.CURSOR);
+				statement.execute();
+				ResultSet rs = (ResultSet) statement.getObject(3);
+				List<DonviHQ> list = new ArrayList<DonviHQ>();
+				while (rs.next()) {
+					list.add(new DonviHQ(rs.getString("ma"), rs.getString("ten")));
+				}
+				rs.close();
+				rs = null;
+				return list;
+			}
+		});
+	}
+	
+	@Override
+	public List<MatHangChuYeu> getDSMatHangChuYeu(final String nhx) {
+
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<MatHangChuYeu>>() {
+
+			@Override
+			public List<MatHangChuYeu> execute(Connection conn)
+					throws SQLException {
+				CallableStatement statement = null;
+				List<MatHangChuYeu> list = new ArrayList<MatHangChuYeu>();
+				statement = conn.prepareCall("{call " + Utils.readProperties("GetDSMHChuYeuBIEU1") + "(?,?)}");
+				statement.setString(1, nhx);
+				statement.registerOutParameter(2, OracleTypes.CURSOR);
+				statement.execute();
+				ResultSet rs = (ResultSet)statement.getObject(2);
+				while(rs.next()){
+					MatHangChuYeu record = 
+							new MatHangChuYeu(rs.getString("ma"), rs.getString("ten"));
+					list.add(record);
+				}
+				return list;
+			}
+		});
+	}
+
+	@Override
+	public List<DanhMucChung> getDSMatHangChuYeuBIEU7(final String nhx) {
+
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<DanhMucChung>>() {
+
+			@Override
+			public List<DanhMucChung> execute(Connection conn)
+					throws SQLException {
+				CallableStatement statement = null;
+				List<DanhMucChung> list = new ArrayList<DanhMucChung>();
+				statement = conn.prepareCall("{call " + Utils.readProperties("GetDSMHChuYeuBIEU7") + "(?,?)}");
+				statement.setString(1, nhx);
+				statement.registerOutParameter(2, OracleTypes.CURSOR);
+				statement.execute();
+				ResultSet rs = (ResultSet)statement.getObject(2);
+				while(rs.next()){
+					DanhMucChung record = 
+							new DanhMucChung(rs.getString("ma"), rs.getString("ten"));
+					list.add(record);
+				}
+				return list;
+			}
+		});
+	}
+	@Override
+	public List<DanhMucChung> getAllNhomPTVT() {
+		// TODO Auto-generated method stub
+		
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<DanhMucChung>>() {
+
+			@Override
+			public List<DanhMucChung> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn.prepareCall("{call " + Utils.readProperties("GetAllNhomPTVT") + "(?)}");
+				statement.registerOutParameter(1, OracleTypes.CURSOR);
+				statement.execute();
+				ResultSet rs = (ResultSet) statement.getObject(1);
+				List<DanhMucChung> list = new ArrayList<DanhMucChung>();
+				while (rs.next()) {
+					list.add(new DanhMucChung(rs.getString("ma"), rs.getString("ten")));
+				}
+				rs.close();
+				rs = null;
+				return list;
+			}
+		});
+	}
+
+	@Override
+	public List<DanhMucChung> getAllPTVTByNhomPTVT(final String maNhomPTVT) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<DanhMucChung>>() {
+
+			@Override
+			public List<DanhMucChung> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn.prepareCall("{call " + Utils.readProperties("GetAllPTVTByNhomPTVT") + "(?, ?)}");
+				statement.setString(1, maNhomPTVT);
+				statement.registerOutParameter(2, OracleTypes.CURSOR);
+				statement.execute();
+				ResultSet rs = (ResultSet) statement.getObject(2);
+				List<DanhMucChung> list = new ArrayList<DanhMucChung>();
+				while (rs.next()) {
+					list.add(new DanhMucChung(rs.getString("ma"), rs.getString("ten")));
+				}
+				rs.close();
+				rs = null;
+				return list;
+			}
+		});
+	}
+
+	@Override
+	public List<DanhMucChung> getAllPhan() {
+		// TODO Auto-generated method stub
+		
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<DanhMucChung>>() {
+
+			@Override
+			public List<DanhMucChung> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn.prepareCall("{call " + Utils.readProperties("GETALL_PHAN") + "(?)}");
+				statement.registerOutParameter(1, OracleTypes.CURSOR);
+				statement.execute();
+				ResultSet rs = (ResultSet) statement.getObject(1);
+				List<DanhMucChung> list = new ArrayList<DanhMucChung>();
+				while (rs.next()) {
+					list.add(new DanhMucChung(rs.getString("ma"), rs.getString("ten")));
+				}
+				rs.close();
+				rs = null;
+				return list;
+			}
+		});
+	}
+
+	@Override
+	public List<DanhMucChung> getAllChuong() {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<DanhMucChung>>() {
+
+			@Override
+			public List<DanhMucChung> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn.prepareCall("{call " + Utils.readProperties("GETALL_CHUONG") + "(?)}");
+				statement.registerOutParameter(1, OracleTypes.CURSOR);
+				statement.execute();
+				ResultSet rs = (ResultSet) statement.getObject(1);
+				List<DanhMucChung> list = new ArrayList<DanhMucChung>();
+				while (rs.next()) {
+					list.add(new DanhMucChung(rs.getString("ma"), rs.getString("ten")));
+				}
+				rs.close();
+				rs = null;
+				return list;
+			}
+		});
+	}
+
+	@Override
+	public List<DanhMucChung> getAllNhomByChuong(final String chuong) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<DanhMucChung>>() {
+
+			@Override
+			public List<DanhMucChung> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn.prepareCall("{call " + Utils.readProperties("GETALL_NHOM_BY_CHUONG") + "(?, ?)}");
+				statement.setString(1, chuong);
+				statement.registerOutParameter(2, OracleTypes.CURSOR);
+				statement.execute();
+				ResultSet rs = (ResultSet) statement.getObject(2);
+				List<DanhMucChung> list = new ArrayList<DanhMucChung>();
+				while (rs.next()) {
+					list.add(new DanhMucChung(rs.getString("ma"), rs.getString("ten")));
+				}
+				rs.close();
+				rs = null;
+				return list;
+			}
+		});
+	}
+
+	@Override
+	public List<DanhMucChung> getAllKhoiKT() {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<DanhMucChung>>() {
+
+			@Override
+			public List<DanhMucChung> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn.prepareCall("{call " + Utils.readProperties("GETALL_KHOIKT") + "(?)}");
+				statement.registerOutParameter(1, OracleTypes.CURSOR);
+				statement.execute();
+				ResultSet rs = (ResultSet) statement.getObject(1);
+				List<DanhMucChung> list = new ArrayList<DanhMucChung>();
+				while (rs.next()) {
+					list.add(new DanhMucChung(rs.getString("ma"), rs.getString("ten")));
+				}
+				rs.close();
+				rs = null;
+				return list;
+			}
+		});
+	}
+
+	@Override
+	public List<DanhMucChung> getAllNuocByKhoiKT(final String khoi) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<DanhMucChung>>() {
+
+			@Override
+			public List<DanhMucChung> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn.prepareCall("{call " + Utils.readProperties("GETALL_NUOC_BY_KHOIKT") + "(?, ?)}");
+				statement.setString(1, khoi);
+				statement.registerOutParameter(2, OracleTypes.CURSOR);
+				statement.execute();
+				ResultSet rs = (ResultSet) statement.getObject(2);
+				List<DanhMucChung> list = new ArrayList<DanhMucChung>();
+				while (rs.next()) {
+					list.add(new DanhMucChung(rs.getString("ma"), rs.getString("ten")));
+				}
+				rs.close();
+				rs = null;
+				return list;
+			}
+		});
+	}
+
+	@Override
+	public List<DanhMucChung> getAllThiTruong() {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<DanhMucChung>>() {
+
+			@Override
+			public List<DanhMucChung> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn.prepareCall("{call " + Utils.readProperties("GETALL_THITRUONG") + "(?)}");
+				statement.registerOutParameter(1, OracleTypes.CURSOR);
+				statement.execute();
+				ResultSet rs = (ResultSet) statement.getObject(1);
+				List<DanhMucChung> list = new ArrayList<DanhMucChung>();
+				while (rs.next()) {
+					list.add(new DanhMucChung(rs.getString("ma"), rs.getString("ten")));
+				}
+				rs.close();
+				rs = null;
+				return list;
+			}
+		});
+	}
+
+	@Override
+	public List<DanhMucChung> getAllCuaKhau() {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<DanhMucChung>>() {
+
+			@Override
+			public List<DanhMucChung> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn.prepareCall("{call " + Utils.readProperties("GETALL_CUAKHAU") + "(?)}");
+				statement.registerOutParameter(1, OracleTypes.CURSOR);
+				statement.execute();
+				ResultSet rs = (ResultSet) statement.getObject(1);
+				List<DanhMucChung> list = new ArrayList<DanhMucChung>();
+				while (rs.next()) {
+					list.add(new DanhMucChung(rs.getString("ma"), rs.getString("ten")));
+				}
+				rs.close();
+				rs = null;
+				return list;
+			}
+		});
+	}
+
+	@Override
+	public List<DanhMucChung> getAllLoaiHinh(final String nhx) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<DanhMucChung>>() {
+
+			@Override
+			public List<DanhMucChung> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn.prepareCall("{call " + Utils.readProperties("GETALL_LOAIHINH") + "(?, ?)}");
+				statement.setString(1, nhx);
+				statement.registerOutParameter(2, OracleTypes.CURSOR);
+				statement.execute();
+				ResultSet rs = (ResultSet) statement.getObject(2);
+				List<DanhMucChung> list = new ArrayList<DanhMucChung>();
+				while (rs.next()) {
+					list.add(new DanhMucChung(rs.getString("ma"), rs.getString("ten")));
+				}
+				rs.close();
+				rs = null;
+				return list;
+			}
+		});
+	}
+
+}

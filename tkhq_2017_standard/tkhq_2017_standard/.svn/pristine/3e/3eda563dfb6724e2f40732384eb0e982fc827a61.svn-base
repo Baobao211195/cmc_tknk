@@ -1,0 +1,324 @@
+package com.tkhq.cmc.controller.rest;
+
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.tkhq.cmc.common.CExcel;
+import com.tkhq.cmc.common.Constants;
+import com.tkhq.cmc.model.TbdSysUsers;
+import com.tkhq.cmc.model.Tbd_LichCB_TTTK;
+import com.tkhq.cmc.model.Tbs_dmbaocao;
+import com.tkhq.cmc.services.Tbs_dmBaoCaoService;
+import com.tkhq.cmc.services.Tbd_LichCBTTTKService;
+import com.tkhq.cmc.utils.Utils;
+
+@RestController
+@RequestMapping(value="/LichCBTTTK")
+public class LichCBTTTKRestController {
+	@Autowired
+	Tbs_dmBaoCaoService tbsDmBaoCaoService;
+	@Autowired
+	Tbd_LichCBTTTKService tbdLichCBTTTKService;
+	
+	@RequestMapping(value="/getLstLoaiBC", method = RequestMethod.GET)
+	public ResponseEntity<List<Tbs_dmbaocao>> getLstLoaiBC(String loaiKyBC){
+		List<Tbs_dmbaocao> list = tbsDmBaoCaoService.getBCByLoaiKy(loaiKyBC);
+		
+		if(list == null){
+			return new ResponseEntity<List<Tbs_dmbaocao>>(HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<List<Tbs_dmbaocao>>(list, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/getLstNSD", method = RequestMethod.GET)
+	public ResponseEntity<List<TbdSysUsers>> getLstNSD(){
+		List<TbdSysUsers> list = tbdLichCBTTTKService.getLstUser();
+		
+		if(list == null){
+			return new ResponseEntity<List<TbdSysUsers>>(HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<List<TbdSysUsers>>(list, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/getScheduleInfo", method = RequestMethod.GET)
+	public ResponseEntity<List<Map<String, Object>>> getScheduleInfo(String namCB, String loaiLichCB){
+		List<Tbd_LichCB_TTTK> lstResults = new ArrayList<Tbd_LichCB_TTTK>();
+		List<Map<String, Object>> returns = new ArrayList<Map<String, Object>>();
+		Map<String, Object> data = new HashMap<String, Object>();
+		List<Tbd_LichCB_TTTK> lstInMonth = new ArrayList<Tbd_LichCB_TTTK>();
+		
+		lstResults = tbdLichCBTTTKService.search(namCB, loaiLichCB);
+		
+		Iterator<Tbd_LichCB_TTTK> iterator = lstResults.iterator();
+		
+		while(lstResults.size() > 0){
+			data = new HashMap<String, Object>();
+			lstInMonth = new ArrayList<Tbd_LichCB_TTTK>();
+			iterator = lstResults.iterator();
+			
+			while(iterator.hasNext()){
+				Tbd_LichCB_TTTK entity = iterator.next();
+				
+				if(lstInMonth.size() == 0){
+					lstInMonth.add(entity);
+					if(!data.containsKey("thangBC")){
+						data.put("thangBC", "Tháng " + entity.getThangBC() + "/" + entity.getNamCB());
+					}
+					iterator.remove();
+				}
+				else{
+					if(!lstInMonth.contains(entity) && lstInMonth.get(0).getThangBC().equals(entity.getThangBC())){
+						lstInMonth.add(entity);
+						
+						if(!data.containsKey("thangBC")){
+							data.put("thangBC", "Tháng" + entity.getThangBC() + "/" + entity.getNamCB());
+						}
+						iterator.remove();
+					}
+				}
+			}
+			
+			data.put("dataMonth", lstInMonth);
+			returns.add(data);
+		}
+		
+		return new ResponseEntity<List<Map<String, Object>>>(returns, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+    public ResponseEntity<String> createInfo(@RequestBody Hashtable<String, String> param,
+    		UriComponentsBuilder ucBuilder) {
+        
+		Tbd_LichCB_TTTK entity = new Tbd_LichCB_TTTK();
+        
+        try{
+        	if(param.get("loaiLichCB").equalsIgnoreCase("CT")){
+				entity.setKyBC(Integer.valueOf(param.get("ky")));
+				entity.setThangBC(Integer.valueOf(param.get("thang")));
+				entity.setQuyBC(Integer.valueOf(param.get("quy")));
+        	}
+        	else{
+        		entity.setLoaiBCNB(param.get("loaiBCNB"));
+        	}
+        	entity.setNamCB(Utils.escapeNull(param.get("namCB")));
+        	entity.setCoquanCB(param.get("coquanCB"));
+        	entity.setHinhthucCB(param.get("hinhthucCB"));
+        	entity.setFormatFileDL(param.get("formatFile"));
+        	entity.setNiengiamTK(param.get("niengiamTK"));
+        	entity.setLoaiBCCB(param.get("loaiBCCB"));
+        	entity.setMaLoaiBC(param.get("maLoaiBC"));
+        	entity.setSolieuSB(Utils.getSqlDate(Utils.convertStringtoDate(param.get("solieuSB"), Constants.DATE_FORMAT_1)));
+        	entity.setSolieu6TDN(Utils.getSqlDate(Utils.convertStringtoDate(param.get("solieu6TDN"), Constants.DATE_FORMAT_1)));
+        	entity.setSolieuCT(Utils.getSqlDate(Utils.convertStringtoDate(param.get("solieuCT"), Constants.DATE_FORMAT_1)));
+        	//entity.setTbdSysUser(new TbdSysUsers(Integer.valueOf(param.get("userId"))));
+        	entity.setUserId(Integer.valueOf(param.get("userId")));
+        	entity.setThangBC(Integer.valueOf(param.get("thangBC")));
+        	entity.setLoaiLichCB(param.get("loaiLichCB"));
+        
+        	tbdLichCBTTTKService.insert(entity);
+        }catch(Exception ex){
+        	ex.printStackTrace();
+        	return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+ 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ucBuilder.path("/LichCBTTTK/{lichCBTTId}").buildAndExpand(entity.getLichCBTTId()).toUri());
+        return new ResponseEntity<String>(headers, HttpStatus.CREATED);
+    }
+	
+	@RequestMapping(value = "/updInfo", method = RequestMethod.POST)
+    public ResponseEntity<Void> updateInfo(@RequestBody Hashtable<String, String> param) {
+         
+		Tbd_LichCB_TTTK entity = tbdLichCBTTTKService.findById(Integer.valueOf(param.get("lichCBTTId")));
+         
+        if (entity == null) {
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        }
+ 
+        try{
+        	entity.setNamCB(Utils.escapeNull(param.get("namCB")));
+        	entity.setCoquanCB(param.get("coquanCB"));
+        	entity.setHinhthucCB(param.get("hinhthucCB"));
+        	entity.setFormatFileDL(param.get("formatFile"));
+        	entity.setNiengiamTK(param.get("niengiamTK"));
+        	entity.setLoaiBCCB(param.get("loaiBCCB"));
+        	entity.setMaLoaiBC(param.get("maLoaiBC"));
+        	entity.setSolieuSB(Utils.getSqlDate(Utils.convertStringtoDate(param.get("solieuSB"), Constants.DATE_FORMAT_1)));
+        	entity.setSolieu6TDN(Utils.getSqlDate(Utils.convertStringtoDate(param.get("solieu6TDN"), Constants.DATE_FORMAT_1)));
+        	entity.setSolieuCT(Utils.getSqlDate(Utils.convertStringtoDate(param.get("solieuCT"), Constants.DATE_FORMAT_1)));
+        	entity.getTbdSysUser().setUserId(Integer.valueOf(param.get("userId")));
+        	entity.setThangBC(Integer.valueOf(param.get("thangBC")));
+        	
+        	tbdLichCBTTTKService.update(entity);
+        }catch(Exception ex){
+        	ex.printStackTrace();
+        }
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+	
+	@RequestMapping(value = "/doExport", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void doExport(@RequestBody Hashtable<String, String> params, HttpServletResponse response) {
+		String currentDate = Utils.getCurrentDate();
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		String excelDir = loader.getResource("ExcelTemplates/").getPath();
+		String excelFilePath = excelDir + "\\LichCBTTTK.xls";
+		String fileName = String.format("Lịch công bố thông tin thống kê_%s.xls", currentDate);
+		
+		List<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		List<Tbd_LichCB_TTTK> lstResults = new ArrayList<Tbd_LichCB_TTTK>();
+		Map<String, Object> data = new HashMap<String, Object>();
+		List<Tbd_LichCB_TTTK> lstInMonth = new ArrayList<Tbd_LichCB_TTTK>();
+		
+		lstResults = tbdLichCBTTTKService.search(params.get("namCB"), params.get("loaiLichCB"));
+		
+		Iterator<Tbd_LichCB_TTTK> iterator = lstResults.iterator();
+		
+		while(lstResults.size() > 0){
+			data = new HashMap<String, Object>();
+			lstInMonth = new ArrayList<Tbd_LichCB_TTTK>();
+			
+			while(iterator.hasNext()){
+				Tbd_LichCB_TTTK entity = iterator.next();
+				
+				if(lstInMonth.size() == 0){
+					lstInMonth.add(entity);
+					if(!data.containsKey("thangBC")){
+						data.put("thangBC", "Tháng " + entity.getThangBC() + "/" + entity.getNamCB());
+					}
+				}
+				else{
+					if(!lstInMonth.contains(entity) && lstInMonth.get(0).getThangBC().equals(entity.getThangBC())){
+						lstInMonth.add(entity);
+						
+						if(!data.containsKey("thangBC")){
+							data.put("thangBC", "Tháng" + entity.getThangBC() + "/" + entity.getNamCB());
+						}
+					}
+				}
+				
+				iterator.remove();
+			}
+			
+			data.put("dataMonth", lstInMonth);
+			listData.add(data);
+		}
+		
+		try{		
+		    //Tao luong doc workbook
+			InputStream is = new FileInputStream(excelFilePath);
+			Workbook workbook = new HSSFWorkbook(is);
+			Sheet sheet = workbook.getSheetAt(0);
+			Cell cell;	//store value of current cell
+			Row row;	//store value of current row
+			
+			List<Tbd_LichCB_TTTK> lstMonthData = new ArrayList<Tbd_LichCB_TTTK>();
+			Tbd_LichCB_TTTK entity = new Tbd_LichCB_TTTK();
+			Map<String, CellStyle> styles = CExcel.createStyles(workbook);
+			
+			Integer colNum = 0;	//position of first column fill data
+			Integer rowNum = 4; //position of first row fill data
+			
+			//fill data to cell
+			for(int i = 0; i < listData.size(); i++){
+				rowNum++;
+				row = sheet.createRow(rowNum);
+				cell = 	row.createCell(colNum);
+				cell.setCellValue("");
+				cell.setCellStyle(styles.get("cell_str"));
+				
+				colNum++;
+				cell = 	row.createCell(colNum);
+				cell.setCellValue(listData.get(i).get("thangBC").toString());
+				cell.setCellStyle(styles.get("cell_str"));
+				
+				for(int j = 0; j < 4; j++){
+					colNum++;
+					cell = 	row.createCell(colNum);
+					cell.setCellValue("");
+					cell.setCellStyle(styles.get("cell_str"));
+				}
+				
+				lstMonthData = (List<Tbd_LichCB_TTTK>)listData.get(i).get("dataMonth");
+				for(int j = 0; j < lstMonthData.size(); j++){
+					entity = lstMonthData.get(j);
+					
+					colNum = 0;
+					rowNum++;
+					row = sheet.createRow(rowNum);
+					cell = row.createCell(colNum);
+					cell.setCellValue(j+1);
+					cell.setCellStyle(styles.get("cell_str_center"));
+					
+					
+					colNum++;
+					cell = row.createCell(colNum);
+					cell.setCellValue(entity.getTbsDmBaocao().getTen());
+					cell.setCellStyle(styles.get("cell_str"));
+					
+					colNum++;
+					cell = row.createCell(colNum);
+					cell.setCellValue(entity.getSolieuSB());
+					cell.setCellStyle(styles.get("cell_str_center"));
+					
+					colNum++;
+					cell = row.createCell(colNum);
+					cell.setCellValue(entity.getSolieu6TDN());
+					cell.setCellStyle(styles.get("cell_str_center"));
+					
+					colNum++;
+					cell = row.createCell(colNum);
+					cell.setCellValue(entity.getSolieuCT());
+					cell.setCellStyle(styles.get("cell_str_center"));
+					
+					colNum++;
+					cell = row.createCell(colNum);
+					cell.setCellValue(entity.getTbdSysUser().getUserName());
+					cell.setCellStyle(styles.get("cell_str_center"));
+				}
+			}
+			
+			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+			
+			//Tao luong ghi
+			ServletOutputStream out = response.getOutputStream();
+			workbook.write(out);
+
+			out.flush();
+			
+			out.close();
+			workbook.close();
+			is.close();	
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
+}

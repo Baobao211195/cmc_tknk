@@ -1,0 +1,15 @@
+package com.tkhq.cmc.services;
+
+import java.util.List;
+
+import com.tkhq.cmc.model.Tbs_dmbaocao;
+
+
+public interface Tbs_dmBaoCaoService {
+
+	List<Tbs_dmbaocao> getDmBcByLoaiBC(Integer ma_loaibc);
+	
+	List<Tbs_dmbaocao> getAllBC();
+	
+	List<Tbs_dmbaocao> getDmBCPhoBienTT(String nhx, Integer[] ma_loaibc);
+}

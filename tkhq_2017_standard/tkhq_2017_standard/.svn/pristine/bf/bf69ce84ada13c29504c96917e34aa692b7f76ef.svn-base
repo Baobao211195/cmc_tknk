@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-06-12T08:56:06 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PhanCongHQ" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b966a959-f366-4cf8-bc58-05dc4cec7b53">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="fullNamePa3" class="java.lang.String">
+		<fieldDescription><![CDATA[fullNamePa3]]></fieldDescription>
+	</field>
+	<field name="matHang" class="java.lang.String">
+		<fieldDescription><![CDATA[matHang]]></fieldDescription>
+	</field>
+	<field name="tenCv" class="java.lang.String">
+		<fieldDescription><![CDATA[tenCv]]></fieldDescription>
+	</field>
+	<field name="userIdPa3" class="java.lang.Long">
+		<fieldDescription><![CDATA[userIdPa3]]></fieldDescription>
+	</field>
+	<field name="userIdPa2" class="java.lang.Long">
+		<fieldDescription><![CDATA[userIdPa2]]></fieldDescription>
+	</field>
+	<field name="denNgay" class="java.util.Date">
+		<fieldDescription><![CDATA[denNgay]]></fieldDescription>
+	</field>
+	<field name="ghiChu" class="java.lang.String">
+		<fieldDescription><![CDATA[ghiChu]]></fieldDescription>
+	</field>
+	<field name="userIdPa1" class="java.lang.Long">
+		<fieldDescription><![CDATA[userIdPa1]]></fieldDescription>
+	</field>
+	<field name="userNamePa3" class="java.lang.String">
+		<fieldDescription><![CDATA[userNamePa3]]></fieldDescription>
+	</field>
+	<field name="fullNamePa1" class="java.lang.String">
+		<fieldDescription><![CDATA[fullNamePa1]]></fieldDescription>
+	</field>
+	<field name="maHq" class="java.lang.String">
+		<fieldDescription><![CDATA[maHq]]></fieldDescription>
+	</field>
+	<field name="userNamePa1" class="java.lang.String">
+		<fieldDescription><![CDATA[userNamePa1]]></fieldDescription>
+	</field>
+	<field name="fullNamePa2" class="java.lang.String">
+		<fieldDescription><![CDATA[fullNamePa2]]></fieldDescription>
+	</field>
+	<field name="userNamePa2" class="java.lang.String">
+		<fieldDescription><![CDATA[userNamePa2]]></fieldDescription>
+	</field>
+	<field name="stt" class="java.lang.Long">
+		<fieldDescription><![CDATA[stt]]></fieldDescription>
+	</field>
+	<field name="maCv" class="java.lang.String">
+		<fieldDescription><![CDATA[maCv]]></fieldDescription>
+	</field>
+	<field name="tenHq" class="java.lang.String">
+		<fieldDescription><![CDATA[tenHq]]></fieldDescription>
+	</field>
+	<field name="tuNgay" class="java.util.Date">
+		<fieldDescription><![CDATA[tuNgay]]></fieldDescription>
+	</field>
+	<field name="maThke" class="java.lang.String">
+		<fieldDescription><![CDATA[maThke]]></fieldDescription>
+	</field>
+	<field name="nhx" class="java.lang.String">
+		<fieldDescription><![CDATA[nhx]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="46" splitType="Stretch">
+			<staticText>
+				<reportElement x="80" y="0" width="400" height="46" uuid="3945a6c3-e8d0-4dc4-805f-2d4e47f5b144"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="22"/>
+				</textElement>
+				<text><![CDATA[Báo cáo phân công công việc]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="180" y="0" width="200" height="30" uuid="a3aecbce-eca7-422a-a4cb-04358a28c6a8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Từ ngày..........đến ngày...........]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="-20" y="0" width="20" height="50" uuid="7f10c434-63c0-4f75-aa97-b1d116954409"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[STT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="80" height="50" uuid="62a067e3-176e-4fe7-8c59-96e1bbfdc9bb"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Tên công việc]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="0" width="60" height="50" uuid="ea3bddc2-9718-4389-aa69-cf2798cc68ca"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Tên mặt hàng]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="0" width="50" height="50" uuid="f99c360a-56b1-49bb-9b92-a1a888cd72f1"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Từ ngày]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="130" y="0" width="50" height="50" uuid="a2c798da-7965-4f64-a427-3ae116df4d46"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Đến ngày]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="0" width="100" height="20" uuid="85939175-f938-4a10-9de2-609ce6e5ae23"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Phương án 1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="20" width="50" height="30" uuid="edcadee4-d74f-4d8c-b493-93c2622c75fa"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Tên đăng nhập]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="20" width="50" height="30" uuid="1d2679ea-99ee-4444-9936-2c89001d730a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Tên đầy đủ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="0" width="100" height="20" uuid="b1e5b9e0-7b72-49a6-bad4-a6adfd0a4db7"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Phương án 2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="0" width="90" height="20" uuid="0ba2c5bb-fce0-4362-b223-d9cc278f277c"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Phương án 3]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="20" width="50" height="30" uuid="b034bc2f-e66e-4829-83a4-c6731b27dfeb"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Tên đầy đủ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="20" width="50" height="30" uuid="cda9ab5c-243e-4ad5-883a-6665d04afb97"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Tên đăng nhập]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="490" y="20" width="40" height="30" uuid="870dbe90-3ecc-4f34-8e7f-f14f0a1b4b11"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Tên đầy đủ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="20" width="50" height="30" uuid="f0c13028-af10-4bf6-8e26-c36ce1e5f2a7"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Tên đăng nhập]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="530" y="0" width="40" height="50" uuid="19324d8e-393d-4882-b367-130e8668ca09"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Ghi chú]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="45" splitType="Stretch">
+			<textField>
+				<reportElement x="-20" y="0" width="20" height="45" uuid="8355a9fe-9e0c-4775-b80b-fd393623fbaf"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="0" width="50" height="45" uuid="9abe745a-68a8-4bed-ac47-75a0571b5510"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tuNgay} == null ? "" : new SimpleDateFormat("dd/MM/yyyy").format($F{tuNgay})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="530" y="0" width="40" height="45" uuid="7092cfc6-3308-4294-bc3f-af369297866b"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ghiChu} == null ? "" : $F{ghiChu} ]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="0" width="50" height="45" uuid="d6ba2957-6e93-4b39-93f1-961434ea2082"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fullNamePa2} == null ? "" : $F{fullNamePa2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="340" y="0" width="50" height="45" uuid="8624016b-a2a7-4eae-8693-940610dae02a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{userNamePa2} == null ? "" : $F{userNamePa2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="0" width="60" height="45" uuid="172967a5-455a-40cd-9214-d4645f5dbf0a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{matHang} == null ? "" : $F{matHang}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="80" height="45" uuid="da089689-fc85-4816-a68d-f9e130473674"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tenCv}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="0" width="50" height="45" uuid="f438ff64-5837-42aa-a6ea-cc2bccffd9d4"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{userNamePa1} == null ? "" : $F{userNamePa1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="290" y="0" width="50" height="45" uuid="f726f003-f14e-4ddc-9191-21e5efe9d133"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fullNamePa1} == null ? "" : $F{fullNamePa1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="0" width="50" height="45" uuid="a652d7cf-74b1-4c8a-a36a-cdcaf5c27d70"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{denNgay} == null ? "" : new SimpleDateFormat("dd/MM/yyyy").format($F{denNgay})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="490" y="0" width="40" height="45" uuid="cc69b72d-a95b-4c95-b98c-6838f23d2d64"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fullNamePa3} == null ? "" : $F{fullNamePa3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="0" width="50" height="45" uuid="d0a9a9f9-f95a-4efe-8153-3166b4a57032"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{userNamePa3} == null ? "" : $F{userNamePa3}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,342 @@
+/**
+ * 
+ */
+'use district;'
+
+angular.module('myApp').controller('Tbs_sysUserController',
+		Tbs_sysUserController);
+Tbs_sysUserController.$inject = [ '$scope', 'Tbs_sysUserService',
+		'pagerService', '$uibModal', '$PopupMessage' ];
+
+function Tbs_sysUserController($scope, Tbs_sysUserService, pagerService,
+		$uibModal, $PopupMessage) {
+	console.log('start Tbs_sysUserController');
+	var self = this;
+	self.lstUser = [];
+	self.lstHQ = [];
+	self.lstCucHQ = [];
+	self.lstChiCuc = [];
+	self.lstNhomNSD = [];
+	self.selectedList = [];
+	self.lstActive = [ {
+		"ma" : "0",
+		"ten" : "Không hoạt động"
+	}, {
+		"ma" : "1",
+		"ten" : "Đang hoạt động"
+	}, {
+		"ma" : "2",
+		"ten" : "Tất cả"
+	} ];
+	$scope.lstActive = [ {
+		"ma" : "0",
+		"ten" : "Không hoạt động"
+	}, {
+		"ma" : "1",
+		"ten" : "Đang hoạt động"
+	} ];
+	self.entity = {
+		groupId : '',
+		username : '',
+		password : '',
+		confirmpassword : '',
+		fullName : '',
+		maHq : '',
+		chucvu : '',
+		workstation : '',
+		emailHQ : '',
+		emailKhac : '',
+		dienthoai : '',
+		didong : '',
+		userdescription : '',
+		isLanhdao : '',
+		active : '',
+		addOrUpdate : ''
+	}
+	self.changeA = changeA;
+	$scope.hideSuccess = true;
+	self.hideError = true;
+	self.hideCF = true;
+	$scope.hidecheckOld = true;
+	$scope.hidecheckcfnewPass = true;
+	$scope.IsMatch = false;
+	$scope.hidenewlikeold = true;
+	self.showPopup = showPopup;
+	self.editRow = editRow;
+	self.remove = remove;
+	self.getNhomNSD = getNhomNSD;
+	self.getlstHQ = getlstHQ;
+	self.getCucHQ = getCucHQ;
+	self.getdsUser = getdsUser;
+	self.doimatkhau = doimatkhau;
+	self.confirmnewpass = confirmnewpass;
+
+	getdsUser();
+	getlstHQ();
+	getCucHQ();
+	$scope.Act = $scope.lstActive[1];
+	$scope.active = self.lstActive[2];
+	$scope.hideErrorMessage = true;
+	// Phân trang
+	$scope.numPerPage = 10;
+	$scope.currentPage = 1;
+	$scope.maxSize = 5;
+	$scope.$watch("currentPage + numPerPage", function() {
+		var begin = (($scope.currentPage - 1) * $scope.numPerPage), end = begin
+				+ $scope.numPerPage;
+		$scope.phantrang = self.lstUser.slice(begin, end);
+	});
+
+	function doimatkhau(username) {
+		var userlogin = self.lstUser.filter(function(el) {
+			return el.username === username;
+		});
+		console.log($scope.oldPass);
+		if (userlogin[0].password === $scope.oldPass) {
+			$scope.hidecheckOld = true;
+			if ($scope.oldPass !== $scope.newPass) {
+				$scope.hidenewlikeold = true;
+				if ($scope.cfPass === $scope.newPass) {
+					$scope.hidecheckcfnewPass = true;
+					userlogin[0].password = $scope.newPass;
+					Tbs_sysUserService.updUser(userlogin[0],
+							userlogin[0].username).then(function(response) {
+						$scope.hideSuccess = false;
+						$scope.getUserByActive();
+						console.log(response);
+					});
+				} else {
+					$scope.hidecheckcfnewPass = false;
+				}
+			}
+			{
+				$scope.hidenewlikeold = false;
+			}
+		} else {
+			$scope.hidecheckOld = false;
+		}
+
+	}
+	$scope.Search = function() {
+		reset();
+		var param = [];
+		if ($scope.active.ma < 2) {
+			param["active"] = $scope.active.ma;
+		}
+		if (!angular.isUndefined($scope.findHQ) && $scope.findHQ.ma != "0") {
+			self.entity.maHq = $scope.findHQ.ma;
+		}
+		self.entity.username = $scope.userName;
+		self.entity.fullName = $scope.fullName;
+		if (!angular.isUndefined($scope.findGroup)
+				&& $scope.findGroup.groupId != 0) {
+			self.entity.groupId = $scope.findGroup.groupId;
+		}
+		Tbs_sysUserService.Search(self.entity).then(function(response) {
+			var array = angular.fromJson(response);
+			self.lstUser = array;
+			$scope.phantrang = self.lstUser.slice(0, 10);
+		})
+	}
+	function getlstHQ() {
+		Tbs_sysUserService.GetHaiQuan().then(function(response) {
+			var array = angular.fromJson(response);
+			self.lstHQ = array;
+			self.lstHQ.splice(0, 0, {
+				"ma" : "0",
+				"ten" : "Vui lòng chọn"
+			});
+			$scope.findHQ = self.lstHQ[0];
+		})
+	}
+	function confirmnewpass() {
+		if ($scope.cfPass == $scope.newPass) {
+			$scope.hideCF = true;
+		} else {
+			$scope.hideCF = false;
+		}
+	}
+	$scope.changeG = function(ma){
+		console.log(ma);
+	}
+	function changeA (ma){
+		console.log(ma);
+	}
+	function getNhomNSD() {
+		var array = [];
+		$scope.lstNhom = [];
+		Tbs_sysUserService.GetNhomNSD().then(function(response) {
+			var array = angular.fromJson(response);
+			for (var int = 0; int < array.length; int++) {
+				$scope.lstNhom.push(array[int]);
+			}
+			$scope.Group = $scope.lstNhom[0];
+			self.lstNhomNSD = array;
+			self.lstNhomNSD.splice(0, 0, {
+				"groupId" : 0,
+				"groupName" : "Vui lòng chọn"
+			});
+			$scope.findGroup = self.lstNhomNSD[0];
+		})
+	}
+	function getdsUser() {
+
+		Tbs_sysUserService.GetDSNguoiDung().then(function(response) {
+			var array = angular.fromJson(response);
+			self.lstUser = array;
+			$scope.phantrang = self.lstUser.slice(0, 10);
+		})
+		getNhomNSD();
+	}
+	$scope.getUserByActive = function() {
+		var active = $scope.active.ma;
+		if (active != 2) {
+			Tbs_sysUserService.getUserByActive(active).then(function(response) {
+				var array = angular.fromJson(response);
+				self.lstUser = array;
+				$scope.phantrang = self.lstUser.slice(0, 10);
+			})
+		} else {
+			getdsUser();
+		}
+	}
+	function reset() {
+		self.entity = {
+			groupId : '',
+			username : '',
+			password : '',
+			confirmpassword : '',
+			fullName : '',
+			maHq : '',
+			chucvu : '',
+			workstation : '',
+			emailHQ : '',
+			emailKhac : '',
+			dienthoai : '',
+			didong : '',
+			userdescription : '',
+			isLanhdao : '',
+			active : '',
+			addOrUpdate : ''
+		};
+		// $scope.myForm.$setPristine(); //reset Form
+	}
+	$scope.addRow = function() {
+		reset(); // Lam moi entity
+		$scope.hidePass = false;
+		self.entity.addOrUpdate = 'add';
+		$scope.Title = "Thêm mới người sử dụng"
+		self.showPopup(self.lstUser, self.entity);
+	};
+
+	function showPopup(grid, row) {
+		$scope.$modalInstance = $uibModal.open({
+			animation : self.animationsEnabled,
+			scope : $scope,
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'themnguoidung'
+		});
+
+	}
+	$scope.saveData = function() {
+		if (typeof $scope.ChiCuc !== "undefined") {
+			self.entity.maHq = $scope.ChiCuc.ma;
+		} else {
+			self.entity.maHq = $scope.cucHQ.ma;
+		}
+		self.entity.active = $scope.Act.ma;
+		console.log($scope.Act.ma);
+		console.log($scope.Group.groupId);
+		self.entity.groupId = $scope.Group.groupId;
+		
+		if (self.entity.addOrUpdate == 'add') {
+			
+			if (self.entity.confirmpassword != self.entity.password) {
+				$scope.IsMatch = true;
+				return false;
+			} else {
+				self.IsMatch = false;
+				console.log('Saving New Row', $scope.Group.groupId);
+				Tbs_sysUserService.crtUser(self.entity).then(
+						function(response) {
+							if (response == 1) {
+								$scope.hideErrorMessage = true;
+								reset();
+								$scope.getUserByActive();
+							} else if (response == 2) {
+								$scope.hideErrorMessage = false;
+							}
+						});
+			}
+		}
+		if (self.entity.addOrUpdate == 'update') {
+			Tbs_sysUserService.updUser(self.entity, self.entity.username).then(
+					function(response) {
+						$scope.Title = "";
+						$scope.$modalInstance.close();
+						$scope.Search();
+						console.log(response);
+					});
+		}
+	}
+	$scope.cancel = function() {
+		$scope.$modalInstance.dismiss('cancel');
+	}
+	function editRow(username) {
+		$scope.hidePass = true;
+		$scope.Title = "Thay đổi thông tin người sử dụng";
+		for (var i = 0; i < self.lstUser.length; i++) {
+			if (self.lstUser[i].username === username) {
+				self.entity = angular.copy(self.lstUser[i]);
+				break;
+			}
+		}
+		self.entity.addOrUpdate = 'update';
+		self.showPopup(self.lstUser, self.entity);
+	}
+	function remove(username) {
+		$scope.Message = "Bạn có muốn xóa người dùng này không ?"
+		$scope.Title = "Xóa người sử dụng ?"
+		$scope.deleteuser = username;
+		$scope.$modalInstance = $uibModal.open({
+			animation : self.animationsEnabled,
+			scope : $scope,
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : '/tkhq_2017_standard/static/dialogs/Confirm_Fix.html'
+		});
+	}
+
+	$scope.Delete = function() {
+		console.log('start delUser');
+		Tbs_sysUserService.delUser($scope.deleteuser).then(function(response) {
+			$scope.$modalInstance.close();
+			$scope.getUserByActive();
+		});
+	}
+	function getCucHQ() {
+		Tbs_sysUserService.GetCucHQ().then(function(response) {
+			var array = angular.fromJson(response);
+			self.lstCucHQ = array;
+			$scope.cucHQ = array[28];
+		})
+
+	}
+	$scope.GetChiCucHQByCuc = function(ma) {
+		console.log(ma);
+		if (ma != '00') {
+			Tbs_sysUserService.GetChiCucHQByCuc(ma).then(function(response) {
+				var array = angular.fromJson(response);
+				array.push({
+					"ma" : "000",
+					"ten" : "--Vui lòng chọn--"
+				})
+				self.lstChiCuc = array;
+				$scope.ChiCuc = array[array.length - 1];
+			});
+		} else {
+			self.lstChiCuc = null;
+		}
+	}
+}

@@ -1,0 +1,57 @@
+App.factory('PhanHoiQuyTrinhXLDLService', [ '$http', '$q', function($http, $q) {
+	return {
+		GetManager: function () {
+			var deferred = $q.defer();
+            $http.get("http://10.224.65.169:8080/tkhq_2017_standard/bcpt/GetManager?username=usercc1")
+            .then(
+                    function (response) {
+                        deferred.resolve(response.data);
+                    },
+                    function(errResponse){
+                        console.error('Có lỗi xảy ra');
+                        deferred.reject(errResponse);
+                    }
+                );
+                
+                return deferred.promise;
+            },
+            GetPhanHoiSoLieuTheoChiTieuThongKe: function (loai_bc) {
+    			var deferred = $q.defer();
+                $http.get("http://10.224.65.169:8080/tkhq_2017_standard/bcpt/GetPhanHoiSoLieuTheoChiTieuThongKe?loai_bc="+ loai_bc)
+                .then(
+                        function (response) {
+                            deferred.resolve(response.data);
+                        },
+                        function(errResponse){
+                            console.error('Có lỗi xảy ra');
+                            deferred.reject(errResponse);
+                        }
+                    );
+                    
+                    return deferred.promise;
+                },
+             PhanHoiSoLieuTheoChiTieuThongKe: function (param) {
+    			var deferred = $q.defer();
+    			var myURL = 'http://10.224.65.169:8080/tkhq_2017_standard/bcpt/PhanHoiSoLieuTheoChiTieuThongKe';
+    			console.log('PhanHoiQuyTrinhXLDLService@PhanHoiSoLieuTheoChiTieuThongKe param'+param.loai_bc);    			
+    			$http({
+    	    		headers: {
+    	    			'Content-Type': 'application/json;charset=utf-8'
+    	    		},
+    	    		method: 'POST',
+    	    		url: myURL+'?loai_bc='+param.loai_bc+'&noidung='+param.noidung
+    	    	})
+                .then(
+                        function (response) {
+                            deferred.resolve(response.data);
+                        },
+                        function(errResponse){
+                            console.error('Có lỗi xảy ra:'+errResponse.data);
+                            deferred.reject(errResponse);
+                        }
+                    );
+                    
+                    return deferred.promise;
+                }
+	}
+} ]);

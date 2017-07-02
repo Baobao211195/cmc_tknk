@@ -1,0 +1,313 @@
+package com.tkhq.cmc.dao;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.jdbc.ReturningWork;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.tkhq.cmc.dto.DuLieuFileCauTrucDto;
+import com.tkhq.cmc.dto.TbdNhapMoiFileDto;
+import com.tkhq.cmc.dto.Tbs_QuocGiaDto;
+import com.tkhq.cmc.dto.UploadFileCauTrucDto;
+import com.tkhq.cmc.utils.Utils;
+
+import oracle.jdbc.internal.OracleTypes;
+
+@Repository
+public class UploadFileCauTrucDAOIplm implements UploadFileCauTrucDAO {
+	
+	@Autowired
+	private SessionFactory sessionFactory;
+	
+	
+	public List<UploadFileCauTrucDto> getListFileCauTruc(final String chuDe, final String typeNhapXuat) {
+		
+		
+		return sessionFactory.getCurrentSession().doReturningWork(
+			new ReturningWork<List<UploadFileCauTrucDto>>() {
+
+				public List<UploadFileCauTrucDto> execute(Connection con) throws SQLException {
+					List<UploadFileCauTrucDto> listFileDto = new ArrayList<UploadFileCauTrucDto>();
+					CallableStatement callStm = con.prepareCall(new StringBuilder()
+													.append("{call ")
+													.append(Utils.readProperties("PK_FILE_CAUTRUC.ts_readFileCauTruc"))
+													.append("(?,?,?)}").toString());
+					callStm.setString(1, chuDe);
+					callStm.setString(2, typeNhapXuat);
+					callStm.registerOutParameter(3, OracleTypes.CURSOR);
+					
+					callStm.execute();
+					
+					ResultSet rs = (ResultSet) callStm.getObject(3);
+					UploadFileCauTrucDto dto = null;
+					while (rs.next()) {
+						dto = new UploadFileCauTrucDto();
+						dto.setFileId(rs.getInt("FILE_ID"));
+						dto.setFileName(rs.getString("FILE_NAME"));
+						dto.setUpdateLoadDate(rs.getDate("NGAY_TAILEN"));
+						dto.setFileDescription(rs.getString("FILE_DESCRIPTION"));
+						dto.setUpdateLoadDate(rs.getDate("NGAY_TAILEN"));
+						dto.setNguoiTaiLen(rs.getString("NGUOI_TAILEN"));
+
+						listFileDto.add(dto);
+					}
+					return listFileDto;
+				}
+			});
+	}
+
+	public UploadFileCauTrucDto getFileCauTrucById(final int fileId) {
+		
+		return sessionFactory.getCurrentSession().doReturningWork(
+			new ReturningWork<UploadFileCauTrucDto>() {
+
+				public UploadFileCauTrucDto execute(Connection con) throws SQLException {
+					CallableStatement callStm = con.prepareCall(new StringBuilder()
+													.append("{call ")
+													.append(Utils.readProperties("PK_FILE_CAUTRUC.ts_readFileCauTrucById"))
+													.append("(?,?)}").toString());
+					callStm.setInt(1, fileId);
+					callStm.registerOutParameter(2, OracleTypes.CURSOR);
+					
+					callStm.execute();
+					
+					ResultSet rs = (ResultSet) callStm.getObject(2);
+					UploadFileCauTrucDto fileDto = null;
+					while (rs.next()) {
+						fileDto = new UploadFileCauTrucDto();
+						fileDto.setFileId(rs.getInt("FILE_ID"));
+						fileDto.setFileUrl(rs.getString("FILE_URL"));
+						fileDto.setFileName(rs.getString("FILE_NAME"));
+						fileDto.setFileDescription(rs.getString("FILE_DESCRIPTION"));
+						fileDto.setUpdateLoadDate(rs.getDate("NGAY_TAILEN"));
+					}
+					return fileDto;
+				}
+			});
+	}
+
+	public int deleteFileCauTruc(final int fileId) {
+
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<Integer>() {
+
+			public Integer execute(Connection con) throws SQLException {
+				CallableStatement callStm = con.prepareCall("{call "
+						+ Utils.readProperties("PK_FILE_CAUTRUC.ts_deleteFileCauTrucById")
+						+ "(?)}");
+				callStm.setInt(1, fileId);
+
+				return callStm.executeUpdate();
+			}
+			
+		});
+	}
+	// Dành cho màn hình upload.
+	@Override
+	public int insertThongTinFileCauTruc (final UploadFileCauTrucDto uploadFileCauTrucDto) {
+		
+		return sessionFactory.getCurrentSession().doReturningWork(
+			new ReturningWork<Integer>() {
+
+				public Integer execute(Connection con) throws SQLException {
+					CallableStatement callStm = con.prepareCall("{call "
+							+ Utils.readProperties("PK_FILE_CAUTRUC.insertThongTinFileCauTruc")
+							+ "(?,?,?,?,?,?,?)}");
+					try {
+						callStm.setString(1, uploadFileCauTrucDto.getFileTitle());
+						callStm.setString(2, uploadFileCauTrucDto.getFileUrl());
+						callStm.setString(3, uploadFileCauTrucDto.getFileName());
+						callStm.setString(4, uploadFileCauTrucDto.getTypeNhapXuat());
+						callStm.setString(5, uploadFileCauTrucDto.getFileDescription());
+						callStm.setString(6, uploadFileCauTrucDto.getNguoiTaiLen());
+						
+						callStm.registerOutParameter(7, OracleTypes.CURSOR);
+						callStm.execute();
+						
+						ResultSet rs = (ResultSet) callStm.getObject(7);
+						UploadFileCauTrucDto dto = null;
+						while (rs.next()) {
+							dto = new UploadFileCauTrucDto();
+							dto.setFileId(rs.getInt("V_OUTID"));
+						}
+						return dto.getFileId();
+					} catch (SQLException e) {
+						return 0;
+					}
+				
+				}
+			});
+	}
+	
+	// Dành cho màn hình thao tác nhập file.
+	@Override
+	public List<TbdNhapMoiFileDto> getListNhapMoiFileDto(final String chuDe, final String typeNhapXuat) {
+		
+		return sessionFactory.getCurrentSession().doReturningWork(
+			new ReturningWork<List<TbdNhapMoiFileDto>>() {
+
+				public List<TbdNhapMoiFileDto> execute(Connection con) throws SQLException {
+					List<TbdNhapMoiFileDto> listFileDto = new ArrayList<TbdNhapMoiFileDto>();
+					CallableStatement callStm = con.prepareCall(new StringBuilder()
+													.append("{call ")
+													.append(Utils.readProperties("PK_FILE_CAUTRUC.ts_readNhapMoiFileInfo"))
+													.append("(?,?,?)}").toString());
+					callStm.setString(1, chuDe);
+					callStm.setString(2, typeNhapXuat);
+					callStm.registerOutParameter(3, OracleTypes.CURSOR);
+					
+					callStm.execute();
+					
+					ResultSet rs = (ResultSet) callStm.getObject(3);
+					TbdNhapMoiFileDto dto = null;
+					while (rs.next()) {
+						dto = new TbdNhapMoiFileDto();
+						dto.setId(rs.getInt("ID"));
+						dto.setChuDe(rs.getString("CHU_DE"));
+						dto.setThang(rs.getString("THANG"));
+						dto.setNam(rs.getString("NAM"));
+						dto.setTenNuoc(rs.getString("TEN_NUOC"));
+						dto.setLuongThang(rs.getInt("LUONG_THANG"));
+						dto.setTriGiaThang(rs.getInt("TRI_GIA_THANG"));
+						dto.setLuongLuyKe(rs.getInt("LUONG_LUY_KE"));
+						dto.setTriGiaLuyKe(rs.getInt("TRI_GIA_LUY_KE"));
+						dto.setTypeNhapXuat(rs.getString("NHX"));
+						dto.setPhuongTienXNCanh(rs.getString("PHUONG_TIEN_XUAT_NHAP_CANH"));
+						listFileDto.add(dto);
+					}
+					return listFileDto;
+				}
+			});
+	}
+
+	@Override
+	public List<DuLieuFileCauTrucDto> getListPhuongTienXuatNhapCanh(final String chuDe, final String typeNhapXuat) {
+		return sessionFactory.getCurrentSession().doReturningWork(
+			new ReturningWork<List<DuLieuFileCauTrucDto>>() {
+
+				public List<DuLieuFileCauTrucDto> execute(Connection con) throws SQLException {
+					List<DuLieuFileCauTrucDto> listFileDto = new ArrayList<DuLieuFileCauTrucDto>();
+					CallableStatement callStm = con.prepareCall(new StringBuilder()
+													.append("{call ")
+													.append(Utils.readProperties("PK_FILE_CAUTRUC.ts_readPhuongTienXNCanh"))
+													.append("(?,?,?)}").toString());
+					callStm.setString(1, chuDe);
+					callStm.setString(2, typeNhapXuat);
+					callStm.registerOutParameter(3, OracleTypes.CURSOR);
+					
+					callStm.execute();
+					
+					ResultSet rs = (ResultSet) callStm.getObject(3);
+					DuLieuFileCauTrucDto dto = null;
+					while (rs.next()) {
+						dto = new DuLieuFileCauTrucDto();
+						dto.setFileId(rs.getInt("FILE_ID"));
+						dto.setLoaiPhuongTien(rs.getString("LOAI_PHUONGTIEN"));
+						listFileDto.add(dto);
+					}
+					return listFileDto;
+				}
+			});
+	}
+
+	@Override
+	public int insertThongTinNhapMoi(final TbdNhapMoiFileDto tbdNhapMoiFileDto) {
+		
+		return sessionFactory.getCurrentSession().doReturningWork(
+			new ReturningWork<Integer>() {
+	
+				public Integer execute(Connection con) throws SQLException {
+					CallableStatement callStm = con.prepareCall("{call "
+							+ Utils.readProperties("PK_FILE_CAUTRUC.ts_insertNhapMoiFile")
+							+ "(?,?,?,?,?,?,?,?,?,?)}");
+					try {
+						callStm.setString(1, tbdNhapMoiFileDto.getChuDe());
+						callStm.setString(2, tbdNhapMoiFileDto.getThang());
+						callStm.setString(3, tbdNhapMoiFileDto.getNam());
+						callStm.setString(4, tbdNhapMoiFileDto.getTenNuoc());
+						callStm.setInt(5, tbdNhapMoiFileDto.getLuongThang());
+						callStm.setInt(6, tbdNhapMoiFileDto.getTriGiaThang());
+						callStm.setInt(7, tbdNhapMoiFileDto.getLuongLuyKe());
+						callStm.setInt(8, tbdNhapMoiFileDto.getTriGiaLuyKe());
+						callStm.setString(9, tbdNhapMoiFileDto.getTypeNhapXuat());
+						callStm.setString(10, tbdNhapMoiFileDto.getPhuongTienXNCanh());
+	
+						return callStm.executeUpdate();
+					} catch (SQLException e) {
+						return 0;
+					}
+				}
+			});
+	}
+
+	@Override
+	public List<Tbs_QuocGiaDto> getlistCountry() {
+		return sessionFactory.getCurrentSession().doReturningWork(
+			new ReturningWork<List<Tbs_QuocGiaDto>>() {
+
+				public List<Tbs_QuocGiaDto> execute(Connection con) throws SQLException {
+					List<Tbs_QuocGiaDto> listCountry = new ArrayList<Tbs_QuocGiaDto>();
+					CallableStatement callStm = con.prepareCall(new StringBuilder()
+													.append("{call ")
+													.append(Utils.readProperties("PK_FILE_CAUTRUC.ts_readQuocGia"))
+													.append("(?)}").toString());
+					callStm.registerOutParameter(1, OracleTypes.CURSOR);
+					
+					callStm.execute();
+					
+					ResultSet rs = (ResultSet) callStm.getObject(1);
+					Tbs_QuocGiaDto dto = null;
+					while (rs.next()) {
+						dto = new Tbs_QuocGiaDto();
+						dto.setMaNuoc(rs.getString("MA_NUOC"));
+						dto.setTenNuoc(rs.getString("TEN_NUOC"));
+						listCountry.add(dto);
+					}
+					return listCountry;
+				}
+			});
+	}
+	@Override
+	public int insertDulieuFileCauTruc( final DuLieuFileCauTrucDto duLieuFileCauTrucDto) {
+		return sessionFactory.getCurrentSession().doReturningWork(
+			new ReturningWork<Integer>() {
+	
+				public Integer execute(Connection con) throws SQLException {
+					CallableStatement callStm = con.prepareCall("{call "
+							+ Utils.readProperties("PK_FILE_CAUTRUC.insertDuLieuFileCauTruc")
+							+ "(?,?,?,?,?,?,?,?,?,TO_DATE(?, 'dd-mm-yy'),?,?,?,?)}");
+					try {
+						callStm.setInt(1, duLieuFileCauTrucDto.getFileId());
+						callStm.setString(2, duLieuFileCauTrucDto.getLoaiChuDe());
+						callStm.setString(3, duLieuFileCauTrucDto.getLoaiPhuongTien());
+						
+						callStm.setDouble(4, duLieuFileCauTrucDto.getTongSoXuatCanh());
+						callStm.setDouble(5, duLieuFileCauTrucDto.getSoLuongXuatCanhTrongNuoc());
+						callStm.setDouble(6, duLieuFileCauTrucDto.getSoLuongXuatCanhNgoaiNuoc());
+						
+						callStm.setDouble(7, duLieuFileCauTrucDto.getTongSoXuatCanh());
+						callStm.setDouble(8, duLieuFileCauTrucDto.getSoLuongXuatCanhTrongNuoc());
+						callStm.setDouble(9, duLieuFileCauTrucDto.getSoLuongXuatCanhNgoaiNuoc());
+						
+						callStm.setString(10, duLieuFileCauTrucDto.getNgayBaoCao());
+						
+						callStm.setString(11, duLieuFileCauTrucDto.getDonViBaoCao());
+						callStm.setString(12, duLieuFileCauTrucDto.getDonViNhanBaoCao());
+						
+						callStm.setString(13, duLieuFileCauTrucDto.getNguoiLapBieu());
+						callStm.setString(14, duLieuFileCauTrucDto.getTypeNhapXuat());
+	
+						return callStm.executeUpdate();
+					} catch (SQLException e) {
+						return 0;
+					}
+				}
+			});
+	}
+}

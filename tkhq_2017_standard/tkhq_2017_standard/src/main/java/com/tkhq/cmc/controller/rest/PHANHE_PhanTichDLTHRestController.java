@@ -1,0 +1,929 @@
+package com.tkhq.cmc.controller.rest;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.tkhq.cmc.common.Constants.ExportType;
+import com.tkhq.cmc.common.JasperExport;
+import com.tkhq.cmc.dto.ThayDoiDoNVHQTongThe;
+import com.tkhq.cmc.dto.dataDTO;
+import com.tkhq.cmc.dto.thayDoiBSToKhaiHeThongDTO;
+import com.tkhq.cmc.services.PHANHE_PBTKService;
+import com.tkhq.cmc.utils.Utils;
+import com.tkhq.global.dao.SLTheoCTTKDao;
+import com.tkhq.global.dao.SLTheoCTTKRequestParams;
+import com.tkhq.global.model.bcptbangbieu.SLTheoCTTK01Response;
+import com.tkhq.global.model.bcptbangbieu.SLTheoCTTK03Response;
+import com.tkhq.global.model.bcptbangbieu.SLTheoCTTK04Response;
+import com.tkhq.global.model.bcptbangbieu.SLTheoCTTK07Response;
+import com.tkhq.global.model.bcptbangbieu.SLTheoCTTK10Response;
+import com.tkhq.global.model.bcptbangbieu.SLTheoCTTK13Response;
+
+@RestController
+@RequestMapping(value = "pbtk")
+public class PHANHE_PhanTichDLTHRestController {
+
+	@Autowired
+	PHANHE_PBTKService baocaoService;
+
+	@Autowired
+	ServletContext context;
+	
+	@Autowired
+	HttpServletRequest request;
+	
+	@Autowired
+	private SLTheoCTTKDao repository;
+	
+	@Autowired 
+	private ObjectMapper mapper;
+
+	@RequestMapping(value = "/API_thayDoiBSToKhaiHT", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> apiThayDoiBSToKhaiHT(String maHQ, int ky,
+			int thang, int nam, String loai_BC) throws IOException {
+		
+		String Path = Utils.getBaseUrl(request);
+		String myURL = Path + "/bcpt/ThayDoiDoNVHQ/TongThe?maCucHQ=10&maChicucHQ=10ub&nhx=X&loai_ky=NG&tu_ngay=&den_ngay=&ky=1&thang=1&nam=2017";
+		
+		String responeJson;
+		BufferedReader reader = null;
+		try {
+			URL url = new URL(myURL);
+			reader = new BufferedReader(new InputStreamReader(url.openStream(),
+					"UTF-8"));
+			StringBuffer buffer = new StringBuffer();
+			int read;
+			char[] chars = new char[1024];
+			while ((read = reader.read(chars)) != -1)
+				buffer.append(chars, 0, read);
+
+			responeJson = buffer.toString();
+		} finally {
+			if (reader != null)
+				reader.close();
+		}
+
+		ObjectMapper mapper = new ObjectMapper();
+		List<ThayDoiDoNVHQTongThe> listdata = mapper.readValue(
+				responeJson,
+				TypeFactory.defaultInstance().constructCollectionType(
+						List.class, ThayDoiDoNVHQTongThe.class));
+
+		// List<TMBCXKHH20TDTO> list = baocaoService.ts_BCXKHH20T(maHQ, ky,
+		// thang, nam, loai_BC);
+
+		JRBeanCollectionDataSource listData1 = new JRBeanCollectionDataSource(
+				listdata);
+		Map<String, Object> param = new HashMap<String, Object>();
+		// param.put("listObject", listData);
+
+		return JasperExport.ExportReport("BCThayDoiDoNVHQTongThe", listData1,
+				param, ExportType.PDFINLINE);
+
+	}
+
+	@RequestMapping(value = "/API_chartReport", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> API_chartReport(String maHQ, int ky,
+			int thang, int nam, String loai_BC) throws IOException {
+		String Path = Utils.getBaseUrl(request);
+		String myURL = Path + "/bcpt/ThayDoiDoNVHQ/TongThe?maCucHQ=10&maChicucHQ=10ub&nhx=X&loai_ky=NG&tu_ngay=&den_ngay=&ky=1&thang=1&nam=2017";
+		String responeJson;
+		BufferedReader reader = null;
+		try {
+			URL url = new URL(myURL);
+			reader = new BufferedReader(new InputStreamReader(url.openStream()));
+			StringBuffer buffer = new StringBuffer();
+			int read;
+			char[] chars = new char[1024];
+			while ((read = reader.read(chars)) != -1)
+				buffer.append(chars, 0, read);
+
+			responeJson = buffer.toString();
+		} finally {
+			if (reader != null)
+				reader.close();
+		}
+
+		ObjectMapper mapper = new ObjectMapper();
+		List<ThayDoiDoNVHQTongThe> listdata = mapper.readValue(
+				responeJson,
+				TypeFactory.defaultInstance().constructCollectionType(
+						List.class, ThayDoiDoNVHQTongThe.class));
+
+		// List<TMBCXKHH20TDTO> list = baocaoService.ts_BCXKHH20T(maHQ, ky,
+		// thang, nam, loai_BC);
+
+		JRBeanCollectionDataSource listData1 = new JRBeanCollectionDataSource(
+				listdata);
+		Map<String, Object> param = new HashMap<String, Object>();
+		// param.put("listObject", listData);
+
+		return JasperExport.ExportReport("ChartDemo", listData1, param,
+				ExportType.PDFINLINE);
+
+	}
+
+	@RequestMapping(value = "/API_dienbiensolieuchitieuTK_ky", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> API_dienbiensolieuchitieuTK_ky(String nhx,
+			String trangThai, String radioBox) throws IOException,
+			JSONException {
+//		String Path = Utils.getBaseUrl(request);
+//		
+//		String myURL = Path + "/bcpt/SoLieuTheoChiTieuThongKe01?nhx="+nhx+"&trangthai=" + trangThai
+//				+ "&maCucHQ=" + Utils.escapeNull(Utils.getPrincipalLogin().getMaCuc()) 
+//				+ "&maChicucHQ=" + Utils.escapeNull(Utils.getPrincipalLogin().getMaChiCuc());
+//		String respone = "";
+//		System.out.println("API_dienbiensolieuchitieuTK_ky@myURL:"+myURL);
+		
+		SLTheoCTTKRequestParams requestParams = new SLTheoCTTKRequestParams();
+		requestParams.setNhx(nhx);
+		requestParams.setTrangthai(trangThai);
+		requestParams.setUsername(Utils.escapeNull(Utils.getPrincipalLogin().getUser().getUserName()));
+		requestParams.setMaCucHQ(Utils.escapeNull(Utils.getPrincipalLogin().getMaCuc()));
+		requestParams.setMaChicucHQ(Utils.escapeNull(Utils.getPrincipalLogin().getMaChiCuc()));
+		
+		SLTheoCTTK01Response result = repository.getSLTheoCTTK01(requestParams);
+		
+		String respone = mapper.writeValueAsString(result);
+
+		String jsonObject = "";
+		String dataJsonObject = "";
+		if ("THA".equals(radioBox)) {
+			jsonObject = "data_thang";
+			dataJsonObject = "thang";
+		} else {
+			jsonObject = "data_ky";
+			dataJsonObject = "ky";
+		}
+
+		List<dataDTO> lstData = new ArrayList<dataDTO>();
+//		BufferedReader reader = null;
+//		try {
+//			URL url = new URL(myURL);
+//			reader = new BufferedReader(new InputStreamReader(url.openStream()));
+//			StringBuffer buffer = new StringBuffer();
+//			int read;
+//			char[] chars = new char[1024];
+//			while ((read = reader.read(chars)) != -1)
+//				buffer.append(chars, 0, read);
+//
+//			respone = buffer.toString();
+//		} finally {
+//			if (reader != null)
+//				reader.close();
+//		}
+		System.out.println(respone);
+		
+		//JSONArray array= new JSONArray(respone);
+		JSONObject json = new JSONObject(respone);
+		JSONObject jsonDataKy = json.getJSONObject(jsonObject);
+		JSONArray jArray = jsonDataKy.getJSONArray("data");
+		for (int ii = 0; ii < jArray.length(); ii++) {
+//			System.out.println(jArray.getJSONObject(ii).getString(
+//					dataJsonObject));
+			dataDTO dt = new dataDTO();
+			dt.setKy(jArray.getJSONObject(ii).getString(dataJsonObject));
+			if ("null".equals(jArray.getJSONObject(ii).getString("gia_tri")) 
+					|| "".equals(jArray.getJSONObject(ii).getString("gia_tri"))) {
+				dt.setGia_tri("0");
+			} else
+				dt.setGia_tri(jArray.getJSONObject(ii).getString("gia_tri"));
+			lstData.add(dt);
+		}
+
+		JRBeanCollectionDataSource listData1 = new JRBeanCollectionDataSource(
+				lstData);
+		Map<String, Object> param = new HashMap<String, Object>();
+
+		return JasperExport.ExportReport("BDHTCBBTGTMHSITC_Ky", listData1,
+				param, ExportType.HTML);
+
+	}
+
+	@RequestMapping(value = "/API_dienBienSLDoanhNghiepFDI_ky", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> API_dienBienSLDoanhNghiepFDI_ky(String nhx,
+			String trangThai, String radioBox, String maCucHQ,
+			String maChicucHQ, String loaiTK, String mathang) throws IOException, JSONException {
+		
+//		String Path = Utils.getBaseUrl(request);
+//		String myURL = Path+"/bcpt/SoLieuTheoChiTieuThongKe10"
+//				+ "?nhx="
+//				+ nhx
+//				+ "&trangthai="
+//				+ trangThai
+//				+ "&maCucHQ="
+//				+ maCucHQ + "&maChicucHQ=" + maChicucHQ;
+//		String respone = "";
+//		System.out.println(myURL);		
+		
+		SLTheoCTTKRequestParams requestParams = new SLTheoCTTKRequestParams();
+		requestParams.setTrangthai(trangThai);
+		requestParams.setNhx(nhx);
+		requestParams.setMaCucHQ(maCucHQ);
+		requestParams.setMaChicucHQ(maChicucHQ);
+		requestParams.setUsername(Utils.escapeNull(Utils.getPrincipalLogin().getUser().getUserName()));
+		List<SLTheoCTTK10Response> lst = repository.getSLTheoCTTK10(requestParams, mathang);	
+
+		String jsonObject = "";
+		String dataJsonObject = "";
+		String subname = "";
+		String fileChartName = "";
+		if ("THA".equals(radioBox)) {
+			jsonObject = "data_thang";
+			dataJsonObject = "thang";
+		} else {
+			jsonObject = "data_ky";
+			dataJsonObject = "ky";
+		}
+
+		if ("luongTK".equals(loaiTK)) {
+			subname = Utils.getMessageProperties("luongtk");//new String(Utils.getMessageProperties("luongtk").getBytes(), "UTF-8");//"lượng thống kê";
+			fileChartName = "DNFDI_LuongTK";
+		} else if ("dongiaTK".equals(loaiTK)) {
+			subname = Utils.getMessageProperties("dongiatk");//new String(Utils.getMessageProperties("dongiatk").getBytes(), "UTF-8");//"đơn giá thống kê";
+			fileChartName = "DNFDI_DongiaTK";
+		} else {
+			subname = Utils.getMessageProperties("trigiatk");//new String(Utils.getMessageProperties("trigiatk").getBytes(), "UTF-8");//"trị giá thống kê";
+			fileChartName = "DNFDI_TrigiaTK_HHXK";
+		}
+		System.out.println("##############################subname:"+subname);
+		
+		List<dataDTO> lstData = new ArrayList<dataDTO>();
+		BufferedReader reader = null;
+//		try {
+//			URL url = new URL(myURL);
+//			reader = new BufferedReader(new InputStreamReader(url.openStream(),
+//					"UTF-8"));
+//			StringBuffer buffer = new StringBuffer();
+//			int read;
+//			char[] chars = new char[1024];
+//			while ((read = reader.read(chars)) != -1)
+//				buffer.append(chars, 0, read);
+//
+//			respone = buffer.toString();
+//		} finally {
+//			if (reader != null)
+//				reader.close();
+//		}
+		String respone = mapper.writeValueAsString(lst);
+		System.out.println(respone);
+		JSONObject json = new JSONObject();
+		boolean flag = true;
+		int i = 0;
+
+		JSONArray lstJson = new JSONArray(respone);
+		while (flag) {
+			json = lstJson.getJSONObject(i);
+			if (json.getString("subname").toLowerCase().indexOf(subname) >= 0) {
+				flag = false;
+			} else
+				i++;
+		}
+		JSONObject jsonDataKy = json.getJSONObject(jsonObject);
+		JSONArray jArray = jsonDataKy.getJSONArray("data");
+		for (int ii = 0; ii < jArray.length(); ii++) {
+//			System.out.println(jArray.getJSONObject(ii).getString(
+//					dataJsonObject));
+			dataDTO dt = new dataDTO();
+			dt.setKy(jArray.getJSONObject(ii).getString(dataJsonObject));
+//			if ("T5N14".equals(jArray.getJSONObject(ii).getString(
+//					dataJsonObject))) {
+//				dt.setGia_tri("200");
+//			} else
+//				dt.setGia_tri("1");// jArray.getJSONObject(ii).getString("gia_tri"));
+			if ("null".equals(jArray.getJSONObject(ii).getString("gia_tri")) 
+					|| "".equals(jArray.getJSONObject(ii).getString("gia_tri"))) {
+				dt.setGia_tri("0");
+			} else
+				dt.setGia_tri(jArray.getJSONObject(ii).getString("gia_tri"));
+			lstData.add(dt);
+		}
+
+		JRBeanCollectionDataSource listData1 = new JRBeanCollectionDataSource(
+				lstData);
+		Map<String, Object> param = new HashMap<String, Object>();
+
+		return JasperExport.ExportReport(fileChartName, listData1, param,
+				ExportType.HTML);
+
+	}
+
+	@RequestMapping(value = "/API_dienBienXNKVanTai_ky", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> API_dienBienXNKVanTai_ky(String nhx,
+			String trangThai, String radioBox, String maCucHQ,
+			String maChicucHQ, String group_transport, String transport,
+			String loaiTK) throws IOException, JSONException {
+//		String Path = Utils.getBaseUrl(request);
+//		String myURL = Path + "/bcpt/SoLieuTheoChiTieuThongKe13"
+//				+ "?nhx="
+//				+ nhx
+//				+ "&trangthai="
+//				+ trangThai
+//				+ "&maCucHQ="
+//				+ maCucHQ
+//				+ "&maChicucHQ="
+//				+ maChicucHQ
+//				+ "&group_transport="
+//				+ group_transport + "&transport=";// +transport;
+		SLTheoCTTKRequestParams requestParams = new SLTheoCTTKRequestParams();
+		requestParams.setTrangthai(trangThai);
+		requestParams.setNhx(nhx);
+		requestParams.setMaCucHQ(maCucHQ);
+		requestParams.setMaChicucHQ(maChicucHQ);
+		requestParams.setUsername(Utils.escapeNull(Utils.getPrincipalLogin().getUser().getUserName()));
+		List<SLTheoCTTK13Response> lst = repository.getSLTheoCTTK13(requestParams, group_transport, transport);
+		String respone = mapper.writeValueAsString(lst);
+
+//		System.out.println(myURL);
+
+		// byte ptext[] = transport.getBytes("ISO-8859-1");
+		// String groupName = new String(ptext, "UTF-8");
+
+		String jsonObject = "";
+		String dataJsonObject = "";
+		String subname = Utils.getMessageProperties("trigiatk");//new String(Utils.getMessageProperties("trigiatk").getBytes(), "UTF-8");//"trị giá thống kê";
+		String fileChartName = "DNFDI_TrigiaTK";
+		if ("THA".equals(radioBox)) {
+			jsonObject = "data_thang";
+			dataJsonObject = "thang";
+		} else {
+			jsonObject = "data_ky";
+			dataJsonObject = "ky";
+		}
+		
+		System.out.println("##############################subname:"+subname);
+
+		// if("luongTK".equals(loaiTK)){
+		// subname = "lượng thống kê";
+		// fileChartName = "DNFDI_LuongTK";
+		// } else if("dongiaTK".equals(loaiTK)){
+		// subname = "đơn giá thống kê";
+		// fileChartName = "DNFDI_DongiaTK";
+		// } else{
+		// subname = "trị giá thống kê";
+		// fileChartName = "DNFDI_TrigiaTK";
+		// }
+
+		List<dataDTO> lstData = new ArrayList<dataDTO>();
+		BufferedReader reader = null;
+//		try {
+//			URL url = new URL(myURL);
+//			reader = new BufferedReader(new InputStreamReader(url.openStream(),
+//					"UTF-8"));
+//			StringBuffer buffer = new StringBuffer();
+//			int read;
+//			char[] chars = new char[1024];
+//			while ((read = reader.read(chars)) != -1)
+//				buffer.append(chars, 0, read);
+//
+//			respone = buffer.toString();
+//		} finally {
+//			if (reader != null)
+//				reader.close();
+//		}
+		System.out.println(respone);
+		JSONObject json = new JSONObject();
+		JSONObject jsonByGroup = new JSONObject();
+		JSONArray lstJsonByGroup;
+		boolean flag = true;
+		// int i = 0;
+		int j = 0;
+
+		JSONArray lstJson = new JSONArray(respone);
+		// while(flag){
+		jsonByGroup = lstJson.getJSONObject(0);
+		// if(jsonByGroup.getString("group_name").toLowerCase().indexOf(groupName.toLowerCase())
+		// >= 0){
+		lstJsonByGroup = new JSONArray(jsonByGroup.getString("group_data"));
+		while (flag) {
+			json = lstJsonByGroup.getJSONObject(j);
+			if (json.getString("sub_name").toLowerCase().indexOf(subname) >= 0) {
+				flag = false;
+			} else
+				j++;
+		}
+		// } else
+		// i++;
+		// }
+		JSONObject jsonDataKy = json.getJSONObject(jsonObject);
+		JSONArray jArray = jsonDataKy.getJSONArray("data");
+		for (int ii = 0; ii < jArray.length(); ii++) {
+//			System.out.println(jArray.getJSONObject(ii).getString(
+//					dataJsonObject));
+			dataDTO dt = new dataDTO();
+			dt.setKy(jArray.getJSONObject(ii).getString(dataJsonObject));
+//			if ("T4N14".equals(jArray.getJSONObject(ii).getString(
+//					dataJsonObject))) {
+//				dt.setGia_tri("156");
+//			} else
+//				dt.setGia_tri("1");// jArray.getJSONObject(ii).getString("gia_tri"));
+			if ("null".equals(jArray.getJSONObject(ii).getString("gia_tri")) 
+					|| "".equals(jArray.getJSONObject(ii).getString("gia_tri"))) {
+				dt.setGia_tri("0");
+			} else
+				dt.setGia_tri(jArray.getJSONObject(ii).getString("gia_tri"));
+			lstData.add(dt);
+		}
+
+		JRBeanCollectionDataSource listData1 = new JRBeanCollectionDataSource(
+				lstData);
+		Map<String, Object> param = new HashMap<String, Object>();
+
+		return JasperExport.ExportReport(fileChartName, listData1, param,
+				ExportType.HTML);
+
+	}
+
+
+	@RequestMapping(value = "/API_HTCBTGTXNK_ky", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> API_HTCBTGTXNK_ky(String nhx,
+			String radioBox, String maCucHQ, String maChicucHQ, String loaiTK)
+			throws IOException, JSONException {
+//		String Path = Utils.getBaseUrl(request);
+//		String myURL = Path + "/bcpt/SoLieuTheoChiTieuThongKe03"
+//				+ "?nhx="
+//				+ nhx
+//				+ "&maCucHQ="
+//				+ maCucHQ
+//				+ "&maChicucHQ="
+//				+ maChicucHQ;
+		SLTheoCTTKRequestParams requestParams = new SLTheoCTTKRequestParams();
+		requestParams.setNhx(nhx);
+		requestParams.setMaCucHQ(maCucHQ);
+		requestParams.setMaChicucHQ(maChicucHQ);
+		requestParams.setUsername(Utils.escapeNull(Utils.getPrincipalLogin().getUser().getUserName()));
+		List<SLTheoCTTK03Response> lst = repository.getSLTheoCTTK03(requestParams);
+		String respone = mapper.writeValueAsString(lst);
+//		System.out.println(myURL);
+
+		// byte ptext[] = maChicucHQ.getBytes("ISO-8859-1");
+		// String groupName = new String(ptext, "UTF-8");
+
+		String jsonObject = "";
+		String dataJsonObject = "";
+		String subname = "";
+		String fileChartName = "";
+		if ("THA".equals(radioBox)) {
+			jsonObject = "data_thang";
+			dataJsonObject = "thang";
+		} else {
+			jsonObject = "data_ky";
+			dataJsonObject = "ky";
+		}
+
+		if ("luongTK".equals(loaiTK)) {
+			subname = Utils.getMessageProperties("soluongtk");//new String(Utils.getMessageProperties("soluongtk").getBytes(), "UTF-8");//"số lượng tờ khai";
+			fileChartName = "SLToKhaiXNK_LuongTK";
+		} else {
+			subname = Utils.getMessageProperties("tonggiatri");//new String(Utils.getMessageProperties("tonggiatri").getBytes(), "UTF-8");//"tổng giá trị";
+			fileChartName = "SLToKhaiXNK_TongGTr";
+		}
+		System.out.println("##############################subname:"+subname);
+
+		List<dataDTO> lstData = new ArrayList<dataDTO>();
+//		BufferedReader reader = null;
+//		try {
+//			URL url = new URL(myURL);
+//			reader = new BufferedReader(new InputStreamReader(url.openStream(),
+//					"UTF-8"));
+//			StringBuffer buffer = new StringBuffer();
+//			int read;
+//			char[] chars = new char[1024];
+//			while ((read = reader.read(chars)) != -1)
+//				buffer.append(chars, 0, read);
+//
+//			respone = buffer.toString();
+//		} finally {
+//			if (reader != null)
+//				reader.close();
+//		}
+		System.out.println(respone);
+		JSONObject json = new JSONObject();
+		// JSONObject jsonByGroup = new JSONObject();
+		// JSONArray lstJsonByGroup;
+		boolean flag = true;
+		// int i = 0;
+		int j = 0;
+
+		JSONArray lstJson = new JSONArray(respone);
+		while (flag) {
+			json = lstJson.getJSONObject(j);
+			if (json.getString("sub_name").toLowerCase().indexOf(subname) >= 0) {
+				flag = false;
+			} else
+				j++;
+			// jsonByGroup = lstJson.getJSONObject(i);
+			// if(jsonByGroup.getString("group_name").toLowerCase().indexOf(groupName.toLowerCase())
+			// >= 0){
+			// lstJsonByGroup = new
+			// JSONArray(jsonByGroup.getString("group_data"));
+			// while(flag){
+			// json = lstJsonByGroup.getJSONObject(j);
+			// if(json.getString("subname").toLowerCase().indexOf(subname) >=
+			// 0){
+			// flag = false;
+			// } else
+			// j++;
+			// }
+			// } else
+			// i++;
+		}
+		JSONObject jsonDataKy = json.getJSONObject(jsonObject);
+		JSONArray jArray = jsonDataKy.getJSONArray("data");
+		for (int ii = 0; ii < jArray.length(); ii++) {
+//			System.out.println(jArray.getJSONObject(ii).getString(
+//					dataJsonObject));
+			dataDTO dt = new dataDTO();
+			dt.setKy(jArray.getJSONObject(ii).getString(dataJsonObject));
+//			if ("T5N14".equals(jArray.getJSONObject(ii).getString(
+//					dataJsonObject))) {
+//				dt.setGia_tri("123");
+//			} else
+//				dt.setGia_tri("1");// jArray.getJSONObject(ii).getString("gia_tri"));
+			if ("null".equals(jArray.getJSONObject(ii).getString("gia_tri")) 
+					|| "".equals(jArray.getJSONObject(ii).getString("gia_tri"))) {
+				dt.setGia_tri("0");
+			} else
+				dt.setGia_tri(jArray.getJSONObject(ii).getString("gia_tri"));
+			lstData.add(dt);
+		}
+
+		JRBeanCollectionDataSource listData1 = new JRBeanCollectionDataSource(
+				lstData);
+		Map<String, Object> param = new HashMap<String, Object>();
+
+		return JasperExport.ExportReport(fileChartName, listData1, param,
+				ExportType.HTML);
+
+	}
+
+	@RequestMapping(value = "/API_dienBienHangHoaXNK_ky", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> API_dienBienHangHoaXNK_ky(String nhx,
+			String trangThai, String radioBox, String maCucHQ,
+			String maChicucHQ, String mathang, String loaiTK)
+			throws IOException, JSONException {
+//		String Path = Utils.getBaseUrl(request);
+//		String myURL = Path + "/bcpt/SoLieuTheoChiTieuThongKe04"
+//				+ "?nhx="
+//				+ nhx
+//				+ "&trangthai="
+//				+ trangThai
+//				+ "&maCucHQ="
+//				+ maCucHQ + "&maChicucHQ=" + maChicucHQ + "&mathang=" + mathang;
+//		String respone = "";
+//		System.out.println(myURL);
+		
+		SLTheoCTTKRequestParams requestParams = new SLTheoCTTKRequestParams();
+		requestParams.setTrangthai(trangThai);
+		requestParams.setNhx(nhx);
+		requestParams.setMaCucHQ(maCucHQ);
+		requestParams.setMaChicucHQ(maChicucHQ);
+		requestParams.setUsername(Utils.escapeNull(Utils.getPrincipalLogin().getUser().getUserName()));
+		List<SLTheoCTTK04Response> lst = repository.getSLTheoCTTK04(requestParams, mathang);
+		String respone = mapper.writeValueAsString(lst);
+
+		// byte ptext[] = group_name.getBytes("ISO-8859-1");
+		// String groupName = new String(ptext, "UTF-8");
+
+		String jsonObject = "";
+		String dataJsonObject = "";
+		String subname = "";
+		String fileChartName = "";
+		if ("THA".equals(radioBox)) {
+			jsonObject = "data_thang";
+			dataJsonObject = "thang";
+		} else {
+			jsonObject = "data_ky";
+			dataJsonObject = "ky";
+		}
+
+		if ("luongTK".equals(loaiTK)) {
+			subname = Utils.getMessageProperties("luongtk");//new String(Utils.getMessageProperties("luongtk").getBytes(), "UTF-8");//"lượng thống kê";
+			fileChartName = "DNFDI_LuongTK";
+		} else if ("dongiaTK".equals(loaiTK)) {
+			subname = Utils.getMessageProperties("dongiatk");//new String(Utils.getMessageProperties("dongiatk").getBytes(), "UTF-8");//"đơn giá thống kê";
+			fileChartName = "DNFDI_DongiaTK";
+		} else if ("dvt".equals(loaiTK)) {
+			subname = Utils.getMessageProperties("dvt");//new String(Utils.getMessageProperties("dvt").getBytes(), "UTF-8");//"đơn vị tính";
+			fileChartName = "DNFDI_DVT";
+		} else {
+			subname = Utils.getMessageProperties("trigiatk");//new String(Utils.getMessageProperties("trigiatk").getBytes(), "UTF-8");//"trị giá thống kê";
+			fileChartName = "DNFDI_TrigiaTK_HHXK";
+		}
+		System.out.println("##############################subname:"+subname);
+		
+		List<dataDTO> lstData = new ArrayList<dataDTO>();
+		BufferedReader reader = null;
+//		try {
+//			URL url = new URL(myURL);
+//			reader = new BufferedReader(new InputStreamReader(url.openStream(),
+//					"UTF-8"));
+//			StringBuffer buffer = new StringBuffer();
+//			int read;
+//			char[] chars = new char[1024];
+//			while ((read = reader.read(chars)) != -1)
+//				buffer.append(chars, 0, read);
+//
+//			respone = buffer.toString();
+//		} finally {
+//			if (reader != null)
+//				reader.close();
+//		}
+		System.out.println(respone);
+		JSONArray array123= new JSONArray(respone);
+		JSONObject json = array123.getJSONObject(0);
+		JSONObject jsonByGroup = new JSONObject();
+		JSONArray lstJsonByGroup;
+		boolean flag = true;
+		// int i = 0;
+		int j = 0;
+
+		JSONArray lstJson = new JSONArray(respone);
+		// while(flag){
+		jsonByGroup = lstJson.getJSONObject(0);
+		// if(jsonByGroup.getString("group_name").toLowerCase().indexOf(groupName.toLowerCase())
+		// >= 0){
+		lstJsonByGroup = new JSONArray(jsonByGroup.getString("group_data"));
+		while (flag) {
+			json = lstJsonByGroup.getJSONObject(j);
+			if (json.getString("sub_name").toLowerCase().indexOf(subname) >= 0) {
+				flag = false;
+			} else
+				j++;
+		}
+		// } else
+		// i++;
+		// }
+		JSONObject jsonDataKy = json.getJSONObject(jsonObject);
+		JSONArray jArray = jsonDataKy.getJSONArray("data");
+		for (int ii = 0; ii < jArray.length(); ii++) {
+//			System.out.println(jArray.getJSONObject(ii).getString(
+//					dataJsonObject));
+			dataDTO dt = new dataDTO();
+			dt.setKy(jArray.getJSONObject(ii).getString(dataJsonObject));
+//			if ("TH2N14".equals(jArray.getJSONObject(ii).getString(
+//					dataJsonObject))) {
+//				dt.setGia_tri("111");
+//			} else
+//				dt.setGia_tri("1");// jArray.getJSONObject(ii).getString("gia_tri"));
+			if ("null".equals(jArray.getJSONObject(ii).getString("gia_tri")) 
+					|| "".equals(jArray.getJSONObject(ii).getString("gia_tri"))) {
+				dt.setGia_tri("0");
+			} else
+				dt.setGia_tri(jArray.getJSONObject(ii).getString("gia_tri"));
+			lstData.add(dt);
+		}
+
+		JRBeanCollectionDataSource listData1 = new JRBeanCollectionDataSource(
+				lstData);
+		Map<String, Object> param = new HashMap<String, Object>();
+
+		return JasperExport.ExportReport(fileChartName, listData1, param,
+				ExportType.HTML);
+
+	}
+
+	@RequestMapping(value = "/API_dienBienXuTheChiSo_ky", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> API_dienBienXuTheChiSo_ky(String nhx,
+			String trangThai, String radioBox, String chiso, String loaichiso, String ten_chiso,
+			String mathang, String loaiTK) throws IOException, JSONException {
+//		String Path = Utils.getBaseUrl(request);
+//		String myURL = Path + "/bcpt/SoLieuTheoChiTieuThongKe07"
+//				+ "?nhx="+ nhx + "&trangthai=" + trangThai
+//				+ "&thoigian=" + radioBox + "&chiso=" + chiso + "&loaichiso=" + loaichiso
+//				+ "&mathang=" + mathang 
+//				+ "&username=" + Utils.escapeNull(Utils.getPrincipalLogin().getUser().getUserName()) 
+//				+ "&maCucHQ=" + Utils.escapeNull(Utils.getPrincipalLogin().getMaCuc()) 
+//				+ "&maChicucHQ=" + Utils.escapeNull(Utils.getPrincipalLogin().getMaChiCuc());//+ "&maCucHQ=00";
+//		String respone = "";
+//		System.out.println(myURL);
+		SLTheoCTTKRequestParams requestParams = new SLTheoCTTKRequestParams();
+		requestParams.setTrangthai(trangThai);
+		requestParams.setNhx(nhx);
+		requestParams.setMaCucHQ(Utils.getPrincipalLogin().getMaCuc());
+		requestParams.setMaChicucHQ(Utils.getPrincipalLogin().getMaChiCuc());
+		requestParams.setUsername(Utils.escapeNull(Utils.getPrincipalLogin().getUser().getUserName()));
+		List<SLTheoCTTK07Response> lst = repository.getSLTheoCTTK07(requestParams, radioBox, mathang,
+				chiso, loaichiso);
+		String respone = mapper.writeValueAsString(lst);
+		
+		String fileChartName = "xuTheChiSo_DonGia";
+		byte[] bytes = ten_chiso.getBytes(StandardCharsets.ISO_8859_1);
+		ten_chiso = new String(bytes, StandardCharsets.UTF_8);
+		String tenChiso = ten_chiso;
+		
+		SimpleDateFormat yearFormatFull = new SimpleDateFormat("yyyy");
+		SimpleDateFormat yearFormat = new SimpleDateFormat("yy");
+		SimpleDateFormat monthFormat = new SimpleDateFormat("M");
+		Date dateCurrent = new Date();
+		int monthCurrent = Integer.parseInt(monthFormat.format(dateCurrent));
+		int yearCurrent = Integer.parseInt(yearFormat.format(dateCurrent));
+		int yearCurrentFull = Integer.parseInt(yearFormatFull.format(dateCurrent));
+		int quyCurrent = 1;
+		if(monthCurrent >= 4 && monthCurrent <= 6){
+			quyCurrent = 2;
+        } else if(monthCurrent >= 7 && monthCurrent <= 9){
+        	quyCurrent = 3;
+        } else if(monthCurrent >= 10){
+        	quyCurrent = 4;
+        }		
+
+		List<dataDTO> lstData = new ArrayList<dataDTO>();
+//		BufferedReader reader = null;
+//		try {
+//			URL url = new URL(myURL);
+//			reader = new BufferedReader(new InputStreamReader(url.openStream(),"UTF-8"));
+//			StringBuffer buffer = new StringBuffer();
+//			int read;
+//			char[] chars = new char[1024];
+//			while ((read = reader.read(chars)) != -1)
+//				buffer.append(chars, 0, read);
+//			respone = buffer.toString();
+//		} finally {
+//			if (reader != null)
+//				reader.close();
+//		}
+		System.out.println(respone);
+		JSONArray lstJson = new JSONArray(respone);
+
+		JSONObject jsonDataKy = lstJson.getJSONObject(0);
+		String vsKygoc = jsonDataKy.getString("ss_kygoc");
+		String vsCungKyNamTruoc = "";//jsonDataKy.getString("ss_cungky_namtruoc");
+		String vsKyCuoiNamTruoc = "";//jsonDataKy.getString("ss_kycuoi_namtruoc");
+		String vsKyTruoc = "";//jsonDataKy.getString("ss_kytruoc");
+		String luyKe = "";//jsonDataKy.getString("ss_luyke");
+		
+		if("NAM".equals(radioBox)){
+			vsKyTruoc = jsonDataKy.getString("ss_kytruoc");
+		} else{
+			vsCungKyNamTruoc = jsonDataKy.getString("ss_cungky_namtruoc");
+			vsKyCuoiNamTruoc = jsonDataKy.getString("ss_kycuoi_namtruoc");
+			vsKyTruoc = jsonDataKy.getString("ss_kytruoc");
+			luyKe = jsonDataKy.getString("ss_luyke");
+		}
+		
+		dataDTO dtStart = new dataDTO();
+		dtStart.setKy("Kỳ gốc(2012)");
+		dtStart.setGia_tri(vsKygoc);
+		dtStart.setChiso(tenChiso);
+		lstData.add(dtStart);
+		
+		dataDTO dtEnd = new dataDTO();
+		dtEnd.setKy("Lũy kế");
+		dtEnd.setGia_tri(luyKe);
+		dtEnd.setChiso(tenChiso);
+		if("THA".equals(radioBox)){
+			dataDTO dt1 = new dataDTO();
+			dt1.setKy("TH"+monthCurrent+"N"+(yearCurrent-1));
+			dt1.setGia_tri(vsCungKyNamTruoc);
+			dt1.setChiso(tenChiso);
+			lstData.add(dt1);
+			
+			dataDTO dt2 = new dataDTO();
+			dt2.setKy("TH12N"+(yearCurrent-1));
+			dt2.setGia_tri(vsKyCuoiNamTruoc);
+			dt2.setChiso(tenChiso);
+			lstData.add(dt2);
+			
+			dataDTO dt3 = new dataDTO();
+			if(monthCurrent == 1){
+				dt3.setKy("TH12N"+(yearCurrent-1));
+			} else
+				dt3.setKy("TH"+(monthCurrent-1)+"N"+yearCurrent);			
+			dt3.setGia_tri(vsKyTruoc);
+			dt3.setChiso(tenChiso);
+			lstData.add(dt3);
+			lstData.add(dtEnd);
+		} else if("QUY".equals(radioBox)){
+			dataDTO dt1 = new dataDTO();
+			dt1.setKy("Q"+quyCurrent+"N"+(yearCurrent-1));
+			dt1.setGia_tri(vsCungKyNamTruoc);
+			dt1.setChiso(tenChiso);
+			lstData.add(dt1);
+			
+			dataDTO dt2 = new dataDTO();
+			dt2.setKy("Q4N"+(yearCurrent-1));
+			dt2.setGia_tri(vsKyCuoiNamTruoc);
+			dt2.setChiso(tenChiso);
+			lstData.add(dt2);
+			
+			dataDTO dt3 = new dataDTO();
+			if(quyCurrent == 1){
+				dt3.setKy("Q4N"+(yearCurrent-1));
+			} else
+				dt3.setKy("Q"+(quyCurrent-1)+"N"+yearCurrent);			
+			dt3.setGia_tri(vsKyTruoc);
+			dt3.setChiso(tenChiso);
+			lstData.add(dt3);
+			lstData.add(dtEnd);
+		} else{
+			dataDTO dt1 = new dataDTO();
+			dt1.setKy(""+(yearCurrentFull-1));
+			dt1.setGia_tri(vsKyTruoc);
+			dt1.setChiso(tenChiso);
+			lstData.add(dt1);
+		}
+
+		JRBeanCollectionDataSource listData1 = new JRBeanCollectionDataSource(lstData);
+		Map<String, Object> param = new HashMap<String, Object>();
+		return JasperExport.ExportReport(fileChartName, listData1, param,ExportType.HTML);
+	}
+	
+	
+	@RequestMapping(value = "/API_thayDoiBoSungToKhaiHeThong", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> API_thayDoiBoSungToKhaiHeThong(String maCucHQ, String maChicucHQ, String nhx, 
+			String ma_hang, String loai_ky, String ky, String thang, String nam, String fromDate, String toDate, 
+			@RequestParam(value="type",required=false) String type) throws IOException, JSONException {
+		String Path = Utils.getBaseUrl(request);
+//		String myURL = Path + "/bcpt/XemThayDoi/"
+//				+ "DoBSTK?maCucHQ=01&maChicucHQ=01DD&nhx=N&ma_hang=6102&loai_ky=KY&ky=1&thang=1&nam=2017";
+		
+		String myURL = Path + "/bcpt/XemThayDoi/DoBSTK"
+				+"?maCucHQ="+maCucHQ+"&maChicucHQ="+maChicucHQ+"&nhx="+nhx
+				+"&ma_hang="+ma_hang+"&loai_ky="+loai_ky;
+		    	if("NG".equals(loai_ky)){
+		    		myURL += "&tu_ngay="+fromDate+"&den_ngay="+toDate;
+		    	} else if("KY".equals(loai_ky)){
+		    		myURL += "&ky="+ky+"&thang="+thang+"&nam="+nam;
+		    	} else if("TH".equals(loai_ky)){
+		    		myURL += "&thang="+thang+"&nam="+nam;
+		    	}		
+		String respone = "";
+		System.out.println(myURL);
+		String fileChartName = "report_ThayDoiBSToKhaiHT";				
+
+		List<thayDoiBSToKhaiHeThongDTO> lstData = new ArrayList<thayDoiBSToKhaiHeThongDTO>();
+		BufferedReader reader = null;
+		try {
+			URL url = new URL(myURL);
+			reader = new BufferedReader(new InputStreamReader(url.openStream(),"UTF-8"));
+			StringBuffer buffer = new StringBuffer();
+			int read;
+			char[] chars = new char[1024];
+			while ((read = reader.read(chars)) != -1)
+				buffer.append(chars, 0, read);
+			respone = buffer.toString();
+		} finally {
+			if (reader != null)
+				reader.close();
+		}
+		System.out.println(respone);
+		JSONArray lstJson = new JSONArray(respone);
+		String nuocNK = Utils.getMessageProperties("nuocnk");
+		String nuocXK = Utils.getMessageProperties("nuocxk");
+		System.out.println("##############################nuocNK:"+nuocNK+"|nuocXK:"+nuocXK);
+
+		for (int i = 0; i < lstJson.length(); i++) {
+			thayDoiBSToKhaiHeThongDTO dt = new thayDoiBSToKhaiHeThongDTO();
+			dt.setSo_tk(lstJson.getJSONObject(i).getString("so_tk"));
+			dt.setMa_lh(lstJson.getJSONObject(i).getString("ma_lh"));
+			dt.setMa_hq(lstJson.getJSONObject(i).getString("ma_hq"));
+			dt.setMa_dv(lstJson.getJSONObject(i).getString("ma_dv"));
+			dt.setMa_hang(lstJson.getJSONObject(i).getString("ma_hang"));
+			dt.setMa_tk(lstJson.getJSONObject(i).getString("ma_tk"));
+			dt.setDvt_tk(lstJson.getJSONObject(i).getString("dvt_tk"));
+			dt.setLuong_tk(lstJson.getJSONObject(i).getDouble("luong_tk"));
+			dt.setTri_gia_usd(lstJson.getJSONObject(i).getDouble("tri_gia_usd"));
+			dt.setTri_gia_tk_usd(lstJson.getJSONObject(i).getDouble("tri_gia_tk_usd"));
+			dt.setNuoc_nk(lstJson.getJSONObject(i).getString("nuoc_nk"));
+			if("X".equals(nhx)){
+				dt.setTen_nuoc_XNK(nuocNK);
+			}else if("N".equals(nhx)){
+				dt.setTen_nuoc_XNK(nuocXK);
+			}			
+			
+			lstData.add(dt);
+		}
+
+		JRBeanCollectionDataSource listData1 = new JRBeanCollectionDataSource(lstData);
+		Map<String, Object> param = new HashMap<String, Object>();
+		return JasperExport.ExportReport(fileChartName, listData1, param,type);
+	}
+	
+}

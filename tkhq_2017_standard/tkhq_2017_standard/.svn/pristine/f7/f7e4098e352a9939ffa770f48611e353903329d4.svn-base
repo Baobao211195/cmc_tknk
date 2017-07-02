@@ -1,0 +1,265 @@
+/**
+* Controller of upload file phi cau truc.
+*/
+'use strict';
+var myApp = angular.module('myApp');
+
+myApp.controller('displayFilePhiCauTrucController', ['$scope',
+													'$PopupMessage',
+													'$uibModal',
+													'$location',
+													'contextPath',
+													'displayFilePhiCauTrucService',
+													function($scope,
+															$PopupMessage,
+															$uibModal,
+															$location,
+															contextPath,
+															displayFilePhiCauTrucService){
+
+	$scope.listFilePhiCauTrucs = [];
+	$scope.typeNhapXuat = "";
+	$scope.isDeleteId = "";
+	$scope.showReport= false;
+	
+//	var contextPath = "http://localhost:8080/tkhq_2017_standard";
+
+	$scope.chuDe = "1";
+	$scope.restDto = {
+		"fileSize" : "",
+		"fileName" : ""
+	}
+
+	init();
+
+	$scope.selectTile = function(chuDe) {
+		getListFilePhiCauTruc(thietLapChuDe(chuDe), $scope.typeNhapXuat);
+
+	}
+
+	$scope.doOpenUploadFile = function() {
+		var typeNhapXuat = $scope.typeNhapXuat;
+		showPopup(typeNhapXuat)
+	}
+	
+	function thietLapChuDe (chuDe){
+		var chuDeTmp = "";
+		
+		if (chuDe === "1"){
+			chuDeTmp = "Mặt hàng";
+		}else {
+			chuDeTmp = "Thị trường";
+		}
+		return chuDeTmp;
+	}
+	
+	function showPopup(typeNhapXuat){
+		var title = "";
+		if (typeNhapXuat === 'X') {
+			title = "Nhập file phi cấu trúc xuất khẩu";
+		}else {
+			title = "Nhập file phi cấu trúc nhập khẩu khẩu";
+		}
+		
+		var modalInstance = $uibModal.open({
+			animation: self.animationsEnabled,
+			ariaLabelledBy: 'modal-title',
+			ariaDescribedBy: 'modal-body',
+			templateUrl: 'importFilePhiCauTrucHome',
+			controller: 'uploadFilePhiCauTrucController',
+			resolve: {
+				title : function() {
+					return title;
+				},
+				typeNhapXuat : function (){
+					return typeNhapXuat;
+				}
+			}
+		});
+	}
+
+	$scope.doDownloadFile = function (fileId) {
+		displayFilePhiCauTrucService.DoDownloadFile(fileId)
+			.then(
+				function(deferred) {
+					$scope.srcReport = contextPath + "/downLoadFile/?" + "fileId="+ fileId;
+				},
+				function (errResponse) {
+					console.error('Error while fetching data');
+				}
+			);
+	}
+
+	$scope.doDeleteFile = function (fileId) {
+		$scope.isDeleteId = fileId;
+		$PopupMessage.Confirm('Ban co chac chan muon xoa ban ghi', deleteFilePhiCauTruc, null);
+		
+	}
+
+	$scope.doClose = function () {
+		window.history.back();
+	}
+	
+	function deleteFilePhiCauTruc() {
+		displayFilePhiCauTrucService.DoDeleteFile($scope.isDeleteId)
+			.then(
+				function(deferred) {
+					if (deferred == 1) {
+						getListFilePhiCauTruc(thietLapChuDe($scope.chuDe), $scope.typeNhapXuat);
+					}
+				},
+				function (errResponse) {
+					console.log('Error while fetching data');
+				}
+			);
+	}
+
+
+	function init() {
+		var path = $location.absUrl().indexOf("uploadFilePhiCauTrucXuatKhau");
+		if(path != -1){
+			$scope.typeNhapXuat = "X";
+		}else {
+			$scope.typeNhapXuat = "N";
+		}
+		getListFilePhiCauTruc(thietLapChuDe($scope.chuDe), $scope.typeNhapXuat);
+	}
+
+	function getListFilePhiCauTruc(chuDe, typeNhapXuat)	{
+		displayFilePhiCauTrucService.GetListFilePhiCauTruc(chuDe, typeNhapXuat)
+			.then(
+				function(deferred) {
+					$scope.listFilePhiCauTrucs = deferred;
+					console.log("Display data successfully");
+				},
+				function (errResponse) {
+					console.error('Error while fetching data');
+				}
+			);
+	}
+
+}]);
+
+
+myApp.controller('uploadFilePhiCauTrucController', ['$scope',
+													'$PopupMessage',
+													'$uibModal',
+													'$uibModalInstance',
+													'$location',
+													'title',
+													'typeNhapXuat',
+													'displayFilePhiCauTrucService',
+													 function($scope,
+													 		 $PopupMessage,
+													 		 $uibModal,
+													 		 $uibModalInstance,
+													 		 $location,
+													 		 title,
+													 		 typeNhapXuat,
+													 		 displayFilePhiCauTrucService){
+
+	var MAX_SIZE_ESSAY_UPLOAD = 5242880 * 2;
+	$scope.disbleBtn = false;
+	 var file = "";
+
+	init()
+
+	$scope.doUploadFile = function() {
+		 file = $scope.myFile;
+
+		if(validateFileUpload()){
+			$scope.disbleBtn = true;
+			return;
+		}
+		if(file === undefined){
+			$scope.disbleBtn = true;
+			$PopupMessage.Error("Hãy lựa chọn file!");
+			return;
+		}
+		
+		var fileObject = thietLapFileObject();
+
+		displayFilePhiCauTrucService.DoUploadFile(file, fileObject)
+		 	.then(
+				function(deferred) {
+					if(deferred == 1){
+						init();
+						$PopupMessage.Success("upload dữ liệu thành công.!");
+						 console.log("Display data successfully");
+					} else {
+						$PopupMessage.Error("upload dữ liệu không thành công.!");
+						init()
+					}
+				},
+				function (errResponse) {
+					console.error('Error while fetching data');
+				}
+			 );
+	}
+	
+	$scope.doCancel = function () {
+		window.location.reload();
+	}
+	$scope.disableEvent = function(){
+		if (($scope.fileUpload !== "") && ($scope.chuDe !== "") && ($scope.moTa !== "") ){
+			$scope.disbleBtn = false;
+		}
+	}
+	
+	function thietLapFileObject (){
+		var fileObj = {};
+		fileObj.fileTitle = $scope.chuDe;
+		fileObj.typeNhapXuat = $scope.typeNhapXuat;
+		fileObj.fileDescription =$scope.moTa;
+
+		return fileObj;
+	}
+
+	function init(){
+		$scope.title = title;
+		$scope.typeNhapXuat = typeNhapXuat;
+		$scope.chuDe = "";
+		$scope.moTa = "";
+		$('#file').val('');
+	}
+	
+	function validateFileUpload(){
+		if($scope.chuDe == ""){
+			$PopupMessage.Error("Hãy chọn chủ đề.!");
+			$('#chuDe').focus();
+			return false;
+		}
+		if ($scope.moTa == "") {
+			$PopupMessage.Error("Hãy chọn mô tả.!");
+			$('#moTa').focus();
+			return false;
+		}
+
+		if(file != null) { 
+			if($scope.myFile.size > MAX_SIZE_ESSAY_UPLOAD){
+				$PopupMessage.Error("File size must be less than 10MB.");
+				return false;
+			} else if (file.size == 0){
+				$PopupMessage.Error("File size must be less than 10MB.");
+				return false;
+			}
+		}
+	}
+
+}]);
+
+myApp.directive('fileModel', ['$parse', function ($parse) {
+   return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+         var model = $parse(attrs.fileModel);
+         var modelSetter = model.assign;
+         
+         element.bind('change', function(){
+            scope.$apply(function(){
+               modelSetter(scope, element[0].files[0]);
+            });
+         });
+      }
+   };
+}]);

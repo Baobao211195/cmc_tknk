@@ -1,0 +1,114 @@
+package com.tkhq.cmc.controller.rest;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tkhq.cmc.common.Constants.ExportType;
+import com.tkhq.cmc.common.JasperExport;
+import com.tkhq.cmc.dto.Tbd_KetXuatTNHTDTO;
+import com.tkhq.cmc.services.Tbd_KetXuatTNHTService;
+
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
+@RestController
+public class Tbd_KetXuatTNHTRestController {
+	
+	@Autowired
+	Tbd_KetXuatTNHTService tbd_ketXuat_services;
+	
+	private static final String TYPE_EXCEL = "0";
+	
+	
+	
+	/**
+	 * 
+	 * @param tuNgay
+	 * @param denNgay
+	 * @return ResponseEntity
+	 */
+	@RequestMapping(value = "/kxTnHT", method = RequestMethod.GET)
+	public ResponseEntity<List<Tbd_KetXuatTNHTDTO>> ts_readKXTNHT(String tuNgay, String denNgay) {
+
+		List<Tbd_KetXuatTNHTDTO> listDto = tbd_ketXuat_services.getKetXuatTHHT(tuNgay, denNgay);
+
+		return new ResponseEntity<List<Tbd_KetXuatTNHTDTO>>(listDto, HttpStatus.OK);
+	}
+
+	/**
+	 * Update trạng thái phê duyệt.
+	 * 88
+	 * @param ketXuatId
+	 * @param loaiHangHoaKx
+	 * @param trangThaiPheDuyet
+	 * @return ResponseEntity
+	 */
+	@RequestMapping(value = "/kxTnHT", method = RequestMethod.POST)
+	public ResponseEntity<Integer> updateKetXuatTNHT(@RequestParam String ketXuatId,
+													@RequestParam String loaiHangHoaKx,
+													@RequestParam Integer trangThaiPheDuyet){
+		
+		Tbd_KetXuatTNHTDTO dto = null;
+		int updateSuccess = 0;
+		Map<String, String> mapData =  createMapData(Arrays.asList(ketXuatId.split(",")),
+													Arrays.asList(loaiHangHoaKx.split(",")));
+		
+		for (Map.Entry<String, String> entry : mapData.entrySet()) {
+			dto = tbd_ketXuat_services.getKetXuatTHHTById(entry.getKey(),entry.getValue());
+			if (dto == null) {
+				return new ResponseEntity<Integer>(updateSuccess, HttpStatus.NOT_FOUND);
+			}
+		   
+		}
+		try {
+			updateSuccess = tbd_ketXuat_services.updateTrangThaiPheDuyetKetXuatTNHT(ketXuatId, trangThaiPheDuyet);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Integer> (updateSuccess, HttpStatus.OK);
+	}
+
+	/**
+	 * @param tuNgay
+	 * @param denNgay
+	 * @param typeKetXuat
+	 * @return
+	 */
+	@RequestMapping(value = "/kxTnHT/printKetXuatTNHT", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> printExcelKetXuatTNHT (String tuNgay, String denNgay, String typeKetXuat) {
+		List<Tbd_KetXuatTNHTDTO> lisDto = tbd_ketXuat_services.getKetXuatTHHT(tuNgay, denNgay);
+
+		JRBeanCollectionDataSource listData = new JRBeanCollectionDataSource(lisDto);
+		Map<String, Object> param= new HashMap<String, Object>();
+
+		if (TYPE_EXCEL.equals(typeKetXuat)) {
+			return JasperExport.ExportReport("KetXuatTNHT", listData, param, ExportType.EXCEL);
+		}
+		return JasperExport.ExportReport("KetXuatTNHT", listData, param, ExportType.PDFINLINE);
+	}
+	
+	/**
+	 * @param listStrIds
+	 * @param listStrLoaiHangHoaKxs
+	 * @return Map
+	 */
+	private Map<String, String> createMapData (List<String> listStrIds, List<String> listStrLoaiHangHoaKxs) {
+		
+		Map<String, String> mapData = new HashMap<String, String>();
+		for (int i=0; i<listStrIds.size(); i++) {
+			mapData.put(listStrIds.get(i), listStrLoaiHangHoaKxs.get(i));
+		}
+		return mapData;
+		
+	}
+}

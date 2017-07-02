@@ -1,0 +1,61 @@
+package com.tkhq.cmc.dao;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.jdbc.ReturningWork;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.tkhq.cmc.dto.QuanLyNhatKyHTDTO;
+import com.tkhq.cmc.utils.Utils;
+
+import oracle.jdbc.internal.OracleTypes;
+
+@Repository
+public class QuanLyNhatKyHTDAOIplm implements QuanLyNhatKyHTDAO{
+	
+	@Autowired
+	private SessionFactory sessionFactory;
+	
+	@Override
+	public List<QuanLyNhatKyHTDTO> getListThongTinNhatKyHT(final String tuNgay, final String denNgay, final String tenDangNhap, final String maDonVi) {
+		return sessionFactory.getCurrentSession().doReturningWork(
+			new ReturningWork<List<QuanLyNhatKyHTDTO>>() {
+				public List<QuanLyNhatKyHTDTO> execute(Connection con) throws SQLException {
+	
+					List<QuanLyNhatKyHTDTO> listDto = new ArrayList<QuanLyNhatKyHTDTO>();
+					CallableStatement callStm = con.prepareCall("{call "
+													+ Utils.readProperties("PK_QUANLY_NK_HT.getListNhatKyHT")
+													+ "(TO_DATE(?, 'dd-mm-yy'),"
+													+ " TO_DATE(?, 'dd-mm-yy'),?,?,?)}");
+					callStm.setString(1, tuNgay);
+					callStm.setString(2, denNgay);
+					callStm.setString(3, tenDangNhap);
+					callStm.setString(4, maDonVi);
+					callStm.registerOutParameter(5, OracleTypes.CURSOR);
+	
+					callStm.execute();
+	
+					ResultSet rs = (ResultSet) callStm.getObject(5);
+					QuanLyNhatKyHTDTO dto = null;
+					while (rs.next()) {
+						dto = new QuanLyNhatKyHTDTO();
+						dto.setTenDangNhap(rs.getString("TEN_DANG_NHAP"));
+						dto.setTenDonVi(rs.getString("TEN"));  
+						dto.setThoiGianDangNhap(rs.getString("THOI_GIAN_DANGNHAP"));
+						dto.setThoiGianDangXuat(rs.getString("THOI_GIAN_DANGXUAT"));
+						dto.setTrangThai(rs.getInt("ACTIVE"));
+						listDto.add(dto);
+					}
+					return listDto;
+				}
+			});
+	}
+}
+

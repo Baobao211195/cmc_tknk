@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-05-29T15:18:33 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BCNKHTDTK017K" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3e143534-c30c-4453-9c75-0e77c31bf68f">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="hntq3_lk" class="java.lang.Double">
+		<fieldDescription><![CDATA[hntq3_lk]]></fieldDescription>
+	</field>
+	<field name="trigia_lk" class="java.lang.Double">
+		<fieldDescription><![CDATA[trigia_lk]]></fieldDescription>
+	</field>
+	<field name="hntq2_lk" class="java.lang.Double">
+		<fieldDescription><![CDATA[hntq2_lk]]></fieldDescription>
+	</field>
+	<field name="hntq4_lk" class="java.lang.Double">
+		<fieldDescription><![CDATA[hntq4_lk]]></fieldDescription>
+	</field>
+	<field name="sapxep" class="java.lang.Long">
+		<fieldDescription><![CDATA[sapxep]]></fieldDescription>
+	</field>
+	<field name="ten_hang" class="java.lang.String">
+		<fieldDescription><![CDATA[ten_hang]]></fieldDescription>
+	</field>
+	<field name="ky" class="java.lang.Long">
+		<fieldDescription><![CDATA[ky]]></fieldDescription>
+	</field>
+	<field name="tong_hntq_lk" class="java.lang.Double">
+		<fieldDescription><![CDATA[tong_hntq_lk]]></fieldDescription>
+	</field>
+	<field name="hntq2_ky" class="java.lang.Double">
+		<fieldDescription><![CDATA[hntq2_ky]]></fieldDescription>
+	</field>
+	<field name="thang" class="java.lang.Long">
+		<fieldDescription><![CDATA[thang]]></fieldDescription>
+	</field>
+	<field name="hntq1_ky" class="java.lang.Double">
+		<fieldDescription><![CDATA[hntq1_ky]]></fieldDescription>
+	</field>
+	<field name="hntq3_ky" class="java.lang.Double">
+		<fieldDescription><![CDATA[hntq3_ky]]></fieldDescription>
+	</field>
+	<field name="hntq4_ky" class="java.lang.Double">
+		<fieldDescription><![CDATA[hntq4_ky]]></fieldDescription>
+	</field>
+	<field name="trigia_ky" class="java.lang.Double">
+		<fieldDescription><![CDATA[trigia_ky]]></fieldDescription>
+	</field>
+	<field name="chuong" class="java.lang.String">
+		<fieldDescription><![CDATA[chuong]]></fieldDescription>
+	</field>
+	<field name="hntq1_lk" class="java.lang.Double">
+		<fieldDescription><![CDATA[hntq1_lk]]></fieldDescription>
+	</field>
+	<field name="nam" class="java.lang.Long">
+		<fieldDescription><![CDATA[nam]]></fieldDescription>
+	</field>
+	<field name="ten_nhom" class="java.lang.String">
+		<fieldDescription><![CDATA[ten_nhom]]></fieldDescription>
+	</field>
+	<field name="tong_hntq_ky" class="java.lang.Double">
+		<fieldDescription><![CDATA[tong_hntq_ky]]></fieldDescription>
+	</field>
+	<field name="loai_bc" class="java.lang.String">
+		<fieldDescription><![CDATA[loai_bc]]></fieldDescription>
+	</field>
+	<variable name="v_Loai" class="java.lang.String">
+		<variableExpression><![CDATA[($F{loai_bc}.equals("SB")?"Sơ Bộ":($F{loai_bc}.equals( "CT" )?"Chính Thức":"Điều Chỉnh"))]]></variableExpression>
+		<initialValueExpression><![CDATA[($F{loai_bc}.equals("SB")?"Sơ Bộ":($F{loai_bc}.equals( "CT" )?"Chính Thức":"Điều Chỉnh"))]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="167">
+			<staticText>
+				<reportElement x="-3" y="36" width="110" height="20" uuid="5d4501d3-2690-4f1d-95e8-b9998b8cf3b1"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TỔNG CỤC HẢI QUAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="16" width="90" height="30" uuid="e854b16f-f4fb-428d-9568-04b31a187521"/>
+				<textElement>
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Biếu số 21N/TCHQ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="16" width="100" height="30" uuid="ed5c9ba3-38ca-4ed6-93e2-43bb5453978b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[BỘ TÀI CHÍNH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="36" width="160" height="20" uuid="da75bac1-ad8f-4c50-8a97-633401334fe2"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cục CNTT & Thống kê Hải quan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="91" y="78" width="380" height="30" uuid="92a6c868-caf1-4cf7-97e5-f83896fad105"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NHẬP KHẨU HÀNG TIÊU DÙNG NHÀ NƯỚC QUẢN LÝ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="136" y="121" width="287" height="30" uuid="243297c4-a8a5-4734-bcac-201bff1d89e8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[(Theo danh mục hàng tiêu dùng của Bộ Công Thương ban hành tại Thông tư số 07/2011/TT-BCT ngày 24/3/2011)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="205" y="98" width="153" height="30" uuid="d0297a84-cb7a-475c-b080-c4d74b400645"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Kỳ "+ $F{ky} + " tháng " + $F{thang} + " năm " +$F{nam}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="484" y="54" width="60" height="20" uuid="30ea0796-b479-4410-9b44-f9383feae4a7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{v_Loai}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="340" y="0" width="213" height="30" uuid="bf5f8be8-ae33-4775-8fc4-29dd1abcaaf6"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trị giá USD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="61" uuid="a46c3050-fe8a-4970-8684-57701efa4576"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Chương HS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="30" width="120" height="31" uuid="3a44a572-767b-4271-9c1c-02b2fcfaadff"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Số trong kỳ báo cáo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="90" y="0" width="250" height="61" uuid="743dcc17-4580-4191-a6e3-eaaf05ac35da"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mô tả]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="30" width="93" height="31" uuid="7cae33bc-16cf-45cb-9f4d-aeb7e58d2964"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cộng dồn đến hết kỳ báo cáo]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="90" height="30" uuid="4f147c78-457b-43d0-9f9d-704310c2a80d"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chuong}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="90" y="0" width="250" height="30" uuid="c9a2230f-5209-497c-bc6b-eee18cc4c6de"/>
+				<box leftPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ten_nhom}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="340" y="0" width="120" height="30" uuid="f9575e9d-232c-48a1-9484-38facebc5281"/>
+				<box rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{trigia_ky}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="460" y="0" width="93" height="30" uuid="8b388d4b-1120-4473-9e5e-8a59eef39445"/>
+				<box rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{trigia_lk}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="70" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

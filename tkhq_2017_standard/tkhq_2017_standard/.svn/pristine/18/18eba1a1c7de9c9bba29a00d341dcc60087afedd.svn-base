@@ -1,0 +1,30 @@
+package com.tkhq.cmc.dao;
+
+import java.util.List;
+
+import com.tkhq.cmc.dto.DuLieuFileCauTrucDto;
+import com.tkhq.cmc.dto.TbdNhapMoiFileDto;
+import com.tkhq.cmc.dto.Tbs_QuocGiaDto;
+import com.tkhq.cmc.dto.UploadFileCauTrucDto;
+
+public interface UploadFileCauTrucDAO {
+	
+	public List<UploadFileCauTrucDto> getListFileCauTruc (String chuDe, String typeNhapXuat);
+	
+	public UploadFileCauTrucDto getFileCauTrucById(int fileId);
+	
+	public int deleteFileCauTruc(int fileId);
+	
+	public int insertThongTinFileCauTruc (UploadFileCauTrucDto uploadFileCauTrucDto);
+	
+	public int insertDulieuFileCauTruc (DuLieuFileCauTrucDto listDuLieuFileCauTrucDto);
+	
+	public List<TbdNhapMoiFileDto> getListNhapMoiFileDto (String chuDe, String typeNhapXuat) ;
+
+	public List<DuLieuFileCauTrucDto> getListPhuongTienXuatNhapCanh(String chuDe, String typeNhapXuat);
+	
+	public int insertThongTinNhapMoi(TbdNhapMoiFileDto tbdNhapMoiFileDto);
+	
+	public List<Tbs_QuocGiaDto> getlistCountry();
+	
+}

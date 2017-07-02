@@ -1,0 +1,62 @@
+package com.tkhq.cmc.services;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tkhq.cmc.dao.TBS_BieuThueDAO;
+import com.tkhq.cmc.dao.TbsCapnhatTygiaDAO;
+import com.tkhq.cmc.model.TbsCapnhatTygia;
+import com.tkhq.cmc.model.Tbs_BieuThue;
+
+@Service("tbsCapnhatTygiaService")
+@Transactional
+public class TbsCapnhatTygiaServiceImpl implements TbsCapnhatTygiaService{
+	@Autowired
+	private TbsCapnhatTygiaDAO tbsCapnhatTygiaDAO;
+
+	public TbsCapnhatTygia findById(Long tygiaId) {
+		return tbsCapnhatTygiaDAO.findById(tygiaId);
+	}
+
+//	public List<TbsCapnhatTygia> findByName(String maNT) {
+//		return tbsCapnhatTygiaDAO.findByName(maNT);
+//	}
+
+	public void insertTbsCapnhatTygia(TbsCapnhatTygia tbsCapnhatTygia) throws Exception {
+		tbsCapnhatTygiaDAO.insertTbsCapnhatTygia(tbsCapnhatTygia);
+	}
+
+	public void updateTbsCapnhatTygia(TbsCapnhatTygia tbsCapnhatTygia) {
+		tbsCapnhatTygiaDAO.updateTbsCapnhatTygia(tbsCapnhatTygia);
+		
+	}
+
+	public void deleteById(Long tygiaId) {
+		tbsCapnhatTygiaDAO.deleteById(tygiaId);
+		
+	}
+
+	public List<TbsCapnhatTygia> findAll() {
+		return tbsCapnhatTygiaDAO.findAll();
+	}
+
+	public void deleteAll() {
+		tbsCapnhatTygiaDAO.deleteAll();
+	}
+	
+//	public Integer getSequence(){
+//		return tbsCapnhatTygiaDAO.getSequence();
+//	}
+	
+	public List<TbsCapnhatTygia> searchTygia(String ngay, String maNt, int minRow, int maxRow){
+		return tbsCapnhatTygiaDAO.searchTygia(ngay, maNt, minRow, maxRow);
+	}
+	
+	public long countTotal(String ngay, String maNt){
+		return tbsCapnhatTygiaDAO.countTotal(ngay, maNt);
+	}
+
+}

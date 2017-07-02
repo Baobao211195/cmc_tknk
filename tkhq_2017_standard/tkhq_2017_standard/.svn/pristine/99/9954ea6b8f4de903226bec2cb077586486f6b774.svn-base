@@ -1,0 +1,259 @@
+/**
+ * 
+ */
+'use strict';
+
+angular.module('myApp')
+		.controller('Tbs_CangNNController', Tbs_CangNNController);
+Tbs_CangNNController.$inject = [ '$scope', 'Tbs_CangNNService', 'pagerService',
+		'$uibModal', '$PopupMessage' ];
+
+function Tbs_CangNNController($scope, Tbs_CangNNService, pagerService,
+		$uibModal, $PopupMessage) {
+	console.log('start Tbs_CangNNController');
+	var self = this;
+	self.lstCangNN = [];
+	self.cangNNVnaccsEntity = {
+		maCang : '',
+		tenTP : '',
+		maNuoc : '',
+		tenNuoc : '',
+		isChecked : false,
+		addOrUpdate : ''
+	}
+	self.selectedList = [];
+	self.checkAll = false;
+
+	// Them moi row su dung popup start
+	self.editRow = editRow;
+	self.showPopup = showPopup;
+	self.remove = remove;
+	self.animationsEnabled = true;
+
+	self.totalItems = 0;
+	self.currentPage = 1;
+	self.maxSize = 5;
+	self.pageSize = 10;
+	self.search = search;
+	search();
+	// Phân trang
+	$scope.numPerPage = 10;
+	$scope.currentPage = 1;
+	$scope.maxSize = 5;
+	self.getTotalPage = getTotalPage;
+	$scope.totalPage = [];
+	self.getTotalPage = getTotalPage;
+	function getTotalPage(total) {
+		if (total % $scope.numPerPage > 0) {
+			$scope.totalPage = Math.floor(total / $scope.numPerPage) + 1;
+		} else {
+			$scope.totalPage = Math.floor(total / $scope.numPerPage);
+		}
+		if (total == 0) {
+			$scope.totalPage = 1;
+		}
+	}
+	$scope.$watch("currentPage + numPerPage", function() {
+		var begin = (($scope.currentPage - 1) * $scope.numPerPage), end = begin
+				+ $scope.numPerPage;
+		$scope.phantrang = self.lstCangNN.slice(begin, end);
+	});
+	function search() {
+		var param = {};
+		param["maCang"] = $scope.maCang;
+		param["tenNuoc"] = $scope.tenNuoc;
+		param["tenTP"] = $scope.tenTP;
+		param["maNuoc"] = $scope.maNuoc;
+		Tbs_CangNNService
+				.searchCangNN(param)
+				.then(
+						function(respone) {
+							self.lstCangNN = respone;
+							getTotalPage(self.lstCangNN.length);
+							var begin = (($scope.currentPage - 1) * $scope.numPerPage), end = begin
+									+ $scope.numPerPage;
+							$scope.phantrang = self.lstCangNN.slice(begin, end);
+						}, function(errResponse) {
+							console.error(errResponse);
+						});
+	}
+	function remove() {
+		self.selectedList = [];
+		var selectedId = "";
+		if (self.checkAll) {
+			for (var i = 0; i < self.lstCangNN.length; i++) {
+				selectedId = self.lstCangNN[i].maCang;
+				self.selectedList.push(selectedId);
+			}
+		} else {
+			for (var i = 0; i < self.lstCangNN.length; i++) {
+				if (self.lstCangNN[i].isChecked == true) {
+					selectedId = self.lstCangNN[i].maCang;
+					self.selectedList.push(selectedId);
+				}
+			}
+		}
+		if (self.selectedList.length == 0) {
+			angular.element(document.querySelector('.messageErrorArea')).val(
+					"Chưa chọn bản ghi nào để xóa");
+			return;
+		}
+		$PopupMessage.Confirm('Ban co chac chan muon xoa ban ghi',
+				DeleteObject, null);
+
+	}
+
+	function DeleteObject() {
+		delCangNN(self.selectedList);
+	}
+	;
+	function delCangNN(chooseList) {
+		console.log('start delCangNN');
+		Tbs_CangNNService.delCangNN(chooseList).then(
+
+		function(response) {
+			if (response == 1) {
+				$PopupMessage.Success('Xóa cảng nước ngoài thành công');
+				search();
+
+			}
+		});
+	}
+	$scope.pageChanged = function() {
+		console.log('Page changed to: ' + self.currentPage);
+		search();
+	};
+
+	function reset() {
+		self.cangnnVnaccsEntity = {
+			maCang : '',
+			tenTP : '',
+			maNuoc : '',
+			tenNuoc : '',
+			isChecked : false,
+			addOrUpdate : ''
+		};
+		// $scope.myForm.$setPristine(); //reset Form
+	}
+
+	// Them moi row su dung popup
+	$scope.addRow = function() {
+		reset(); // Lam moi entity
+		self.cangnnVnaccsEntity.addOrUpdate = 'add';
+		self.showPopup(self.lstcangNN, self.cangnnVnaccsEntity);
+	};
+
+	function editRow(maCang) {
+		console.log('Id to be edited', maCang);
+		for (var i = 0; i < self.lstCangNN.length; i++) {
+			if (self.lstCangNN[i].maCang === maCang) {
+				self.cangnnVnaccsEntity = angular.copy(self.lstCangNN[i]);
+				break;
+			}
+		}
+		self.cangnnVnaccsEntity.addOrUpdate = 'update';
+		self.showPopup(self.lstCangNN, self.cangnnVnaccsEntity);
+		search();
+	}
+
+	function showPopup(grid, row) {
+		var modalInstance = $uibModal.open({
+			animation : self.animationsEnabled,
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'cangnnVnaccsEdit',
+			controller : 'cangnnVnaccsModalCtrl',
+			controllerAs : 'self',
+			resolve : {
+				grid : function() {
+					search();
+					return grid;
+				},
+				row : function() {
+					return row;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(data) {
+				search();
+		}, function() {
+			// $log.info('modal-component dismissed at: ' + new Date());
+		});
+	}
+}
+angular.module('myApp').controller('cangnnVnaccsModalCtrl',
+		cangnnVnaccsModalCtrl);
+cangnnVnaccsModalCtrl.$inject = [ '$uibModalInstance', 'grid', 'row',
+		'Tbs_CangNNService', '$PopupMessage' ]
+function cangnnVnaccsModalCtrl($uibModalInstance, grid, row, Tbs_CangNNService,
+		$PopupMessage) {
+	var self = this;
+	self.lstCangNN = angular.copy(grid);
+	self.entity = angular.copy(row);
+	console.log('start save data!');
+	console.log(self.entity.addOrUpdate);
+	self.message = '';
+
+	self.saveData = saveData;
+
+	self.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+
+	function saveData() {
+		if (self.entity.addOrUpdate == 'add') {
+			console.log('Saving New Row', self.entity);
+			crtCangNN(self.entity);
+		} else {
+			console.log('Updated row with maCang ', self.entity.maCang);
+			updCangNN(self.entity, self.entity.maCang);
+		}
+	}
+	function crtCangNN(entity) {
+		Tbs_CangNNService.crtCangNN(entity).then(function(response) {
+			self.message = response;
+			switch (self.message) {
+			case 0:
+				$PopupMessage.Error('Chuyên đề không tồn tại');
+				break;
+			case 1:
+				$PopupMessage.Success('Cập nhật thành công ');
+				$uibModalInstance.close(self.message);
+				break;
+			case 2:
+				$PopupMessage.Error('Có lỗi trong quá trình xử lý ');
+				break;
+			case 3:
+				$PopupMessage.Error('Đã tồn tại chuyên đề này ');
+				break;
+			default:
+				return false;
+			}
+		});
+	}
+
+	function updCangNN(entity, maCang) {
+		Tbs_CangNNService.updCangNN(entity, maCang).then(function(response) {
+			self.message = response;
+			switch (self.message) {
+			case 0:
+				$PopupMessage.Error('Chuyên đề không tồn tại');
+				break;
+			case 1:
+				$PopupMessage.Success('Cập nhật thành công ');
+				$uibModalInstance.close(self.message);
+				break;
+			case 2:
+				$PopupMessage.Error('Có lỗi trong quá trình xử lý ');
+				break;
+			case 3:
+				$PopupMessage.Error('Đã tồn tại chuyên đề này ');
+				break;
+			default:
+				return false;
+			}
+		});
+	}
+
+}

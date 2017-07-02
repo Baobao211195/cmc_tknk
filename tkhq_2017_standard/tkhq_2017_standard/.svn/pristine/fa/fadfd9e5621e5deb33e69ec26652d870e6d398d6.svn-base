@@ -1,0 +1,182 @@
+/**
+ * Service of model TBS_BIEUTHUE
+ * 
+ */
+
+'use strict';
+
+App.factory('dienBienSoLieuChiTieuTKService',['$http','$q','contextPath', '$httpParamSerializerJQLike', dienBienSoLieuChiTieuTKService]);
+function dienBienSoLieuChiTieuTKService($http, $q, contextPath, $httpParamSerializerJQLike){
+
+	var REST_SERVICE_URI_CUCHQ = 'http://10.224.65.169:8080/tkhq_2017_standard/bcpt/GetCustom';//contextPath + '/tbs_cuakhaunn_vnaccs/';
+	var REST_SERVICE_URI_CHICUCHQ = 'http://10.224.65.169:8080/tkhq_2017_standard/bcpt/GetSubCustom';
+	var REST_SERVICE_URI_MATHANG = 'http://10.224.65.169:8080/tkhq_2017_standard/bcpt/DSMatHangChuYeu';
+	var REST_SERVICE_URI_SOLIEUCHITIEUTK = 'http://10.224.65.169:8080/tkhq_2017_standard/bcpt/SoLieuTheoChiTieuThongKe01';
+//							console.log(REST_SERVICE_URI);
+	var semaphore = false;
+
+	var factory = {
+//		fetchAllBieuThues : fetchAllBieuThues,
+//		crtCuaKhauNN: crtCuaKhauNN,
+//		updCuaKhauNN: updCuaKhauNN,
+//		delCuaKhauNN: delCuaKhauNN,
+		GetSoLieuChiTieuTK01:GetSoLieuChiTieuTK01,
+		GetCucHQ:GetCucHQ,
+    	GetChiCucHQByCuc: GetChiCucHQByCuc,
+    	GetlstMatHang: GetlstMatHang,
+    	doExport: doExport,
+		searchCuaKhauNN: searchCuaKhauNN
+	};
+
+	return factory;
+	
+	function GetSoLieuChiTieuTK01(trangThai, nhx) {
+        var deferred = $q.defer();
+        console.log('Service GetSoLieuChiTieuTK01@trangThai:' + trangThai + "|nhx:" + nhx);
+        $http.get(REST_SERVICE_URI_SOLIEUCHITIEUTK + '?nhx='+nhx+'&trangthai='+trangThai)
+            .then(
+            function (response) {
+            	console.log('Service@response:'+response+'|response.data:'+response.data.data_ky.data[0].ky);
+                deferred.resolve(response.data);
+            },
+            function(errResponse){
+                console.error('Có lỗi xảy ra trong khi lấy thông tin service:'+ errResponse);
+                deferred.reject(errResponse);
+            }
+        );
+                
+        return deferred.promise;
+    }
+
+	 function GetCucHQ() {
+	        var deferred = $q.defer();
+	        $http.get(REST_SERVICE_URI_CUCHQ)
+	            .then(
+	            function (response) {
+	                deferred.resolve(response.data);
+	            },
+	            function(errResponse){
+	                console.error('Có lỗi xảy ra trong khi lấy thông tin');
+	                deferred.reject(errResponse);
+	            }
+	        );
+	        
+	        return deferred.promise;
+	    }
+
+	    function GetChiCucHQByCuc(maCuc) {
+	        var deferred = $q.defer();
+	        console.log('GetChiCucHQByCuc@maCuc:'+maCuc);
+	        $http.get('http://10.224.65.169:8080/tkhq_2017_standard/bcpt/GetSubCustom?maCucHQ='+ maCuc)
+	            .then(
+	            function (response) {
+	                deferred.resolve(response.data);
+	            },
+	            function(errResponse){
+	                console.error('Có lỗi xảy ra trong khi lấy thông tin');
+	                deferred.reject(errResponse);
+	            }
+	        );
+	        return deferred.promise;
+	    }
+	    
+	    function GetlstMatHang(data) {
+	        var deferred = $q.defer();
+	        $http.get(REST_SERVICE_URI_MATHANG +'?nhx='+data)
+	            .then(
+	            function (response) {
+	                deferred.resolve(response.data);
+	            },
+	            function(errResponse){
+	                console.error('Có lỗi xảy ra trong khi lấy thông tin');
+	                deferred.reject(errResponse);
+	            }
+	        );
+	        return deferred.promise;
+	    }
+    
+    function searchCuaKhauNN(formData){						    	
+    	console.log('thayDoiBoSungToKhaiHeThongService@searchCuaKhauNN START formData:',formData);
+    	var deferred = $q.defer();
+    	$http({
+    		headers: {'Content-Type': 'application/json;charset=utf-8'},
+    		method: 'POST',
+    		url: REST_SERVICE_URI_CUCHQ + 'search',
+    		data: formData
+    	})
+		.success(function(data, status) {
+			console.log('Return data: ' + data);
+			deferred.resolve(data);
+		})
+		.error(function(data, status) {
+			console.error('Return data: ' + data);
+			deferred.reject(data);
+		});
+    	return deferred.promise;
+    }
+    
+    function doExport(param){
+		console.log('dienBienSoLieuChiTieuTKService@doExport param'+param);
+		
+		$http({
+    		headers: {
+    			'Content-Type': 'application/json;charset=utf-8',
+    			'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    		},
+    		method: 'POST',
+    		url: contextPath + '/doExport/dienBienSoLieuChiTieuTK',
+    		data: JSON.stringify(param),
+    		responseType: 'arraybuffer'
+    	})
+    	.then(
+            function (response) {
+    		var fileName = "dienBienSoLieuChiTieuTK_" + (new Date()).getTime() + ".xls";
+    		
+    	    var blob = new Blob([response.data], {
+    	        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    	    });
+    	    saveAs(blob, fileName);
+		},
+		function(errResponse){
+			console.log("Can't download file with error: " + errResponse.data);
+		});
+	}
+
+}
+
+angular.module('myApp').service('modalService',
+		[ '$uibModal', function($uibModal) {
+
+			var modalDefaults = {
+				backdrop : true,
+				keyboard : true,
+				modalFade : true,
+				animation : true,
+				templateUrl : 'cuaKhaunnVnaccsEdit',
+				controller : 'Tbs_CuaKhauNNController',
+				controllerAs : 'self'
+			};
+
+			this.showModal = function(grid, row) {
+				// Create temp objects to work with since we're in a singleton
+				// service
+				var tempModalDefaults = {
+					resolve : {
+						grid : function() {
+							return grid;
+						},
+						row : function() {
+							return row;
+						}
+					}
+				};
+				// var tempModalOptions = {};
+
+				// Map angular-ui modal custom defaults to modal defaults
+				// defined in service
+				angular.extend(tempModalDefaults, modalDefaults);
+
+				return $uibModal.open(tempModalDefaults).result;
+			};
+
+		} ]);

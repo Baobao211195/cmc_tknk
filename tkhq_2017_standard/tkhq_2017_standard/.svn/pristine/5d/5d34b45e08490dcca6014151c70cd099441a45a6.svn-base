@@ -1,0 +1,37 @@
+package com.tkhq.cmc.common;
+
+public class Constants {
+	/*
+     * Resource Bundles
+     */
+	public static final String BUNDLE_MESSAGE = "Message";
+	
+	public static final String STORE = "test";
+	
+	/*
+	 * Pagination
+	 */
+	public static final int PAGE_SIZE_10 = 10;
+	
+	public static final int PAGE_SIZE_30 = 30;
+	
+	public static final int PAGE_SIZE_50 = 50;
+	
+	public static final int PAGE_SIZE_100 = 100;
+	
+	public static final String NOW_PAGE = "nowPage";
+	
+	/**
+	 * Date String format type dd/MM/yyyy
+	 * */
+	public static final String DATE_FORMAT_1 = "dd/MM/yyyy";
+	
+	public static final String DATE_FORMAT_2 = "yyyy-MM-dd";
+	
+	public static final String DATE_FORMAT_3 = "yyyy/MM/dd";
+	
+	public enum ExportType{
+		PDFINLINE,HTML,FILE,EXCEL,PDFATTACH,CHART
+	}
+}
+

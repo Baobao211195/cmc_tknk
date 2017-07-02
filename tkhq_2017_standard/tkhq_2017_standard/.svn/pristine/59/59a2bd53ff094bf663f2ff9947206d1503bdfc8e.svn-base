@@ -1,0 +1,164 @@
+package com.tkhq.global.controler.rest;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tkhq.cmc.utils.Utils;
+import com.tkhq.global.dao.DanhMucDao;
+import com.tkhq.global.model.*;
+
+@RestController
+@RequestMapping(value = "bcpt", method = RequestMethod.GET)
+public class DanhMucController {
+	@Autowired 
+	private DanhMucDao repository;
+	
+	@RequestMapping(value = "GetProvince", method = RequestMethod.GET)
+	public ResponseEntity<List<TinhTP>> getAllTinhTP(){
+		List<TinhTP> list = repository.getAllTinhTP();
+		if(list == null){
+			return new ResponseEntity<List<TinhTP>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<TinhTP>>(list, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "GetCustom", method = RequestMethod.GET)
+	public ResponseEntity<List<DonviHQ>> getAllCucHQ(){
+		String requestingUsername = Utils.getRequestingUsername();
+		List<DonviHQ> list = repository.getAllCucHQ(requestingUsername);
+		if(list == null){
+			return new ResponseEntity<List<DonviHQ>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<DonviHQ>>(list, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "GetSubCustom", method = RequestMethod.GET)
+	public ResponseEntity<List<DonviHQ>> getAllChiCucHQByParentCode(String maCucHQ){
+		String requestingUsername = Utils.getRequestingUsername();
+		List<DonviHQ> list = repository.getAllChiCucHQByParentCode(maCucHQ, requestingUsername);
+		if(list == null){
+			return new ResponseEntity<List<DonviHQ>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<DonviHQ>>(list, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "DSMatHangChuYeu", method = RequestMethod.GET)
+	public ResponseEntity<List<MatHangChuYeu>> getDSMHChuYeu(String nhx){
+		List<MatHangChuYeu> list = repository.getDSMatHangChuYeu(nhx);
+		if(list == null)
+			return new ResponseEntity<List<MatHangChuYeu>>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<List<MatHangChuYeu>>(list, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "DSMatHangChuYeuBIEU7", method = RequestMethod.GET)
+	public ResponseEntity<List<DanhMucChung>> getDSMHChuYeuBIEU7(String nhx){
+		List<DanhMucChung> list = repository.getDSMatHangChuYeuBIEU7(nhx);
+		if(list == null)
+			return new ResponseEntity<List<DanhMucChung>>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<List<DanhMucChung>>(list, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "GetGroupTransport", method = RequestMethod.GET)
+	public ResponseEntity<List<DanhMucChung>> getAllNhomPTVT(){
+		
+		List<DanhMucChung> list = repository.getAllNhomPTVT();
+		if(list == null){
+			return new ResponseEntity<List<DanhMucChung>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<DanhMucChung>>(list, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "GetTransport", method = RequestMethod.GET)
+	public ResponseEntity<List<DanhMucChung>> getAllPTVTByNhomPTVT(String maNhomPTVT){
+		
+		List<DanhMucChung> list = repository.getAllPTVTByNhomPTVT(maNhomPTVT);
+		if(list == null){
+			return new ResponseEntity<List<DanhMucChung>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<DanhMucChung>>(list, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "GetPhan", method = RequestMethod.GET)
+	public ResponseEntity<List<DanhMucChung>> getAllPhan(){
+		
+		List<DanhMucChung> list = repository.getAllPhan();
+		if(list == null){
+			return new ResponseEntity<List<DanhMucChung>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<DanhMucChung>>(list, HttpStatus.OK);
+	}
+	@RequestMapping(value = "GetChuong", method = RequestMethod.GET)
+	public ResponseEntity<List<DanhMucChung>> getAllChuong(){
+		
+		List<DanhMucChung> list = repository.getAllChuong();
+		if(list == null){
+			return new ResponseEntity<List<DanhMucChung>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<DanhMucChung>>(list, HttpStatus.OK);
+	}
+	@RequestMapping(value = "GetNhom", method = RequestMethod.GET)
+	public ResponseEntity<List<DanhMucChung>> getAllNhomByChuong(String chuong){
+		
+		List<DanhMucChung> list = repository.getAllNhomByChuong(chuong);
+		if(list == null){
+			return new ResponseEntity<List<DanhMucChung>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<DanhMucChung>>(list, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "GetKhoi", method = RequestMethod.GET)
+	public ResponseEntity<List<DanhMucChung>> getAllKhoiKT(){
+		
+		List<DanhMucChung> list = repository.getAllKhoiKT();
+		if(list == null){
+			return new ResponseEntity<List<DanhMucChung>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<DanhMucChung>>(list, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "GetNuoc", method = RequestMethod.GET)
+	public ResponseEntity<List<DanhMucChung>> getAllNuocByKhoiKT(String khoi){
+		
+		List<DanhMucChung> list = repository.getAllNuocByKhoiKT(khoi);
+		if(list == null){
+			return new ResponseEntity<List<DanhMucChung>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<DanhMucChung>>(list, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "GetThitruong", method = RequestMethod.GET)
+	public ResponseEntity<List<DanhMucChung>> getAllThiTruong(){
+		
+		List<DanhMucChung> list = repository.getAllThiTruong();
+		if(list == null){
+			return new ResponseEntity<List<DanhMucChung>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<DanhMucChung>>(list, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "GetGate", method = RequestMethod.GET)
+	public ResponseEntity<List<DanhMucChung>> getAllCuaKhau(){
+		
+		List<DanhMucChung> list = repository.getAllCuaKhau();
+		if(list == null){
+			return new ResponseEntity<List<DanhMucChung>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<DanhMucChung>>(list, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "GetLHXNK", method = RequestMethod.GET)
+	public ResponseEntity<List<DanhMucChung>> getAllLoaiHinhXNK(String nhx){
+		
+		List<DanhMucChung> list = repository.getAllLoaiHinh(nhx);
+		if(list == null){
+			return new ResponseEntity<List<DanhMucChung>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<DanhMucChung>>(list, HttpStatus.OK);
+	}
+}

@@ -1,0 +1,68 @@
+/**
+ * Service of model HoanThanhRaXoatSanPhamTKDauRa.
+ * 
+ */
+'use strict';
+App.factory('hoanThanhRaXoatSanPhamTKDauRaService',['$http','$q', 'contextPath', hoanThanhRaXoatSanPhamTKDauRaService]);
+
+function hoanThanhRaXoatSanPhamTKDauRaService($http, $q, contextPath) {
+
+    var factory = {
+        GetListThongTin: GetListThongTin,
+        GetDanhMucBaoCaoByMaBC : GetDanhMucBaoCaoByMaBC,
+        InsertThongTinRaXoat: InsertThongTinRaXoat
+    };
+
+    return factory;
+
+    function GetListThongTin(typeNhapXuat) {
+        
+        var deferred = $q.defer();
+        console.log(typeNhapXuat);
+        console.log(contextPath + "/raXoatSanPham?" + "typeNhapXuat=" + typeNhapXuat);
+        $http.get(contextPath + "/raXoatSanPham?" + "typeNhapXuat=" + typeNhapXuat)
+            .then(
+                function(response){
+                    deferred.resolve(response.data);
+                },
+                function(errResponse){
+                    console.log("Có lỗi xảy ra trong khi lấy thông tin GetListThongTin");
+                    deferred.reject(errResponse);
+                }
+        );
+        return deferred.promise;
+    }
+    
+    function GetDanhMucBaoCaoByMaBC(typeNhapXuat, maBc){
+    	var deferred = $q.defer();
+    	
+    	 $http.get(contextPath + "/danhMucBaoCaoByMaBacao?" + "typeNhapXuat=" + typeNhapXuat + "&maBc=" +maBc)
+		    	 .then(
+	                 function(response){
+	                     deferred.resolve(response.data);
+	                 },
+	                 function(errResponse){
+	                     console.log("Có lỗi xảy ra trong khi lấy thông tin GetDanhMucBaoCaoByMaBC");
+	                     deferred.reject(errResponse);
+	                 }
+		         );
+    	 
+         return deferred.promise;
+    }
+
+    function InsertThongTinRaXoat(thongTinEntity) {
+        console.log(thongTinEntity);
+		var deferred = $q.defer();
+        $http.post(contextPath + '/hoanThanhRaXoat', thongTinEntity)
+            .then(
+                function(response) {
+                    deferred.resolve(response.data)	
+                },
+                function(errResponse) {
+                    console.log("Có lỗi xảy ra trong khi hoàn thành rà xoát InsertThongTinRaXoat");
+                    deferred.resolve(errResponse.data)	
+                }
+            );
+         return deferred.promise;   
+    }  
+}

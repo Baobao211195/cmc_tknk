@@ -1,0 +1,38 @@
+package com.tkhq.cmc.dto;
+
+import java.math.BigInteger;
+
+import com.tkhq.cmc.common.PagerInfo;
+
+public class TbsQtacTrigiaDTO extends PagerInfo{
+	
+	private Long id;
+	
+	private String mathongke;
+	
+	private BigInteger trigiatinhthue;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getMathongke() {
+		return mathongke;
+	}
+
+	public void setMathongke(String mathongke) {
+		this.mathongke = mathongke;
+	}
+
+	public BigInteger getTrigiatinhthue() {
+		return trigiatinhthue;
+	}
+
+	public void setTrigiatinhthue(BigInteger trigiatinhthue) {
+		this.trigiatinhthue = trigiatinhthue;
+	}
+}

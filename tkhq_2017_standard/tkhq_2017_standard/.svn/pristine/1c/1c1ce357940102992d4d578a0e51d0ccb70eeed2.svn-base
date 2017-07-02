@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-05-19T12:19:41 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BCSLDNTTTP" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3159fe19-15a6-4777-bf9f-8c0983d0bbb1">
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="ma_tinh" class="java.lang.String">
+		<fieldDescription><![CDATA[ma_tinh]]></fieldDescription>
+	</field>
+	<field name="nam" class="java.lang.Long">
+		<fieldDescription><![CDATA[nam]]></fieldDescription>
+	</field>
+	<field name="tentinhtp" class="java.lang.String">
+		<fieldDescription><![CDATA[tentinhtp]]></fieldDescription>
+	</field>
+	<field name="so_luong" class="java.lang.Long">
+		<fieldDescription><![CDATA[so_luong]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="118" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="16" width="100" height="30" uuid="cfbc0ab1-c576-466b-a134-a6db77ecf824"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[BỘ TÀI CHÍNH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-3" y="36" width="110" height="20" uuid="4e03fe0a-77a2-49e3-9c0e-0cdaaf20cbd7"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TỔNG CỤC HẢI QUAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="80" y="68" width="380" height="30" uuid="d93b75b1-a23b-42e1-a107-ec2d39d8f1b6"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SỐ LƯỢNG DOANH NGHIỆP THEO TỈNH THÀNH PHỐ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="201" y="88" width="153" height="30" uuid="22a32b1b-a2c5-4482-a710-d9ec6962df02"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Năm " +$F{nam}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="390" y="16" width="160" height="20" uuid="7acc8edd-4601-4dbd-8851-f4e8a28099ea"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cục CNTT & Thống kê Hải quan]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="35" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="320" y="0" width="230" height="35" uuid="f03326dc-4c94-42cf-9523-2f31a59d1cdd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Số lượng doanh nghiệp]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="320" height="35" uuid="fa9d429e-8621-48ff-8566-5f5709b4a985">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tên tỉnh, thành phố]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="320" height="30" uuid="4aecfc14-4cc5-4ce9-ba13-8a74cbceb75d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tentinhtp}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.###">
+				<reportElement x="320" y="0" width="230" height="30" uuid="0c8231fa-a91d-4ba7-864a-6945eda5d810">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{so_luong}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement positionType="Float" x="480" y="0" width="70" height="15" uuid="d4a77298-1a30-4245-ad8d-7dac4b649c60">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Trang " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

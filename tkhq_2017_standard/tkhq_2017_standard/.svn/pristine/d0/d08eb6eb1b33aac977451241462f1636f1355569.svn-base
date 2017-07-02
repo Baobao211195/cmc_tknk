@@ -1,0 +1,118 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<script type="text/javascript">
+	var _contextPath = "${pageContext.request.contextPath}";
+</script>
+
+<script src="<c:url value='/static/js/service/tbs_cangnnService.js' />"></script>
+<script	src="<c:url value='/static/js/controller/tbs_cangnnController.js' />"></script>
+
+<!-- <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-2 main bgwhite"> -->
+	<div class="generic-container"
+		ng-controller="Tbs_CangNNController as cangNNCtrl">
+		<div class="panel panel-success">
+			<h3 class="panel-heading">Danh mục cảng nước ngoài VNACCS</h3>
+		</div>
+		<div class="container">
+			<fieldset class="form-group form-wrapper">
+				<legend class="form-wrapper">Thông tin tìm kiếm</legend>
+				<form class="form-search">
+					<table style="width: 100%">
+						<tr>
+							<td><label class="col-sm-3">Mã cảng:</label>
+								<div class="col-sm-3">
+									<input type="text" id="maCang" ng-model="maCang" />
+								</div></td>
+							<td><label class="col-sm-3">Tên nước:</label>
+								<div class="col-sm-3">
+									<input type="text" id="tenNuoc" ng-model="tenNuoc" />
+								</div></td>
+
+						</tr>
+
+						<tr>
+
+							<td><label class="col-sm-3">Mã nước:</label>
+								<div class="col-sm-6">
+									<input type="text" id="maNuoc" ng-model="maNuoc" />
+								</div></td>
+							<td><label class="col-sm-3">Tên thành phố:</label>
+								<div class="col-sm-3">
+									<input type="text" id="tenTP" ng-model="tenTP" />
+								</div></td>
+							<td></td>
+						</tr>
+					</table>
+
+					</br>
+
+					<div class="form-group row form-btn-align" align="center">
+						<button type="submit" id="btnSearch"
+							ng-click="cangNNCtrl.search(1,cangNNCtrl.pageSize)"
+							class="btn btn-success">
+							<i class="icon-white"></i>Tìm kiếm
+						</button>
+						<button type="button" id="addRow" class="btn btn-success"
+							ng-click="addRow()">
+							<i class="icon-white"></i>Thêm mới
+						</button>
+						<button type="submit" id="btnDel" class="btn btn-danger"
+							ng-click="cangNNCtrl.remove()">
+							<i class=icon-white"></i>Xóa
+						</button>
+					</div>
+					</br>
+
+				</form>
+			</fieldset>
+		</div>
+
+		<table id="tblCangNN" class="table table-bordered table-striped table-responsive">
+			<%-- <colgroup>
+				<col width="11%" />
+				<col width="21%" />
+				<col width="25%" />
+				<col width="25%" />
+				<col width="15%" />
+			</colgroup> --%>
+			<thead>
+				<tr>
+					<th><input type="checkbox" ng-model="cangNNCtrl.checkAll"></th>
+					<!--<th>STT</th> -->
+					<th>Mã cảng</th>
+					<th>Tên thành phố</th>
+					<th>Mã nước</th>
+					<th>Tên nước</th>
+
+				</tr>
+			</thead>
+			<tbody align="center">
+				<tr ng-if="cangNNCtrl.lstCangNN"></tr>
+				<tr ng-repeat="row in cangNNCtrl.lstCangNN">
+					<td><input type="checkbox" ng-checked="cangNNCtrl.checkAll"
+						ng-model="row.isChecked"></td>
+					<td ng-bind="row.maCang"></td>
+					<td ng-bind="row.tenTP"></td>
+					<td ng-bind="row.maNuoc"></td>
+					<td ng-bind="row.tenNuoc"></td>
+					<td>
+						<button type="button" ng-click="cangNNCtrl.editRow(row.maCang)"
+							class="btn btn-success custom-width">Edit</button>
+					</td>
+
+				</tr>
+
+			</tbody>
+		</table>
+		<div class="row">
+			<div></div>
+			<div>
+				<pagination total-items="cangNNCtrl.totalItems"
+					ng-change="pageChanged()" ng-model="cangNNCtrl.currentPage"
+					max-size="cangNNCtrl.maxSize" class="pagination"
+					boundary-links="true" rotate="false"></pagination>
+			</div>
+		</div>
+	</div>
+<!-- </div> -->

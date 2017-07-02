@@ -1,0 +1,279 @@
+/**
+ * Controller of model 
+ */
+
+'use strict';
+
+angular.module('myApp').controller('TbsCapnhatTygiaController', TbsCapnhatTygiaController);
+TbsCapnhatTygiaController.$inject = ['$scope', 'TbsCapnhatTygiaService', 'pagerService', '$uibModal', '$state', '$PopupMessage'];
+
+function TbsCapnhatTygiaController($scope, TbsCapnhatTygiaService, pagerService, $uibModal, $state, $PopupMessage) {
+		console.log('TbsCapnhatTygiaController START@');
+		var self = this;
+		//define variable
+		self.listTygia = [];
+        self.tygiaEntity = {
+        		tygiaId: 0,
+        		maNt: '',        		
+        		tygiaVnd: 0,
+        		tygiaUsd: 0,        		
+        		ngay: '',
+        		isChecked: false,
+        		addOrUpdate: ''
+        };
+        self.selectedList = []; //Danh sach row da chon        
+        self.checkAll = false;
+        
+        //method handle action in form
+        self.remove = remove;	//Xoa ban ghi da chon        
+        self.editRow = editRow;	//Cap nhat ban ghi da chon
+        self.showPopup = showPopup;	//Hien thi popup cho them moi va cap nhat du lieu
+        self.search = search;	//Tim kiem tren form
+        
+        //option of popup
+        self.animationsEnabled = true;
+        
+        //pagination
+        self.pager = {};
+        //self.setPage = setPage;
+        //variable of paging
+        self.totalItems = 0;
+        self.currentPage = 1;
+        self.maxSize = 5;
+        self.pageSize = 10;
+        
+        self.testColum = 3;
+                
+        
+        //get all data after initialize property of controller        
+        search(self.currentPage, self.pageSize);
+        
+//        function setPage(totalItems, currentPage, pageSize){
+//        	selft.pager = pagerService.GetPager(totalItems, currentPage, pageSize);
+//        }
+        
+        $scope.pageChanged = function() {
+            console.log('Page changed to: ' + self.currentPage);
+            search(self.currentPage, self.pageSize);
+        };
+
+        function delTygia(chooseList) {
+        	TbsCapnhatTygiaService.delTygia(chooseList)
+                .then(
+                	search(0, self.pageSize),
+                    function (errResponse) {
+                        console.error(errResponse);
+                    }
+                );
+        }
+        
+        function search(currentPage, pageSize){
+        	var param = {};
+        	if($scope.maNt == null)
+        		param["maNt"] = "";
+        	else
+        		param["maNt"] = $scope.maNt;
+        	if($scope.ngay == null)
+        		param["ngay"] = "";
+        	else
+        		param["ngay"] = $scope.ngay;        	
+        	param["currentPage"] = currentPage;
+        	param["pageSize"] = pageSize;        	                	
+        	
+        	TbsCapnhatTygiaService.searchTygia(param)
+        		.then(function(respone){
+        			self.listTygia = respone.content;
+        			self.totalItems = parseInt(respone.totalItems);
+        			self.pageSize = parseInt(respone.pageSize);
+        			self.currentPage = parseInt(respone.currentPage);
+        			},
+        			function(errResponse){
+        				console.error(errResponse);
+        			}
+        		);
+        	console.log('search@self.listTygia: ' + self.listTygia);
+        }       
+
+        function remove() {
+
+        	self.selectedList = [];
+        	var selectedId = "";
+        	for(var i = 0; i < self.listTygia.length; i++){
+        		if(self.listTygia[i].isChecked == true){
+        			selectedId = self.listTygia[i].tygiaId;
+        			self.selectedList.push(selectedId);
+        		}
+        	}
+            console.log('Id to be deleted: ', self.selectedList);
+            if(self.selectedList.length == 0){
+            	angular.element(document.querySelector('.messageErrorArea')).val("Chưa chọn bản ghi nào để xóa");
+            	return;
+            }
+
+            var modalInstance = $PopupMessage.Confirm('Bạn có chắc muốn xóa bản ghi?');
+            
+            modalInstance.result.then(function (data) {
+				if(data == 'ok'){
+					delTygia(self.selectedList);
+				}
+				else if (data == 'cancel'){
+					console.log("Delete cancel");
+				}
+				else{
+					console.log("Error");
+				}
+		    });
+        }
+
+        //Them moi truc tiep row tren grid end
+
+        function reset() {
+        	self.tygiaEntity = {
+        			tygiaId: 0,
+            		maNt: '',        		
+            		tygiaVnd: 0,
+            		tygiaUsd: 0,        		
+            		ngay: '',
+            		isChecked: false,
+            		addOrUpdate: ''
+            };           
+        }
+        
+        $scope.addRow = function() {
+        	reset(); //Lam moi entity
+        	self.tygiaEntity.addOrUpdate = 'add';
+    		self.showPopup(self.listTygia, self.tygiaEntity);
+    	};
+    	
+    	function editRow(id){
+    		console.log('Id to be edited', id);
+            for (var i = 0; i < self.listTygia.length; i++) {
+                if (self.listTygia[i].tygiaId === id) {
+                    self.tygiaEntity = angular.copy(self.listTygia[i]);
+                    self.tygiaEntity.ngay = new Date(self.tygiaEntity.ngay);
+                    break;
+                }
+            }
+            self.tygiaEntity.addOrUpdate = 'update';
+            self.showPopup(self.listTygia, self.tygiaEntity);
+    	}   	
+    	
+    	function showPopup(grid, row){
+    		var modalInstance = $uibModal.open({
+    			animation: self.animationsEnabled,
+    			ariaLabelledBy: 'modal-title',
+    			ariaDescribedBy: 'modal-body',
+    			templateUrl: 'tygiaEdit',
+    			controller: 'tygiaModalCtrl',
+    			controllerAs: 'self',
+    			resolve: {
+    				grid : function() {
+						return grid;
+					},
+					row : function() {
+						return row;
+					}
+    			}
+    		});
+    		
+    		modalInstance.result.then(function (data) {
+    				if(data == 'success'){
+    					search(1, self.pageSize);
+    				}else{
+    					console.log('Có lỗi xảy ra');
+    				}
+    		    }, function () {
+    		      //$log.info('modal-component dismissed at: ' + new Date());
+    		    });
+    	}
+
+}
+
+angular.module('myApp').controller('tygiaModalCtrl', tygiaModalCtrl);
+tygiaModalCtrl.$inject = ['$uibModalInstance', 'grid', 'row', 'TbsCapnhatTygiaService', '$PopupMessage']
+function tygiaModalCtrl($uibModalInstance, grid, row, TbsCapnhatTygiaService, $PopupMessage) {
+	var self = this;
+	self.listTygia = angular.copy(grid);
+	self.entity = angular.copy(row);
+	self.message = '';
+	  
+	self.saveData = saveData;
+
+	self.cancel = function () {
+	    $uibModalInstance.dismiss('cancel');
+	};
+	  
+	function saveData() {
+		if (self.entity.addOrUpdate == 'add') {
+			console.log('Saving New Row', self.entity);
+			crtTygia(self.entity);
+        } else {
+        	console.log('Updated row with id ', self.entity.tygiaId);
+        	updTygia(self.entity, self.entity.tygiaId);
+        }
+		//$uibModalInstance.close(self.message);
+
+		if(self.message == 'Create success')
+		{
+			var modalInstance = $PopupMessage.Success('Thêm mới thành công');
+			
+			modalInstance.result.then(function (data) {
+				if(data == 'close'){
+					$uibModalInstance.close("success");
+				}
+				else{
+					$uibModalInstance.close("error");
+				}
+		    });
+		}
+		else if(self.message == 'Update success'){
+			var modalInstance = $PopupMessage.Success('Cập nhật thành công');
+			
+			modalInstance.result.then(function (data) {
+				if(data == 'close'){
+					$uibModalInstance.close("success");
+				}
+				else{
+					$uibModalInstance.close("error");
+				}
+		    });
+		}
+		else{
+			return false;
+		}
+  	}
+	
+	function crtTygia(entity) {
+		TbsCapnhatTygiaService.crtTygia(entity)
+            .then(
+            	self.message = 'Create success',
+                function (errResponse) {
+            		console.error(errResponse);
+            		self.message = 'error';
+                }
+            );
+    }
+	
+	function updTygia(entity, id) {
+		TbsCapnhatTygiaService.updTygia(entity, id)
+            .then(
+            	self.message = 'Update success',
+                function (errResponse) {
+                    console.error(errResponse);
+                    self.message = 'error';
+                }
+            );
+    }
+	
+//	function fetchAllBieuThues() {
+//    	TBS_BieuThueService.fetchAllBieuThues()
+//        	.then(
+//    			function (deferred) {
+//    				self.lstBieuThue = deferred;
+//                },
+//                function (errResponse) {
+//                    console.error('Error while fetching data');
+//                }
+//            );
+//    }
+}

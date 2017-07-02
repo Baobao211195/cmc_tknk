@@ -1,0 +1,42 @@
+package com.tkhq.global.model.bcptbangbieu;
+
+
+public class SLTheoCTTK01Response {
+	private String chi_tieu; 
+	private SLTheoCTTK01DataKy data_ky;
+	private SLTheoCTTK01DataThang data_thang;
+	private String avg;
+	public String getChi_tieu() {
+		return chi_tieu;
+	}
+	public void setChi_tieu(String chi_tieu) {
+		this.chi_tieu = chi_tieu;
+	}
+	public SLTheoCTTK01DataKy getData_ky() {
+		return data_ky;
+	}
+	public void setData_ky(SLTheoCTTK01DataKy data_ky) {
+		this.data_ky = data_ky;
+	}
+	public SLTheoCTTK01DataThang getData_thang() {
+		return data_thang;
+	}
+	public void setData_thang(SLTheoCTTK01DataThang data_thang) {
+		this.data_thang = data_thang;
+	}
+	public String getAvg() {
+		return avg;
+	}
+	public void setAvg(String avg) {
+		this.avg = avg;
+	}
+	public SLTheoCTTK01Response(SLTheoCTTK01DataKy data_ky, SLTheoCTTK01DataThang data_thang,
+			String avg, String chi_tieu) {
+		this.chi_tieu = chi_tieu;
+		this.data_ky = data_ky;
+		this.data_thang = data_thang;
+		this.avg = avg;
+	}	
+	public SLTheoCTTK01Response(){}
+}
+

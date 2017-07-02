@@ -1,0 +1,38 @@
+package com.tkhq.cmc.dao;
+
+import com.tkhq.cmc.model.TbsDvtVnaccs;
+import com.tkhq.cmc.model.TbsQtacDnTrigiaNhapkhau;
+import com.tkhq.cmc.model.TbsQtacDnTrigiaXuatkhau;
+
+public class TbsQtacDnTrigiaXuatkhauDaoImpl extends BaseDAO<String, TbsQtacDnTrigiaXuatkhau> implements TbsQtacDnTrigiaXuatkhauDao {
+
+	@Override
+	public void insert(TbsQtacDnTrigiaXuatkhau entity) {
+		try{
+			this.persist(entity);
+		}catch(Exception ex){
+			throw ex;
+		}
+	}
+
+	@Override
+	public void update(TbsQtacDnTrigiaXuatkhau entity) {
+		try{
+			this.update(entity);
+		}catch(Exception ex){
+			throw ex;
+		}	
+	}
+
+	@Override
+	public void delete(long id) {
+		TbsQtacDnTrigiaXuatkhau entity = new TbsQtacDnTrigiaXuatkhau();
+		entity.setId(id);
+		try{
+			this.delete(entity);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
+
+}

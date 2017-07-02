@@ -1,0 +1,127 @@
+package com.tkhq.cmc.controller.rest;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tkhq.cmc.dto.HTRaXoatSanPhamTKDTO;
+import com.tkhq.cmc.services.HTRaXoatSanPhamTKService;
+import com.tkhq.cmc.utils.Utils;
+
+@RestController
+public class HTRaXoatSanPhamTKRestController {
+	
+	private static final String EMPTY = "";
+	@Autowired
+	HTRaXoatSanPhamTKService hTRaXoatSanPhamTKService;
+	
+	@RequestMapping(value = "/raXoatSanPham", method = RequestMethod.GET)
+	public ResponseEntity<List<Object>> getListInformation(String typeNhapXuat) {
+		
+		List<HTRaXoatSanPhamTKDTO> listDanhMucDto      = hTRaXoatSanPhamTKService.getListDanhMucBaoCao(typeNhapXuat);
+		List<HTRaXoatSanPhamTKDTO> listCongChucDto     = hTRaXoatSanPhamTKService.getListCongChucQuanLy(typeNhapXuat);
+		List<HTRaXoatSanPhamTKDTO> listThongTinXuLyDto = hTRaXoatSanPhamTKService.getListThongTinXuLy(typeNhapXuat);
+		
+		List<Object> listObj = new ArrayList<Object>();
+
+		listObj.add(listDanhMucDto);
+		listObj.add(listCongChucDto);
+		listObj.add(listThongTinXuLyDto);
+
+		return new ResponseEntity<List<Object>>(listObj, HttpStatus.OK);
+		
+	}
+	
+	@RequestMapping(value = "/danhMucBaoCaoByMaBacao", method = RequestMethod.GET)
+	public ResponseEntity<HTRaXoatSanPhamTKDTO> getDanhMucBaoCaoByMaBacao (String typeNhapXuat, String maBc){
+		HTRaXoatSanPhamTKDTO dto = hTRaXoatSanPhamTKService.getDanhMucBaoCaoByMaBC(typeNhapXuat, maBc);
+		
+		if (dto == null){
+			new ResponseEntity<HTRaXoatSanPhamTKDTO>(dto, HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<HTRaXoatSanPhamTKDTO>(dto, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/hoanThanhRaXoat", method = RequestMethod.POST,produces= MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Integer> insertThongTinRaXoat(@RequestBody HTRaXoatSanPhamTKDTO paramDto) {
+		
+		int insertSuccess = 0;
+		HTRaXoatSanPhamTKDTO  resultDto = hTRaXoatSanPhamTKService.getThongTinXuLyByMaBaoCao(paramDto.getMaDanhMucBaoCao(), paramDto.getTypeNhapXuat());
+		HTRaXoatSanPhamTKDTO dtoIns = null;
+		try {
+			if (resultDto != null 
+				&& (Utils.equals(paramDto.getMaDanhMucBaoCao(), resultDto.getMaDanhMucBaoCao()))
+				&& (paramDto.getKy()== resultDto.getKy())
+				&& (paramDto.getThang() == resultDto.getThang())
+				&& (paramDto.getNam()== resultDto.getNam())
+				&& Utils.equals(paramDto.getTrangThai(), resultDto.getTrangThai())
+				&& (resultDto.getHoanThanhRaXoat() == 1)){
+				if ((paramDto.getThayDoiDuLieu() == 1) && !EMPTY.equals(paramDto.getLyDoThayDoiDL())) {
+					dtoIns = thietLapThongTinToInsert(paramDto);
+					insertSuccess = hTRaXoatSanPhamTKService.updateThongTinXuLy(paramDto.getMaDanhMucBaoCao(),
+																				paramDto.getLyDoThayDoiDL(),
+																				String.valueOf(paramDto.getKy()),
+																				String.valueOf(paramDto.getThang()),
+																				String.valueOf(paramDto.getNam()),
+																				paramDto.getTypeNhapXuat(),
+																				paramDto.getTrangThai(),
+																				paramDto.getTenCongChucQuanLy());
+					return new ResponseEntity<Integer>(insertSuccess, HttpStatus.OK);
+				} else {
+					insertSuccess = 2;
+					return new ResponseEntity<Integer>(insertSuccess, HttpStatus.OK);
+				}
+				
+			} else {
+				dtoIns = thietLapThongTinToInsert(paramDto);
+				insertSuccess = hTRaXoatSanPhamTKService.insertThongTinXuLy(dtoIns);
+				return new ResponseEntity<Integer>(insertSuccess, HttpStatus.OK);
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Integer>(insertSuccess, HttpStatus.OK);
+	}
+
+	/**
+	* @param paramDto
+	* @return HTRaXoatSanPhamTKDTO
+	*/
+	private HTRaXoatSanPhamTKDTO thietLapThongTinToInsert(HTRaXoatSanPhamTKDTO paramDto) {
+
+		HTRaXoatSanPhamTKDTO resultDto = new HTRaXoatSanPhamTKDTO();	
+
+		resultDto.setMaDanhMucBaoCao(paramDto.getMaDanhMucBaoCao());
+		resultDto.setKy(paramDto.getKy());
+		resultDto.setThang(paramDto.getThang());
+		resultDto.setNam(paramDto.getNam());
+		resultDto.setTypeNhapXuat(paramDto.getTypeNhapXuat());
+		resultDto.setTrangThai(paramDto.getTrangThai());
+		resultDto.setPheDuyet(paramDto.getPheDuyet());
+		// NGÀY PHÊ DUYỆT LÀ SYSdaTE
+		if (!getUserLogin().isEmpty()) {
+			resultDto.setNguoiPheDuyet(getUserLogin()); 
+		}else {
+			resultDto.setNguoiPheDuyet(paramDto.getNguoiPheDuyet());
+		}
+		resultDto.setThayDoiDuLieu(paramDto.getThayDoiDuLieu());
+		resultDto.setTenCongChucQuanLy(paramDto.getTenCongChucQuanLy());
+		resultDto.setLyDoThayDoiDL(paramDto.getLyDoThayDoiDL());
+		resultDto.setHoanThanhRaXoat(1);
+
+		return resultDto;
+	}
+	
+	private String getUserLogin(){
+		return SecurityContextHolder.getContext().getAuthentication().getName();
+	}
+}

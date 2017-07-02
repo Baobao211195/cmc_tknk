@@ -1,0 +1,91 @@
+/**
+ * Created by cmcsoft on 6/2/2017.
+ */
+
+App.factory('tbsDmQtacService',['$http', '$q', 'contextPath', tbsDmQtacService]);
+
+function tbsDmQtacService($http, $q, contextPath) {
+    'use strict';
+    var factory = {
+        validateEmpty: validateEmpty,
+    	validateMa : validateMa,
+    	validateTriGia: validateTriGia,
+    	validateDecimal : validateDecimal,
+    	valdateTenQuocGia:valdateTenQuocGia,
+    	DoUploadFile : DoUploadFile
+    };
+
+    return factory;
+    
+    
+    function DoUploadFile(fileUpload) {
+		var deferred = $q.defer();
+		var formData = new FormData();
+		formData.append('fileUpLoad', fileUpload);
+		var url = contextPath + "/uploadFileDanhMuc",formData;
+		$http.post(url, formData,
+					{
+						transformRequest : angular.identity,
+						headers : {
+							'Content-Type': undefined,
+						}
+					}
+			)
+			.then(
+				function(response) {
+					deferred.resolve(response.data)	
+				 },
+			    function(errResponse) {
+					console.log("Có lỗi xảy ra trong khi hoàn thành rà xoát ");
+					deferred.resolve(errResponse.data)	
+			    }
+		);
+		return deferred.promise;
+	}
+    
+    function validateEmpty(str) {
+        if(str === ""){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    function validateMa(ma) {
+       if(ma.length > 20){
+    	   return true;
+       }else {
+    	   return false;
+       }
+       
+    }
+    function validateTriGia(triGia) {
+    	var triGiaArray =  triGia.toString().split('.');
+		if (triGiaArray[0].length > 14) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+    
+    function validateDecimal(triGia){
+    	var triGiaArray =  triGia.toString().split('.');
+    	if(triGiaArray.length  === 2){
+    		if (triGiaArray[1].length > 2) {
+    			return true;
+    		} else {
+    			return false;
+    		}
+    	}else {
+    		return false
+    	}
+    	
+    }
+
+    function valdateTenQuocGia(tenQuocGia) {
+    	 if(tenQuocGia.length > 100){
+      	   return true;
+         }else {
+      	   return false;
+         }
+    }
+}

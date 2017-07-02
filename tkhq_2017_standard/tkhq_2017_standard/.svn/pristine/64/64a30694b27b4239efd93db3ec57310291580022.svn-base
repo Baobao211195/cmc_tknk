@@ -1,0 +1,190 @@
+/**
+ * 
+ */
+'use district;'
+
+angular.module('myApp').controller('TbdSysParameterController',
+		TbdSysParameterController).constant('userlogin', _userlogin);
+;
+TbdSysParameterController.$inject = [ '$scope', 'TbdSysParameterService',
+		'pagerService', '$uibModal', '$filter', '$PopupMessage', 'userlogin' ];
+
+function TbdSysParameterController($scope, TbdSysParameterService,
+		pagerService, $uibModal, $filter, $PopupMessage, userlogin) {
+	var self = this;
+	self.lstParameters = [];
+	self.getAllParam = getAllParam;
+	self.remove = remove;
+	$scope.phantrang = [];
+	self.entity = {
+		ma : '',
+		gia_tri : '',
+		ngay_capnhat : '',
+		nguoi_capnhat : '',
+		ten_thamSo : '',
+		addOrUpdate : '',
+		ghichu : ''
+	};
+	self.editRow = editRow;
+	getAllParam();
+	$scope.numPerPage = 10;
+	$scope.currentPage = 1;
+	$scope.maxSize = 5;
+	$scope.totalPage = [];
+	self.getTotalPage = getTotalPage;
+	function getTotalPage(total) {
+		if (total % $scope.numPerPage > 0) {
+			$scope.totalPage = Math.floor(total / $scope.numPerPage) + 1;
+		} else {
+			$scope.totalPage = Math.floor(total / $scope.numPerPage);
+		}
+	}
+	function getAllParam() {
+		TbdSysParameterService
+				.getAllParameters()
+				.then(
+						function(response) {
+							self.lstParameters = response;
+							var begin = (($scope.currentPage - 1) * $scope.numPerPage), end = begin
+									+ $scope.numPerPage;
+							$scope.phantrang = self.lstParameters.slice(begin,
+									end);
+							getTotalPage(self.lstParameters.length);
+						})
+	}
+	$scope.$watch("currentPage + numPerPage", function() {
+		var begin = (($scope.currentPage - 1) * $scope.numPerPage), end = begin
+				+ $scope.numPerPage;
+		$scope.phantrang = self.lstParameters.slice(begin, end);
+	});
+	function remove(ma) {
+		console.log(ma);
+		$scope.Message = "Bạn có muốn xóa người dùng này không ?"
+		$scope.Title = "Xóa người sử dụng ?"
+		$scope.deletema = ma;
+		$scope.$modalInstance = $uibModal.open({
+			animation : self.animationsEnabled,
+			scope : $scope,
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : '/tkhq_2017_standard/static/dialogs/Confirm_Fix.html'
+		});
+	}
+	function editRow(ma) {
+		for (var int = 0; int < self.lstParameters.length; int++) {
+			if (self.lstParameters[int].ma == ma) {
+				self.entity = self.lstParameters[int];
+				console.log(self.entity);
+			}
+		}
+		var fDate = $filter('date')(new Date(), "dd-MM-yyyy");
+		self.entity.ngay_capnhat = fDate;
+		$scope.Title = "Thay đổi thông tin ";
+		self.entity.addOrUpdate = 'update';
+	}
+	$scope.Delete = function() {
+		TbdSysParameterService.deleteParameters($scope.deletema).then(
+				function(response) {
+					$scope.$modalInstance.close();
+					$scope.Search();
+				});
+	}
+	$scope.Search = function() {
+		reset();
+		self.entity.ten_thamSo = angular.isUndefined($scope.paramName) ? ""
+				: $scope.paramName;
+		self.entity.gia_tri = angular.isUndefined($scope.paramValue) ? ""
+				: $scope.paramValue;
+		self.entity.nguoi_capnhat = angular.isUndefined($scope.paramUser) ? ""
+				: $scope.paramUser;
+		var fdate
+		$filter('date')($scope.paramDate, "dd-MM-yyyy")
+		if (!angular.isUndefined($scope.paramDate)) {
+			var fDate = $filter('date')($scope.paramDate, "dd-MM-yyyy");
+			self.entity.ngay_capnhat = fDate;
+		}
+		TbdSysParameterService
+				.Search(self.entity)
+				.then(
+						function(response) {
+							self.lstParameters = response;
+							var begin = (($scope.currentPage - 1) * $scope.numPerPage), end = begin
+									+ $scope.numPerPage;
+							$scope.phantrang = self.lstParameters.slice(begin,
+									end);
+							getTotalPage(self.lstParameters.length);
+						});
+	}
+	$scope.AddNew = function() {
+		self.entity.nguoi_capnhat = userlogin;
+		var fDate = $filter('date')(new Date(), "dd-MM-yyyy");
+		self.entity.ngay_capnhat = fDate;
+		if (self.entity.addOrUpdate == 'add') {
+			TbdSysParameterService
+					.insertParameters(self.entity)
+					.then(
+							function(response) {
+								if (response == 1) {
+									$PopupMessage
+											.Success('Cập nhập thành công. ');
+									$scope.Search();
+									reset();
+									self.entity.addOrUpdate = 'add';
+								} else {
+									$scope.MessageError = "Có lỗi trong quá trình tạo mới thêm số . Vui lòng kiểm tra lại";
+									$scope.$modalInstance = $uibModal
+											.open({
+												animation : self.animationsEnabled,
+												scope : $scope,
+												ariaLabelledBy : 'modal-title',
+												ariaDescribedBy : 'modal-body',
+												templateUrl : '/tkhq_2017_standard/static/dialogs/Error_Fix.html'
+											});
+								}
+							});
+		}
+		if (self.entity.addOrUpdate == 'update') {
+			TbdSysParameterService.updateParameters(self.entity).then(
+					function(response) {
+						if (response == 1) {
+							$PopupMessage.Success('Cập nhập thành công. ');
+							$('#myModal').modal('hide');
+							$scope.Search();
+						}
+					
+					});
+		}
+	}
+	$scope.cancel = function() {
+		$('#myModal').modal('hide');
+		$scope.$modalInstance.dismiss('cancel');
+	}
+	function reset() {
+		self.entity = {
+			ma : '',
+			gia_tri : '',
+			ngay_capnhat : '',
+			nguoi_capnhat : '',
+			ten_thamSo : '',
+			addOrUpdate : '',
+			ghichu : ''
+		};
+	}
+	$scope.addRow = function() {
+		reset();
+		self.entity.addOrUpdate = 'add';
+		$scope.Title = "Thêm mới tham số";
+	}
+	$scope.popup1 = {
+		opened : false
+	};
+
+	$scope.open1 = function() {
+		$scope.popup1.opened = true;
+	};
+	$scope.dateOptions = {
+		format : 'dd/MM/yyyy',
+		startingDay : 1,
+		'show-weeks' : false
+	};
+}

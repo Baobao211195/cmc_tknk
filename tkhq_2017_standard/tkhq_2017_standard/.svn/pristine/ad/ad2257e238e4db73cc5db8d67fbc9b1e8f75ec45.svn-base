@@ -1,0 +1,81 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<script
+	src="<c:url value='/static/js/service/tbd_sys_userService.js' />"></script>
+<script
+	src="<c:url value='/static/js/controller/tbd_sys_userController.js' />"></script>
+
+<div ng-app="myApp" class="content-wrapper"
+	ng-controller="Tbs_sysUserController as ctrl">
+	<section class="content-header">
+		<h3 class="title">Đổi mật khẩu</h3>
+	</section>
+	<section class="content">
+		<div class="modal-body">
+			<form name="userForm" ng-submit="submitForm()" novalidate>
+				<span style="display: none" ng-model="username"></span>
+				<div class="col-md-12" style="margin: 5px">
+					<label class="col-md-3" style="margin-left: 50px">Mật khẩu
+						cũ: </label>
+					<div class="col-md-6">
+						<input type="password" name="oldPass" class="form-control"
+							ng-model="oldPass" ng-required=true ng-minlength="8" /> <span
+							class="error col-md-1"
+							ng-show="userForm.oldPass.$error.required ||userForm.oldPass.$error.minlength">Vui
+							lòng nhập mật khẩu</span> <span class="error col-md-1"
+							ng-hide="hidecheckOld">Mật khẩu cũ không chính xác</span>
+							
+					</div>
+
+				</div>
+
+				<div class="col-md-12" style="margin: 5px">
+					<label class="col-md-3" style="margin-left: 50px">Mật khẩu
+						mới: </label>
+					<div class="col-md-6">
+						<input type="password" name="newPass" class="form-control"
+						ng-pattern="/^(?=.*[A-Za-z])(?=.*\d\w)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}[\w -]*$/"
+							ng-model="newPass" ng-required=true ng-minlength="8"  ng-maxlength="255"/> <span
+							class="error"
+							ng-show="userForm.newPass.$error.required ">Vui
+							lòng nhập mật khẩu</span>
+							<span class="error" ng-show="userForm.newPass.$error.maxlength||userForm.newPass.$error.minlength">Mật khẩu quá ngắn hoặc quá dài</span>
+							<span class="error" ng-show="userForm.newPass.$error.pattern">Mật khẩu phải có không đúng định dạng</span>
+							<span class="error" ng-hide="hidenewlikeold">Mật khẩu mới không được trùng mật khẩu cũ</span>
+					</div>
+				</div>
+
+
+				<div class="col-md-12" style="margin: 5px">
+					<label class="col-md-3" style="margin-left: 50px">Xác nhận
+						mật khẩu: </label>
+					<div class="col-md-6">
+						<input type="password" name="cfPass" ng-model="cfPass"
+							class="form-control" ng-required=true /> <span
+							class="error col-md-1" ng-show="userForm.cfPass.$error.required">Vui
+							lòng xác nhận mật khẩu</span> <span class="error col-md-1"
+							ng-hide="hidecheckcfnewPass">Xác nhận mật khẩu mới không
+							chính xác</span>
+
+					</div>
+
+				</div>
+
+				<br />
+				<div class="col-md-12" align="center">
+					<span ng-hide="hideSuccess" style="color: Green;">Đổi mật
+						khẩu thành công</span> <br />
+				</div>
+				<div class="form-group row form-btn-align" align="center">
+					<button type="submit" name="btnGhilai" class="btn btn-primary"
+						ng-disabled="userForm.$invalid"
+						ng-click="ctrl.doimatkhau('${pageContext.request.userPrincipal.name}')">Đổi
+						mật khẩu</button>
+					<!-- <button type="button" name="btnThoat" class="btn btn-primary"
+					data-dismiss="modal">Thoát</button> -->
+				</div>
+			</form>
+		</div>
+	</section>
+</div>

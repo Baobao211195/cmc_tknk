@@ -1,0 +1,225 @@
+/**
+ * 
+ */
+
+'use strict';
+
+angular.module('myApp').controller('QLLDTPhoBienController', QLLDTPhoBienController);
+QLLDTPhoBienController.$inject = ['$rootScope', '$scope', '$filter', 'QLLDTPhoBienService', '$uibModal', '$PopupMessage',
+                                  'hoanThanhRaXoatSanPhamTKDauRaService'];
+
+function QLLDTPhoBienController($rootScope, $scope, $filter, QLLDTPhoBienService, $uibModal, $PopupMessage,
+		hoanThanhRaXoatSanPhamTKDauRaService) {
+	var self = this;
+	
+	$scope.lstBieu = [];
+	$scope.lstKy = [
+        {ma: "1", ten: "1"},
+        {ma: "2", ten: "2"}
+    ];
+	$scope.lstThang = [];
+	$scope.lstNam = [];
+	
+	$scope.lstProcessInfo = [];
+	$scope.nhx = 'X';
+	self.lydo = '';
+	
+	self.tenBieuSelected = null;
+	self.kySelected = null;
+	self.thangSelected = null;
+	self.namSelected = null;
+	self.TTSelected = null;
+	
+	$scope.rbApproval = {value: '0'};
+	
+	$scope.showDataTable = false;
+	$scope.showLoaiKy = true;
+	$scope.showTT = true;
+	$scope.btnDisable = false;
+	
+	function initComponent(){
+		self.tenBieuSelected = null;
+		self.kySelected = null;
+		self.thangSelected = null;
+		self.namSelected = null;
+		self.TTSelected = null;
+		
+		$scope.showDataTable = false;
+		$scope.showLoaiKy = true;
+		$scope.showTT = true;
+		$scope.btnDisable = false;
+		$scope.rbApproval = {value: '0'};
+		
+		hoanThanhRaXoatSanPhamTKDauRaService.GetListThongTin($scope.nhx)
+			.then(
+				function (deferred) {
+					$scope.lstBieu = deferred[0];
+                },
+                function (errResponse) {
+                    console.error(errResponse);
+                }
+			);
+		
+		for(var i = 1; i <= 12; i++){
+			$scope.lstThang.push(
+				{ ma: i, ten: i}
+			);
+		}
+		
+		for(var i = 1990; i <= 2030; i++){
+			$scope.lstNam.push(
+				{ ma: i, ten: i}
+			);
+		}
+	}
+	
+	$scope.changeTab = function(index){
+		console.log("Tab selected: " + index);
+		if(index == 0){
+			$scope.nhx = 'X';
+			initComponent();
+		}
+		else if(index == 1){
+			$scope.nhx = 'N';
+			initComponent();
+		}
+		else{
+			console.error("No tab index found!");
+		}
+	};
+	
+	$scope.changeBC = function(){
+		if(self.tenBieuSelected == 0){
+			$scope.btnDisable = true;
+		}
+		else{
+			$scope.btnDisable = false;
+		}
+		
+		var item;
+		
+		hoanThanhRaXoatSanPhamTKDauRaService.GetDanhMucBaoCaoByMaBC($scope.nhx, self.tenBieuSelected)
+			.then(
+				function (deferred) {
+					item = deferred;
+					if(item.loaiBc == 0){
+						$scope.showTT = false;
+					}
+					else{
+						$scope.showTT = true;
+					}
+					
+					if(item.ky == 0){
+						$scope.showLoaiKy = false;
+					}
+					else{
+						$scope.showLoaiKy = true;
+					}
+                },
+                function (errResponse) {
+                    console.error(errResponse);
+                }
+			);
+	};
+	
+	$scope.search = function(){
+    	var param = {};
+    	param["loaiBC"] = self.tenBieuSelected == null ? '' : self.tenBieuSelected;
+    	param["trangthai"] = self.TTSelected == null ? '' : self.TTSelected;
+    	param["nhx"] = $scope.nhx;
+    	
+    	if(self.kySelected != null && self.thangSelected != null && self.namSelected != null
+			&& $scope.showLoaiKy == true){
+    		param["ky"] = self.kySelected;
+    		param["thang"] = self.thangSelected;
+    		param["nam"] = self.namSelected;
+    	}
+    	else if($scope.showLoaiKy == false && self.thangSelected != null && self.namSelected != null){
+    		param["ky"] = '';
+    		param["thang"] = self.thangSelected;
+    		param["nam"] = self.namSelected;
+    	}
+    	else{
+    		angular.element('#messageErrorArea').text('Chọn sai kỳ tháng năm');
+    		return;
+    	}
+    	
+    	$rootScope.showLoading = true;
+    	
+    	QLLDTPhoBienService.getProcessInfo(param)
+    		.then(function(response){
+    				$scope.lstProcessInfo = response;
+    				$scope.showDataTable = true;
+    				$rootScope.showLoading = false;
+    			},
+    			function(errResponse){
+    				console.error(errResponse);
+    				if(errResponse == 404){
+    					$scope.lstProcessInfo = [];
+    				}
+    				$scope.showDataTable = true;
+    				$rootScope.showLoading = false;
+    			}
+    		);
+	};
+	
+	$scope.doApproval = function(){
+		var param = {};
+		
+		param["approval"] = $scope.rbApproval.value;
+		param["loaiBC"] = self.tenBieuSelected == null ? '' : self.tenBieuSelected;
+		param["lydoPD"] = self.lydo;
+		
+		if(self.kySelected != null && self.thangSelected != null && self.namSelected != null
+				&& $scope.showLoaiKy == true){
+	    		param["ky"] = self.kySelected;
+	    		param["thang"] = self.thangSelected;
+	    		param["nam"] = self.namSelected;
+    	}
+    	else if($scope.showLoaiKy == false && self.thangSelected != null && self.namSelected != null){
+    		param["ky"] = '';
+    		param["thang"] = self.thangSelected;
+    		param["nam"] = self.namSelected;
+    	}
+    	else{
+    		angular.element('#messageErrorArea').text('Chọn sai kỳ tháng năm');
+    		return;
+    	}
+		
+		$rootScope.showLoading = true;
+		
+		QLLDTPhoBienService.doApproval(param)
+			.then(function(response){
+					$rootScope.showLoading = false;
+					
+					var modalInstance = $PopupMessage.Success('Phê duyệt thành công');
+					
+					modalInstance.result.then(function (data) {
+						if(data == 'close'){
+							$scope.search();
+							$scope.rbApproval = {value: '0'};
+							self.lydo = '';
+						}
+						else{
+							console.log("error while close modal");
+						}
+				    });
+				},
+				function(errResponse){
+					console.error(errResponse);
+					var modalInstance = $PopupMessage.Error('Không thể phê duyệt báo cáo');
+					
+					modalInstance.result.then(function (data) {
+						if(data == 'close'){
+							console.log("close modal");
+						}
+						else{
+							console.log("error while close modal");
+						}
+				    });
+				
+					$rootScope.showLoading = false;
+				}
+			);
+	};
+}

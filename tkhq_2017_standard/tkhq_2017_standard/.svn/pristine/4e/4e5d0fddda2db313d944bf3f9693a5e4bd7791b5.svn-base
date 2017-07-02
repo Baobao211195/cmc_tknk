@@ -1,0 +1,85 @@
+package com.tkhq.cmc.services;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tkhq.cmc.dao.TbdSysPhancongCvDAO;
+import com.tkhq.cmc.dao.Tbs_Phancong_CongviecDAO;
+import com.tkhq.cmc.dto.TbdSysPhancongCvDTO;
+import com.tkhq.cmc.model.TbdSysPhancongCv;
+import com.tkhq.cmc.model.TbsPhancongCongviec;
+
+@Service
+@Transactional
+public class Phancong_CongviecServiceImpl implements Phancong_CongviecService {
+
+	@Autowired
+	private Tbs_Phancong_CongviecDAO tbs_Phancong_CongviecDAO;
+
+	@Autowired
+	private TbdSysPhancongCvDAO tbdSysPhancongCvDAO;
+
+	public void createCongviec(TbsPhancongCongviec entity) {
+		tbs_Phancong_CongviecDAO.create(entity);
+
+	}
+
+	public void deleteCongviec(long status) {
+		tbs_Phancong_CongviecDAO.delete(status);
+
+	}
+
+	public void updateCongViec(TbsPhancongCongviec entity) {
+		tbs_Phancong_CongviecDAO.update(entity);
+
+	}
+
+	public List<TbsPhancongCongviec> getAllCongviec() {
+
+		return tbs_Phancong_CongviecDAO.getAll();
+	}
+
+	public void createPhancong(TbdSysPhancongCv entity) {
+		tbdSysPhancongCvDAO.createPhancong(entity);
+	}
+
+	public void deletePhancong(long status) {
+		tbdSysPhancongCvDAO.deletePhancong(status);
+
+	}
+
+	public List<TbdSysPhancongCv> getAllPhancong() {
+
+		return tbdSysPhancongCvDAO.getAllPhancong();
+	}
+
+	public List<TbdSysPhancongCv> getByMacv(String maCv) {
+		return tbdSysPhancongCvDAO.findByMaCV(maCv);
+	}
+
+	public List<TbdSysPhancongCv> search(String type, String maCv) {
+		return tbdSysPhancongCvDAO.search(type, maCv);
+	}
+
+	public TbdSysPhancongCv updatePhancong(TbdSysPhancongCvDTO entity) {
+		
+		return tbdSysPhancongCvDAO.update(entity);
+
+	}
+
+	@Override
+	public Integer createPhancong(TbdSysPhancongCvDTO entity) {
+		return tbs_Phancong_CongviecDAO.create(entity);
+
+	}
+
+	public void deleteList(String s) {
+		tbdSysPhancongCvDAO.deleteList(s);
+	}
+
+}

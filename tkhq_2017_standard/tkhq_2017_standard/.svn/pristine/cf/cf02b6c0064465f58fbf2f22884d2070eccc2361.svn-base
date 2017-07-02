@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-06-15T11:07:07 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BCNKHTDTK017KMaster" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c2353024-fb5a-4dfa-b378-930f37aab98a">
+	<parameter name="PathReport" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="BCNKHTDTK017K1lst" class="java.util.List">
+		<fieldDescription><![CDATA[BCNKHTDTK017K1lst]]></fieldDescription>
+	</field>
+	<field name="thang" class="java.lang.Integer">
+		<fieldDescription><![CDATA[thang]]></fieldDescription>
+	</field>
+	<field name="BCNKHTDTK017Klst" class="java.util.List">
+		<fieldDescription><![CDATA[BCNKHTDTK017Klst]]></fieldDescription>
+	</field>
+	<field name="loai" class="java.lang.String">
+		<fieldDescription><![CDATA[loai]]></fieldDescription>
+	</field>
+	<field name="nam" class="java.lang.Integer">
+		<fieldDescription><![CDATA[nam]]></fieldDescription>
+	</field>
+	<field name="ky" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ky]]></fieldDescription>
+	</field>
+	<variable name="v_Loai" class="java.lang.String">
+		<variableExpression><![CDATA[($F{loai}.equals("SB")?"Sơ Bộ":($F{loai}.equals( "CT" )?"Chính Thức":"Điều Chỉnh"))]]></variableExpression>
+		<initialValueExpression><![CDATA[($F{loai}.equals("SB")?"Sơ Bộ":($F{loai}.equals( "CT" )?"Chính Thức":"Điều Chỉnh"))]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="166" splitType="Stretch">
+			<staticText>
+				<reportElement x="-3" y="36" width="110" height="20" uuid="6df5ec0f-89a5-47bc-a551-35d9d612bbf3"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TỔNG CỤC HẢI QUAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="16" width="90" height="30" uuid="0981e6b9-2a63-40a8-a9c0-0202d87ceb48"/>
+				<textElement>
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Biếu số 21N/TCHQ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="16" width="100" height="30" uuid="a9db463e-6760-4e23-9ad6-7e04f00165dc"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[BỘ TÀI CHÍNH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="36" width="160" height="20" uuid="e0a82c27-51d5-4697-8b4d-fe1feb0167e2"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cục CNTT & Thống kê Hải quan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="91" y="78" width="380" height="30" uuid="2bca0abc-85f5-46d0-b887-25b7e19ae396"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NHẬP KHẨU HÀNG TIÊU DÙNG NHÀ NƯỚC QUẢN LÝ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="136" y="121" width="287" height="30" uuid="bf260094-a7c0-4b7e-a06d-7ae54999e935"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[(Theo danh mục hàng tiêu dùng của Bộ Công Thương ban hành tại Thông tư số 07/2011/TT-BCT ngày 24/3/2011)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="205" y="98" width="153" height="30" uuid="2418c3f4-b7cc-4463-9df6-5753e9e48204"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Kỳ "+ $F{ky} + " tháng " + $F{thang} + " năm " +$F{nam}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="484" y="54" width="60" height="20" uuid="3d14f1b3-3404-4547-9c16-2cd27dd2268a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{v_Loai}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="50" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<subreport>
+				<reportElement x="-20" y="0" width="595" height="50" uuid="ba157a02-31ec-4865-861a-05800d3410b7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{BCNKHTDTK017Klst})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{PathReport} + "BCNKHTDTK017K.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="50">
+			<subreport>
+				<reportElement x="-20" y="0" width="595" height="50" uuid="60287e3a-b9a8-4b6f-bf29-75c381cbe7fc"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{BCNKHTDTK017K1lst})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{PathReport}+ "BCNKHTDTK017K1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="15" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="509" y="0" width="46" height="15" uuid="5f89a954-fc22-41b5-9c10-8f27663ec715">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Trang " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

@@ -1,0 +1,632 @@
+package com.tkhq.global.dao;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+
+//import oracle.jdbc.OracleTypes;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.jdbc.ReturningWork;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tkhq.cmc.utils.Utils;
+
+//import oracle.jdbc.internal.OracleTypes;
+import com.tkhq.global.model.bcdulieuthaydoi.*;
+
+import oracle.jdbc.OracleTypes;
+
+@Repository
+@Transactional
+public class BaoCaoDuLieuThayDoiDaoImpl implements BaoCaoDuLieuThayDoiDao {
+
+	@Autowired
+	private SessionFactory sessionFactory;
+
+	private void setParamsXemChiTiet(CallableStatement statement, XemToKhaiThayDoiParams params) throws SQLException{
+		statement.setString(1, params.getMaCucHQ());
+		statement.setString(2, params.getMaChicucHQ());
+		statement.setString(3, params.getNhx());
+		statement.setString(4, params.getMa_hang());
+		statement.setString(5, params.getLoai_ky());
+		statement.setString(6, params.getTu_ngay());
+		statement.setString(7, params.getDen_ngay());
+		statement.setString(8, params.getKy());
+		statement.setString(9, params.getThang());
+		statement.setString(10, params.getNam());		
+		
+		statement.registerOutParameter(11, OracleTypes.CURSOR);
+		statement.setInt(12, params.getPage());
+		statement.setInt(13, params.getOffset());
+	}
+	
+	private void setParams(CallableStatement statement, ThayDoiDoNVHQRequest requestParams) throws SQLException{
+		statement.setString(1, requestParams.getMaCucHQ());
+		statement.setString(2, requestParams.getMaChicucHQ());
+		statement.setString(3, requestParams.getNhx());
+		statement.setString(4, requestParams.getMaNghiepvu());
+		
+		statement.setString(5, requestParams.getLoai_ky());
+		statement.setString(6, requestParams.getTu_ngay());
+		statement.setString(7, requestParams.getDen_ngay());
+		statement.setString(8, requestParams.getKy());
+		statement.setString(9, requestParams.getThang());
+		statement.setString(10, requestParams.getNam());
+		
+		statement.registerOutParameter( 11, OracleTypes.CURSOR );
+	}
+	@Override
+	public List<ThayDoiDoNVHQTongTheResponse> getThayDoiTongThe(
+			final ThayDoiDoNVHQRequest requestParams) {
+
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<ThayDoiDoNVHQTongTheResponse>>() {
+
+			@Override
+			public List<ThayDoiDoNVHQTongTheResponse> execute(Connection conn)
+					throws SQLException {
+				CallableStatement statement = null;
+				List<ThayDoiDoNVHQTongTheResponse> list = new ArrayList<ThayDoiDoNVHQTongTheResponse>();
+				statement = conn.prepareCall("{call " + Utils.readProperties("GetThayDoiDoNVHQTongThe") + "(?,?,?,? ,?,?,?,?,?,?, ?)}");
+				setParams(statement, requestParams);
+				statement.execute();
+				ResultSet rs = (ResultSet)statement.getObject(11);
+				while(rs.next()){
+					ThayDoiDoNVHQTongTheResponse record = 
+							new ThayDoiDoNVHQTongTheResponse(rs.getString("lydo"), 
+									rs.getInt("tongtk"), 
+									rs.getInt("tong_dh"), 
+									rs.getDouble("tri_gia_tk_cu"), 
+									rs.getDouble("tri_gia_tk_moi"),
+									rs.getDouble("thay_doi"));
+					list.add(record);
+				}
+				return list;
+			}
+		});
+	}
+	
+	@Override
+	public List<ThayDoiDoNVHQBSToKhaiResponse> getThayDoiDoBSToKhai(
+			final ThayDoiDoNVHQRequest requestParams) {		
+		
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<ThayDoiDoNVHQBSToKhaiResponse>>() {
+
+			@Override
+			public List<ThayDoiDoNVHQBSToKhaiResponse> execute(Connection conn)
+					throws SQLException {
+				CallableStatement statement = null;
+				List<ThayDoiDoNVHQBSToKhaiResponse> list = new ArrayList<ThayDoiDoNVHQBSToKhaiResponse>();
+				statement = conn.prepareCall("{call " + Utils.readProperties("GetThayDoiDoBSToKhai")  + "(?,?,?,? ,?,?,?,?,?,?, ?)}");
+				setParams(statement, requestParams);
+				statement.execute();
+				ResultSet rs = (ResultSet)statement.getObject(11);
+				String tmpField = "";
+				try {
+					while(rs.next()){
+						ThayDoiDoNVHQBSToKhaiResponse record = new ThayDoiDoNVHQBSToKhaiResponse();
+						tmpField = "mo_ta";
+						record.setMo_ta(rs.getString("mo_ta"));  
+						tmpField = "ma_hang";
+						record.setMa_hang(rs.getString("ma_hang"));
+						tmpField = "ma_tk";
+						record.setMa_tk(rs.getString("ma_tk")); 
+						 
+						tmpField = "IS_THONGKE";
+						record.setIs_tk(rs.getBoolean("IS_TK"));
+						
+						tmpField = "dvt_tk";
+						record.setDvt_tk(rs.getString("dvt_tk"));
+						
+						tmpField = "don_gia_usd";
+						record.setDon_gia_usd(rs.getDouble("don_gia_usd")); 
+
+						tmpField = "don_gia_vnd";
+						record.setDon_gia_vnd(rs.getDouble("don_gia_vnd"));
+						
+						tmpField = "luong";
+						record.setLuong(rs.getDouble("luong"));
+
+						tmpField = "luong_tk";
+						record.setLuong_tk(rs.getDouble("luong_tk"));
+						
+						tmpField = "tri_gia_usd";
+						record.setTri_gia_usd(rs.getDouble("tri_gia_usd")); 
+						
+						tmpField = "tri_gia_vnd";
+						record.setTri_gia_vnd(rs.getDouble("tri_gia_vnd")); 
+
+						tmpField = "tri_gia_tk_usd";
+						record.setTri_gia_tk_usd(rs.getDouble("tri_gia_tk_usd")); 
+						
+						tmpField = "tri_gia_tk_vnd";
+						record.setTri_gia_tk_vnd(rs.getDouble("tri_gia_tk_vnd"));
+						
+						tmpField = "ma_dv";
+						record.setMa_dv(rs.getString("ma_dv"));
+						
+						tmpField = "ma_hq";
+						record.setMa_hq(rs.getString("ma_hq"));
+						
+						tmpField = "ma_lh";
+						record.setMa_lh(rs.getString("ma_lh")); 
+						
+						tmpField = "so_tk";
+						record.setSo_tk(rs.getString("so_tk")); 
+						
+						tmpField = "thang";
+						record.setThang(rs.getInt("thang"));
+						
+						tmpField = "ky";
+						record.setKy(rs.getInt("ky"));
+						
+						tmpField = "nuoc_nk";
+						record.setNuoc_nk(rs.getString("nuoc_nk"));
+
+						tmpField = "nuoc_xx";
+						record.setNuoc_xx(rs.getString("nuoc_xx"));
+						
+						tmpField = "ma_nt";
+						record.setMa_nt(rs.getString("ma_nt"));
+						
+						tmpField = "ngay_dk";
+						record.setNgay_dk(rs.getString("ngay_dk"));
+
+						tmpField = "cang_nn";
+						record.setCang_nn(rs.getString("cang_nn")); 
+
+						tmpField = "ma_cuakhau_nk";
+						record.setMa_cuakhau_nk(rs.getString("ma_cuakhau_nk"));
+						
+						tmpField = "ten_cuakhau_nk";
+						record.setTen_cuakhau_nk(rs.getString("ten_cuakhau_nk"));
+						
+						tmpField = "ma_cuakhau_xk";
+						record.setMa_cuakhau_xk(rs.getString("ma_cuakhau_xk")); 
+
+						tmpField = "ten_cuakhau_xk";
+						record.setTen_cuakhau_xk(rs.getString("ten_cuakhau_xk"));
+						
+						list.add(record);
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println(tmpField);
+				}
+				return list;
+			}
+		});
+	}
+
+	@Override
+	public List<ThayDoiDoNVHQNhomHuyXoaResponse> getThayDoiDoHuyXoa(
+			final ThayDoiDoNVHQRequest requestParams) {
+		
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<ThayDoiDoNVHQNhomHuyXoaResponse>>() {
+
+			@Override
+			public List<ThayDoiDoNVHQNhomHuyXoaResponse> execute(Connection conn)
+					throws SQLException {
+				CallableStatement statement = null;
+				List<ThayDoiDoNVHQNhomHuyXoaResponse> list = new ArrayList<ThayDoiDoNVHQNhomHuyXoaResponse>();
+				statement = conn.prepareCall("{call " + Utils.readProperties("GetThayDoiDoHuyXoa")  + "(?,?,?,? ,?,?,?,?,?,?, ?)}");
+				setParams(statement, requestParams);
+				statement.execute();
+				ResultSet rs = (ResultSet)statement.getObject(11);
+				while(rs.next()){
+					ThayDoiDoNVHQNhomHuyXoaResponse record = 
+							new ThayDoiDoNVHQNhomHuyXoaResponse(rs.getString("so_tk") , rs.getString("ma_hq") , rs.getString("ma_lh") ,
+									rs.getString("ngay_dk") , rs.getString("lydo_huy"));
+					list.add(record);
+				}
+				return list;
+			}
+		});
+	}
+	@Override
+	public List<ThayDoiDoNVHQNhomSDBSResponse> getThayDoiDoSDBS(
+			final ThayDoiDoNVHQRequest requestParams) {
+		
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<ThayDoiDoNVHQNhomSDBSResponse>>() {
+
+			@Override
+			public List<ThayDoiDoNVHQNhomSDBSResponse> execute(Connection conn)
+					throws SQLException {
+				CallableStatement statement = null;
+				List<ThayDoiDoNVHQNhomSDBSResponse> list = new ArrayList<ThayDoiDoNVHQNhomSDBSResponse>();
+				statement = conn.prepareCall("{call " + Utils.readProperties("GetThayDoiDoSDBS")  + "(?,?,?,? ,?,?,?,?,?,?, ?)}");
+				setParams(statement, requestParams);
+				statement.execute();
+				ResultSet rs = (ResultSet)statement.getObject(11);
+				while(rs.next()){
+					ThayDoiDoNVHQNhomSDBSResponse record = 
+							new ThayDoiDoNVHQNhomSDBSResponse();
+					record.setSo_tk(rs.getString("so_tk"));	
+					record.setSo_tt(rs.getString("so_tt"));	
+					record.setMa_hq(rs.getString("ma_hq"));					
+					record.setMa_lh(rs.getString("ma_lh"));
+					record.setNgay_dk(rs.getString("ngay_dk"));
+					record.setSoluong_cu(rs.getString("soluong_cu"));
+					record.setSoluong_moi(rs.getString("soluong_moi"));
+					record.setTrigiakb_cu(rs.getString("trigiakb_cu"));
+					record.setTrigiakb_moi(rs.getString("trigiakb_moi"));
+					record.setTrigiatt_cu(rs.getString("trigiatt_cu"));
+					record.setTrigiatt_moi(rs.getString("trigiatt_moi"));
+					record.setNuocxk_cu(rs.getString("nuocxk_cu"));
+					record.setNuocxk_moi(rs.getString("nuocxk_moi"));
+					record.setNuocxx_cu(rs.getString("nuocxx_cu"));
+					record.setNuocxx_moi(rs.getString("nuocxx_moi"));
+					record.setDvt_cu(rs.getString("dvt_cu"));
+					record.setDvt_moi(rs.getString("dvt_moi"));
+					record.setMahs_cu(rs.getString("mahs_cu"));
+					record.setMahs_moi(rs.getString("mahs_moi"));
+					record.setMota_cu(rs.getString("mota_cu"));
+					record.setMota_moi(rs.getString("mota_moi"));
+					record.setNgaydk_cu(rs.getString("ngaydk_cu"));
+					record.setNgaydk_moi(rs.getString("ngaydk_moi"));
+					list.add(record);
+				}
+				return list;
+			}
+		});
+	}
+	@Override
+	public List<List<PrintBuocNVTKGroupItem>> getPrintBuocNVTKValue(
+			final BuocNVTKPrintParams requestParams) {
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<List<PrintBuocNVTKGroupItem>>>() {
+
+			@Override
+			public List<List<PrintBuocNVTKGroupItem>> execute(Connection conn)
+					throws SQLException {
+				CallableStatement statement = null;
+				List<List<PrintBuocNVTKGroupItem>> list = new ArrayList<List<PrintBuocNVTKGroupItem>>();
+				statement = conn.prepareCall("{call " + Utils.readProperties("GET_ThayDoi_NVTK_Print") + "(?,?,?,? ,?,?,?,?,?,?, ?, ?)}");
+
+				statement.setString(1, requestParams.getMaCucHQ());
+				statement.setString(2, requestParams.getMaChicucHQ());
+				statement.setString(3, requestParams.getNhx());
+				statement.setString(4, requestParams.getLoai_ky());
+				statement.setString(5, requestParams.getTu_ngay());
+				statement.setString(6, requestParams.getDen_ngay());
+				statement.setString(7, requestParams.getKy());
+				statement.setString(8, requestParams.getThang());
+				statement.setString(9, requestParams.getNam());		
+				
+				statement.registerOutParameter(10, OracleTypes.CURSOR);
+				statement.registerOutParameter(11, OracleTypes.CURSOR);
+				statement.registerOutParameter(12, OracleTypes.CURSOR);
+				
+				statement.execute();
+				ResultSet rs = (ResultSet)statement.getObject(10);
+				Map<Integer,String> dsLydo = new java.util.HashMap<Integer,String>();
+				//Lay danh sach ly do
+				while(rs.next()){
+					dsLydo.put(rs.getInt("ID"), rs.getString("GROUP_NAME"));
+				}
+				rs.close();
+				rs = null;
+				
+				int index = 0;
+				//Lay data group Tong
+				rs = (ResultSet)statement.getObject(12);
+				List<PrintBuocNVTKGroupItem> group;
+				group = new ArrayList<PrintBuocNVTKGroupItem>();
+				while(rs.next()){
+					index = rs.getInt("GROUP_ID");
+					PrintBuocNVTKGroupItem record = 
+							new PrintBuocNVTKGroupItem(index, dsLydo.get(index), 
+									rs.getString("giatri_cu"), 
+									rs.getString("giatri_moi"),
+									rs.getString("thay_doi"));
+					
+					if(index == 0){						
+						record.setTrigia_cu("");
+						record.setTrigia_moi("");
+					}
+					group.add(record);					
+				}
+				list.add(group);
+				rs.close();
+				rs = null;
+				
+				//Lay data chi tiet theo mat hang
+				int rowIndex = 0;
+				int storeOldIndex = -1;
+				rs = (ResultSet)statement.getObject(11);
+				while(rs.next()){
+					rowIndex = rs.getInt("GROUP_ID");
+					PrintBuocNVTKGroupItem record;
+					//Khoi tao group moi & insert Tong mat hang
+					if(storeOldIndex != 0 && rowIndex == 0){
+						group = new ArrayList<PrintBuocNVTKGroupItem>();
+						list.add(group);
+						record = new PrintBuocNVTKGroupItem(rowIndex, rs.getString("TEN_HANG"), 
+										"", 
+										"",
+										rs.getString("thay_doi"));
+					}
+					//Insert group items khac
+					else{
+						record = new PrintBuocNVTKGroupItem(rowIndex, dsLydo.get(rowIndex), 
+								rs.getString("giatri_cu"), 
+								rs.getString("giatri_moi"),
+								rs.getString("thay_doi"));
+					}
+					group.add(record);
+					//store rowIndex to compare with new value
+					storeOldIndex = rowIndex;
+				}
+				rs.close();
+				rs = null;
+				
+				return list;
+			}
+		});	
+				
+	}
+
+	@Override
+	public List<XemThayDoiDoBuocNVThKe> xemChitietThayDoi_BuocNVTHKE(final XemToKhaiThayDoiParams params) {		
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<XemThayDoiDoBuocNVThKe>>() {
+
+			@Override
+			public List<XemThayDoiDoBuocNVThKe> execute(Connection conn)
+					throws SQLException {
+				CallableStatement statement = null;
+				List<XemThayDoiDoBuocNVThKe> list = new ArrayList<XemThayDoiDoBuocNVThKe>();
+				statement = conn.prepareCall("{call " + Utils.readProperties("XemChitietThayDoi_BuocNVTHKE")  + "(?,?,?,?, ?,?,?,?,?,?, ?, ?,?)}");
+				
+				setParamsXemChiTiet(statement, params);
+				statement.execute();
+				ResultSet rs = (ResultSet)statement.getObject(11);
+				while(rs.next()){
+					XemThayDoiDoBuocNVThKe record = new XemThayDoiDoBuocNVThKe();
+					String tmpFieldName="";
+					try{
+						tmpFieldName="so_tk";
+					    record.setSo_tk(rs.getString("so_tk"));
+					    
+					    tmpFieldName="so_tt";
+					    record.setSo_tt(rs.getString("STTHANG"));
+					    
+					    tmpFieldName="ma_hq";
+					    record.setMa_hq(rs.getString("ma_hq"));
+					    tmpFieldName="ma_lh";
+					    record.setMa_lh(rs.getString("ma_lh"));
+					    tmpFieldName="ngay_dk";
+					    record.setNgay_dk(rs.getString("ngay_dk")); 
+					    tmpFieldName="mo_ta";
+					    record.setMo_ta(rs.getString("mo_ta")); 
+					    tmpFieldName="ma_hang";
+					    record.setMa_hang(rs.getString("ma_hang")); 
+					    
+					    tmpFieldName="soluong_cu";
+					    record.setSoluong_cu(rs.getString("soluong_cu"));
+					    tmpFieldName="soluong_moi";
+						record.setSoluong_moi(rs.getString("soluong_moi")); 
+						tmpFieldName="soluong_ttsua";
+						record.setSoluong_ttsua(rs.getString("soluong_ttsua")); 
+						
+						tmpFieldName="trigiakb_cu";
+					    record.setTrigiakb_cu(rs.getString("trigiakb_cu"));
+					    tmpFieldName="trigiakb_moi";
+						record.setTrigiakb_moi(rs.getString("trigiakb_moi")); 
+						tmpFieldName="trigiakb_ttsua";
+						record.setTrigiakb_ttsua(rs.getString("trigiakb_ttsua")); 
+
+						tmpFieldName="trigiatt_cu";
+					    record.setTrigiatt_cu(rs.getString("trigiatt_cu"));
+					    tmpFieldName="trigiatt_moi";
+						record.setTrigiatt_moi(rs.getString("trigiatt_moi")); 
+						tmpFieldName="trigiatt_ttsua";
+						record.setTrigiatt_ttsua(rs.getString("trigiatt_ttsua"));
+
+						tmpFieldName="nuocxk_cu";
+					    record.setNuocxk_cu(rs.getString("nuocxk_cu"));
+					    tmpFieldName="nuocxk_moi";
+						record.setNuocxk_moi(rs.getString("nuocxk_moi")); 
+						tmpFieldName="nuocxk_ttsua";
+						record.setNuocxk_ttsua(rs.getString("nuocxk_ttsua"));
+
+						tmpFieldName="nuocxx_cu";
+					    record.setNuocxx_cu(rs.getString("nuocxx_cu"));
+					    tmpFieldName="nuocxx_moi";
+						record.setNuocxx_moi(rs.getString("nuocxx_moi")); 
+						tmpFieldName="nuocxx_ttsua";
+						record.setNuocxx_ttsua(rs.getString("nuocxx_ttsua"));
+
+						tmpFieldName="dvt_cu";
+					    record.setDvt_cu(rs.getString("dvt_cu"));
+					    tmpFieldName="dvt_moi";
+						record.setDvt_moi(rs.getString("dvt_moi")); 
+						tmpFieldName="dvt_ttsua";
+						record.setDvt_ttsua(rs.getString("dvt_ttsua"));
+
+						tmpFieldName="mahs_cu";
+					    record.setMahs_cu(rs.getString("mahs_cu"));
+					    tmpFieldName="mahs_moi";
+						record.setMahs_moi(rs.getString("mahs_moi")); 
+						tmpFieldName="mahs_ttsua";
+						record.setMahs_ttsua(rs.getString("mahs_ttsua"));
+
+						tmpFieldName="mota_cu";
+					    record.setMota_cu(rs.getString("mota_cu"));
+					    tmpFieldName="mota_moi";
+						record.setMota_moi(rs.getString("mota_moi")); 
+						tmpFieldName="mota_ttsua";
+						record.setMota_ttsua(rs.getString("mota_ttsua"));
+
+						tmpFieldName="ngaydk_cu";
+					    record.setNgaydk_cu(rs.getString("ngaydk_cu"));
+					    tmpFieldName="ngaydk_moi";
+						record.setNgaydk_moi(rs.getString("ngaydk_moi")); 
+						tmpFieldName="ngaydk_ttsua";
+						record.setNgaydk_ttsua(rs.getString("ngaydk_ttsua"));
+						
+					}catch(SQLException ex){
+						System.out.println("Ten field error: " + tmpFieldName);
+					}
+					list.add(record);
+				}
+				return list;
+			}
+		});
+	}
+	
+	@Override
+	public List<XemThayDoiDoBSToKhai> xemChitietThayDoi_BSToKhai(final XemToKhaiThayDoiParams params) {		
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<XemThayDoiDoBSToKhai>>() {
+
+			@Override
+			public List<XemThayDoiDoBSToKhai> execute(Connection conn)
+					throws SQLException {
+				CallableStatement statement = null;
+				List<XemThayDoiDoBSToKhai> list = new ArrayList<XemThayDoiDoBSToKhai>();
+				statement = conn.prepareCall("{call " + Utils.readProperties("XemChitietThayDoi_BSToKhai")  + "(?,?,?,?, ?,?,?,?,?,?, ?, ?,? )}");
+				setParamsXemChiTiet(statement, params);
+				statement.execute();
+				ResultSet rs = (ResultSet)statement.getObject(11);
+				while(rs.next()){
+					XemThayDoiDoBSToKhai record = 
+							new XemThayDoiDoBSToKhai(rs.getString("mo_ta") , rs.getString("ma_hang") , rs.getBoolean("is_tk"), rs.getString("dvt_tk") , rs.getDouble("don_gia_usd") ,
+									rs.getDouble("don_gia_vnd") , rs.getDouble("luong") , rs.getDouble("luong_tk") , rs.getDouble("tri_gia_usd") ,
+									rs.getDouble("tri_gia_vnd") , rs.getDouble("tri_gia_tk_usd") , rs.getDouble("tri_gia_tk_vnd") , rs.getString("ma_dv") , rs.getString("ma_hq") ,
+									rs.getString("ma_lh") , rs.getString("so_tk") , rs.getInt("thang") , rs.getInt("ky"), rs.getString("nuoc_nk") , rs.getString("nuoc_xx") , rs.getString("ma_nt") ,
+									rs.getString("ngay_dk") , rs.getString("cang_nn") , rs.getString("ma_cuakhau_nk") , rs.getString("ten_cuakhau_nk") , rs.getString("ma_cuakhau_xk") ,
+									rs.getString("ten_cuakhau_xk"), rs.getString("ma_tk"));
+					list.add(record);
+				}
+				return list;
+			}
+		});
+	}
+	
+	@Override
+	public List<XemThayDoiDoSDBS> xemChitietThayDoi_SDBS(final XemToKhaiThayDoiParams params) {		
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<XemThayDoiDoSDBS>>() {
+
+			@Override
+			public List<XemThayDoiDoSDBS> execute(Connection conn)
+					throws SQLException {
+				CallableStatement statement = null;
+				List<XemThayDoiDoSDBS> list = new ArrayList<XemThayDoiDoSDBS>();
+				statement = conn.prepareCall("{call " + Utils.readProperties("XemChitietThayDoi_SDBS")  + "(?,?,?,?, ?,?,?,?,?,?, ?, ?,? )}");
+				
+				setParamsXemChiTiet(statement, params);
+				statement.execute();
+				ResultSet rs = (ResultSet)statement.getObject(11);
+				while(rs.next()){
+					XemThayDoiDoSDBS record = 
+							new XemThayDoiDoSDBS(rs.getString("mo_ta") , rs.getString("ma_hang") , rs.getBoolean("is_tk"), rs.getString("dvt_tk") , rs.getDouble("don_gia_usd") ,
+									rs.getDouble("don_gia_vnd") , rs.getDouble("luong") , rs.getDouble("luong_tk") , rs.getDouble("tri_gia_usd") ,
+									rs.getDouble("tri_gia_vnd") , rs.getDouble("tri_gia_tk_usd") , rs.getDouble("tri_gia_tk_vnd") , rs.getString("ma_dv") , rs.getString("ma_hq") ,
+									rs.getString("ma_lh") , rs.getString("so_tk") , rs.getInt("thang") , rs.getInt("ky"), rs.getString("nuoc_nk") , rs.getString("nuoc_xx") , rs.getString("ma_nt") ,
+									rs.getString("ngay_dk") , rs.getString("cang_nn") , rs.getString("ma_cuakhau_nk") , rs.getString("ten_cuakhau_nk") , rs.getString("ma_cuakhau_xk") ,
+									rs.getString("ten_cuakhau_xk"));
+					list.add(record);
+				}
+				return list;
+			}
+		});
+	}
+	
+	@Override
+	public List<List<PrintTongTheGroupItem>> getPrintTongThe(final TongThePrintParams requestParams){
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<List<PrintTongTheGroupItem>>>() {
+
+			@Override
+			public List<List<PrintTongTheGroupItem>> execute(Connection conn)
+					throws SQLException {
+				CallableStatement statement = null;
+				List<List<PrintTongTheGroupItem>> list = new ArrayList<List<PrintTongTheGroupItem>>();
+				statement = conn.prepareCall("{call " + Utils.readProperties("GET_ThayDoi_TongThe_Print") + "(?,?,?,? ,?,?,?,?,?,?, ?, ?)}");
+
+				statement.setString(1, requestParams.getMaCucHQ());
+				statement.setString(2, requestParams.getMaChicucHQ());
+				statement.setString(3, requestParams.getNhx());
+				statement.setString(4, requestParams.getLoai_ky());
+				statement.setString(5, requestParams.getTu_ngay());
+				statement.setString(6, requestParams.getDen_ngay());
+				statement.setString(7, requestParams.getKy());
+				statement.setString(8, requestParams.getThang());
+				statement.setString(9, requestParams.getNam());		
+				
+				statement.registerOutParameter(10, OracleTypes.CURSOR);
+				statement.registerOutParameter(11, OracleTypes.CURSOR);
+				statement.registerOutParameter(12, OracleTypes.CURSOR);
+				
+				statement.execute();
+				ResultSet rs = (ResultSet)statement.getObject(10);
+				Map<Integer,String> dsLydo = new java.util.HashMap<Integer,String>();
+				//Lay danh sach ly do
+				while(rs.next()){
+					dsLydo.put(rs.getInt("ID"), rs.getString("GROUP_NAME"));
+				}
+				rs.close();
+				rs = null;
+				
+				int index = 0;
+				//Lay data group Tong
+				rs = (ResultSet)statement.getObject(12);
+				List<PrintTongTheGroupItem> group;
+				group = new ArrayList<PrintTongTheGroupItem>();
+				while(rs.next()){
+					index = rs.getInt("GROUP_ID");
+					PrintTongTheGroupItem record = 
+							new PrintTongTheGroupItem(index, dsLydo.get(index), 
+									rs.getString("giatri_cu"), 
+									rs.getString("giatri_moi"),
+									rs.getString("thay_doi"));
+					
+					if(index == 0){						
+						record.setTrigia_cu("");
+						record.setTrigia_moi("");
+					}
+					group.add(record);					
+				}
+				list.add(group);
+				rs.close();
+				rs = null;
+				
+				//Lay data chi tiet theo mat hang
+				int rowIndex = 0;
+				int storeOldIndex = -1;
+				rs = (ResultSet)statement.getObject(11);
+				while(rs.next()){
+					rowIndex = rs.getInt("GROUP_ID");
+					PrintTongTheGroupItem record;
+					//Khoi tao group moi & insert Tong mat hang
+					if(storeOldIndex != 0 && rowIndex == 0){
+						group = new ArrayList<PrintTongTheGroupItem>();
+						list.add(group);
+						record = new PrintTongTheGroupItem(rowIndex, rs.getString("TEN_HANG"), 
+										"", 
+										"",
+										rs.getString("thay_doi"));
+					}
+					//Insert group items khac
+					else{
+						record = new PrintTongTheGroupItem(rowIndex, dsLydo.get(rowIndex), 
+								rs.getString("giatri_cu"), 
+								rs.getString("giatri_moi"),
+								rs.getString("thay_doi"));
+					}
+					group.add(record);
+					//store rowIndex to compare with new value
+					storeOldIndex = rowIndex;
+				}
+				rs.close();
+				rs = null;
+				
+				return list;
+			}
+		});
+	}
+}

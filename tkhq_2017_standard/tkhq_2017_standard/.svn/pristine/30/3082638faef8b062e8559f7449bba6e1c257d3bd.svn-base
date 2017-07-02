@@ -1,0 +1,74 @@
+package com.tkhq.cmc.dto;
+
+import com.tkhq.cmc.common.PagerInfo;
+
+public class TbsQtacDnTrigiaNhapkhauDTO extends PagerInfo {
+	private Long id;
+	private String masodn;
+	private double trigianhapkhau;
+    private String tenDn;
+    private int trangThai;
+    private String moTa;
+    
+	public TbsQtacDnTrigiaNhapkhauDTO(String masodn, double trigianhapkhau,
+			String tenDn, int trangThai, String moTa) {
+		super();
+		this.masodn = masodn;
+		this.trigianhapkhau = trigianhapkhau;
+		this.tenDn = tenDn;
+		this.trangThai = trangThai;
+		this.moTa = moTa;
+	}
+	
+	public TbsQtacDnTrigiaNhapkhauDTO() {
+		
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getMasodn() {
+		return masodn;
+	}
+
+	public void setMasodn(String masodn) {
+		this.masodn = masodn;
+	}
+
+	public double getTrigianhapkhau() {
+		return trigianhapkhau;
+	}
+
+	public void setTrigianhapkhau(double trigianhapkhau) {
+		this.trigianhapkhau = trigianhapkhau;
+	}
+
+	public String getTenDn() {
+		return tenDn;
+	}
+
+	public void setTenDn(String tenDn) {
+		this.tenDn = tenDn;
+	}
+
+	public int getTrangThai() {
+		return trangThai;
+	}
+
+	public void setTrangThai(int trangThai) {
+		this.trangThai = trangThai;
+	}
+
+	public String getMoTa() {
+		return moTa;
+	}
+
+	public void setMoTa(String moTa) {
+		this.moTa = moTa;
+	}
+}

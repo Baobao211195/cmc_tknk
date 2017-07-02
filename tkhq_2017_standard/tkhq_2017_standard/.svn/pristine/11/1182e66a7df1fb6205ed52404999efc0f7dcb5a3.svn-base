@@ -1,0 +1,41 @@
+package com.tkhq.cmc.dao;
+
+
+import org.springframework.stereotype.Repository;
+
+import com.tkhq.cmc.model.TbsDvtVnaccs;
+import com.tkhq.cmc.model.TbsQtacCuakhauDbVn;
+
+@Repository
+public class TbsQtacCuakhauDbVnDaoImpl extends BaseDAO<String, TbsQtacCuakhauDbVn> implements TbsQtacCuakhauDbVnDao{
+
+	@Override
+	public void insert(TbsQtacCuakhauDbVn entity) {
+		try{
+			this.persist(entity);
+		}catch(Exception ex){
+			throw ex;
+		}	
+	}
+
+	@Override
+	public void update(TbsQtacCuakhauDbVn entity) {
+		try{
+			this.update(entity);
+		}catch(Exception ex){
+			throw ex;
+		}	
+	}
+
+	@Override
+	public void delete(long id) {
+		TbsQtacCuakhauDbVn entity = new TbsQtacCuakhauDbVn();
+		entity.setId(id);
+		try{
+			this.delete(entity);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
+
+}

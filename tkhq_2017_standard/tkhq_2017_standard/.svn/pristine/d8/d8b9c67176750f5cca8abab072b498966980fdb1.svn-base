@@ -1,0 +1,357 @@
+/**
+ * 
+ */
+
+'use strict';
+
+angular.module('myApp').controller('QLUserSDSPTKController', QLUserSDSPTKController);
+QLUserSDSPTKController.$inject = ['$rootScope','$scope', 'QLUserSDSPTKService', '$uibModal', '$PopupMessage'];
+
+function QLUserSDSPTKController($rootScope, $scope, QLUserSDSPTKService, $uibModal, $PopupMessage) {
+		
+		var self = this;
+		//define variable
+		self.lstQLUser = [];
+        self.qlUserEntity = {
+        	resourceId: 0,
+        	tenTochuc: '',
+        	tenCanhan: '',
+        	email: '',
+        	mobile: '',
+        	mota: '',
+        	chitieuTK: '',
+        	khainiem: '',
+        	cancu: '',
+        	tansuat: '',
+        	dexuatDL: '',
+        	userQL: '',
+        	userName: '',
+        	ghichu: '',
+        	mucdo: ''
+        };
+        self.selectedList = []; //Danh sach row da chon        
+        self.checkAll = false;
+        
+        //method handle action in form
+        self.remove = remove;	//Xoa ban ghi da chon
+        self.addRow = addRow;	//Them moi
+        self.editRow = editRow;	//Cap nhat ban ghi da chon
+        self.showPopup = showPopup;	//Hien thi popup cho them moi va cap nhat du lieu
+        self.search = search;	//Tim kiem tren form
+        self.doExport = doExport;
+        self.doPrint = doPrint;
+        
+        //option of popup
+        self.animationsEnabled = true;
+        
+        //pagination
+        self.pager = {};
+        //variable of paging
+        self.totalItems = 0;
+        self.currentPage = 1;
+        self.maxSize = 5;
+        self.pageSize = 10;
+        
+        //Progress bar
+        $rootScope.showLoading = true;
+        
+        //get all data after initialize property of controller
+        search(self.currentPage, self.pageSize);
+        
+        $scope.pageChanged = function() {
+            console.log('Page changed to: ' + self.currentPage);
+            search(self.currentPage, self.pageSize);
+        };
+        
+        function search(currentPage, pageSize){
+        	if(typeof currentPage == 'undefined' || currentPage == ''){
+        		currentPage = 1;
+        	}
+        	if(typeof pageSize == 'undefined'){
+        		pageSize = self.pageSize;
+        	}
+        	
+        	var param = {};
+        	param["currentPage"] = currentPage;
+        	param["pageSize"] = pageSize;
+        	
+        	$rootScope.showLoading = true;
+        	
+        	QLUserSDSPTKService.search(param)
+        		.then(function(respone){
+        			self.lstQLUser = respone.content;
+        			self.totalItems = respone.totalItems;
+        			self.pageSize = respone.pageSize;
+        			
+        			for(var i = 0; i < self.lstQLUser.length; i++){
+    					angular.extend(self.lstQLUser[i], {isChecked: false}); 
+    				}
+        			//$state.forceReload(); reload data
+        			
+        			$rootScope.showLoading = false;
+        			},
+        			function(errResponse){
+        				console.error(errResponse);
+        				if(errResponse == 404){
+        					self.lstQLUser = [];
+        					self.totalItems = 0;
+        				}
+        				$rootScope.showLoading = false;
+        			}
+        		);
+        }
+        
+        $scope.toggleAll = function(){
+        	for(var i = 0; i < self.lstQLUser.length; i++){
+        		self.lstQLUser[i].isChecked = self.checkAll;
+        	}
+        };
+
+        function remove() {
+        	self.selectedList = [];
+        	var selectedId = "";
+        	for(var i = 0; i < self.lstQLUser.length; i++){
+        		if(self.lstQLUser[i].isChecked == true){
+        			selectedId = self.lstQLUser[i].resourceId;
+        			self.selectedList.push(selectedId);
+        		}
+        	}
+
+            if(self.selectedList.length == 0){
+            	angular.element(document.querySelector('.messageErrorArea')).val("Chưa chọn bản ghi nào để xóa");
+            	return;
+            }
+            
+            $PopupMessage.Confirm('Bạn có chắc muốn xóa bản ghi?',DeleteData,null);
+        }
+        
+        function DeleteData()
+        {
+        	delUserInfo(self.selectedList);
+        }
+        
+        function delUserInfo(selectedList) {
+        	QLUserSDSPTKService.delUserInfo(selectedList)
+                .then(function (response) {
+                		self.checkAll = false;
+                		self.currentPage = 1;
+                		search(self.currentPage, self.pageSize);
+                	},
+                    function (errResponse) {
+                        console.error(errResponse);
+                    }
+                );
+        }
+
+        function reset() {
+        	self.qlUserEntity = {
+                	resourceId: 0,
+                	tenTochuc: '',
+                	tenCanhan: '',
+                	email: '',
+                	mobile: '',
+                	mota: '',
+                	chitieuTK: '',
+                	khainiem: '',
+                	cancu: '',
+                	tansuat: '',
+                	dexuatDL: '',
+                	userQL: '',
+                	userName: '',
+                	ghichu: '',
+                	mucdo: ''
+                };
+        }
+    	
+    	function addRow(){
+    		reset(); //Lam moi entity
+    		self.showPopup(self.lstQLUser, self.qlUserEntity);
+    	}
+    	
+    	function editRow(id){
+            for (var i = 0; i < self.lstQLUser.length; i++) {
+                if (self.lstQLUser[i].resourceId === id) {
+                    self.qlUserEntity = angular.copy(self.lstQLUser[i]);
+                    break;
+                }
+            }
+            self.showPopup(self.lstQLUser, self.qlUserEntity);
+    	}   	
+    	
+    	function showPopup(grid, row){
+    		var modalInstance = $uibModal.open({
+    			animation: self.animationsEnabled,
+    			ariaLabelledBy: 'modal-title',
+    			ariaDescribedBy: 'modal-body',
+    			templateUrl: 'EditUserSDTK',
+    			controller: 'UserSDSPTKModalCtrl',
+    			controllerAs: 'self',
+    			size: 'lg',
+    			resolve: {
+					row : function() {
+						return row;
+					}
+    			}
+    		});
+    		
+    		modalInstance.result.then(function (data) {
+    				if(data == 'success'){
+    					self.currentPage = 1;
+    					search(self.currentPage, self.pageSize);
+    				}else{
+    					console.log('Có lỗi xảy ra');
+    				}
+    		    }, function () {
+    		      //$log.info('modal-component dismissed at: ' + new Date());
+    		    });
+    	}
+    	
+    	function doExport(){
+    		var param = {};
+    		param["currentPage"] = self.currentPage;
+        	param["pageSize"] = self.pageSize;
+
+    		QLUserSDSPTKService.doExport(param);
+    	}
+    	
+    	function doPrint(){
+    		doExport();
+    	}
+
+}
+
+angular.module('myApp').controller('UserSDSPTKModalCtrl', UserSDSPTKModalCtrl);
+UserSDSPTKModalCtrl.$inject = ['$scope', '$uibModalInstance', 'row', 'QLUserSDSPTKService', '$PopupMessage']
+function UserSDSPTKModalCtrl($scope, $uibModalInstance, row, QLUserSDSPTKService, $PopupMessage) {
+	var self = this;
+	//Variable
+	self.entity = angular.copy(row);
+	self.message = '';
+	self.lstUser = [];
+	
+	//Method handle
+	self.saveData = saveData;
+	
+	$scope.rbLoai = {value: 'TC'};
+	$scope.showTochuc = true;
+	$scope.showCanhan = false;
+	
+	$scope.emailFormat = /^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,6}$/;
+	$scope.phoneNumber = /^\d*$/;
+	
+	//initialize
+	initComponent();
+	
+	function initComponent(){
+		if(self.entity.tenTochuc.length > 0){
+			$scope.rbLoai = {value: 'TC'};
+			$scope.changeRb;
+		}
+		else if(self.entity.tenCanhan.length > 0){
+			$scope.rbLoai = {value: 'CN'};
+			$scope.changeRb;
+		}
+		
+		
+		QLUserSDSPTKService.getListUser()
+			.then(
+				function (deferred) {
+					self.lstUser = deferred;
+                },
+                function (errResponse) {
+                    console.error(errResponse);
+                }
+			);
+	}
+	
+	$scope.changeRb = function(){
+		if($scope.rbLoai.value == 'TC'){
+			$scope.showTochuc = true;
+			$scope.showCanhan = false;
+		}
+		else if($scope.rbLoai.value == 'CN'){
+			$scope.showTochuc = false;
+			$scope.showCanhan = true;
+		}
+	}
+
+	self.cancel = function () {
+	    $uibModalInstance.dismiss('cancel');
+	};
+	  
+	function saveData() {
+		if (self.entity.resourceId == 0) {
+			console.log('Saving New Row', self.entity);
+			crtUserInfo(self.entity);
+        } else {
+        	console.log('Updated row with id ', self.entity.resourceId);
+        	updUserInfo(self.entity, self.entity.resourceId);
+        }
+  	}
+	
+	function crtUserInfo(entity) {
+		QLUserSDSPTKService.crtUserInfo(entity)
+            .then(
+        		function (response){
+            		self.message = 'Create success';
+            		var modalInstance = $PopupMessage.Success('Thêm mới thành công');
+        			
+        			modalInstance.result.then(function (data) {
+        				if(data == 'close'){
+        					$uibModalInstance.close("success");
+        				}
+        				else{
+        					$uibModalInstance.close("error");
+        				}
+        		    });
+            	},
+                function (errResponse) {
+            		console.error(errResponse);
+            		self.message = 'error';
+            		var modalInstance = $PopupMessage.Error('Không thể thêm mới xin hãy thử lại');
+					
+					modalInstance.result.then(function (data) {
+						if(data == 'close'){
+							console.log("Đóng modal");
+						}
+						else{
+							console.log("Lỗi khi đóng modal");
+						}
+				    });
+                }
+            );
+    }
+	
+	function updUserInfo(entity, id) {
+		QLUserSDSPTKService.updUserInfo(entity, id)
+            .then(
+        		function (ressponse){
+            		self.message = 'Update success';
+            		var modalInstance = $PopupMessage.Success('Cập nhật thành công');
+        			
+        			modalInstance.result.then(function (data) {
+        				if(data == 'close'){
+        					$uibModalInstance.close("success");
+        				}
+        				else{
+        					$uibModalInstance.close("error");
+        				}
+        		    });
+            	},
+                function (errResponse) {
+                    console.error(errResponse);
+                    self.message = 'error';
+                    var modalInstance = $PopupMessage.Error('Không thể cập nhật xin hãy thử lại');
+					
+					modalInstance.result.then(function (data) {
+						if(data == 'close'){
+							console.log("Đóng modal");
+						}
+						else{
+							console.log("Lỗi khi đóng modal");
+						}
+				    });
+                }
+            );
+    }
+}

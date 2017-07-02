@@ -1,0 +1,81 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<div>
+  <div class="modal-header">
+      <h4 class="modal-title">Thêm mới/Cập nhật Biểu thuế</h4>
+  </div>
+  <div class="modal-body">
+    <form name="bieuThueForm">
+		<div class="row mab10">
+	  		<label class="col-sm-3">Mã biểu thuế *</label>
+	  		<div class="col-sm-5 pa0">
+	  			<input class="form-control" type="text" name="maBieuThue" ng-model="self.entity.maBieuThue" required/>
+	  		</div>
+	  		<span ng-show="bieuThueForm.maBieuThue.$error.required" class="col-sm-4 input-warning">Mã biểu thuế is required</span>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-3">Tên biểu thuế</label>
+	  		<div class="col-sm-5 pa0">
+	  			<input class="form-control" type="text" name="tenBieuThue" ng-model="self.entity.tenBieuThue"/>
+	  		</div>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-3">Thuế suất *</label>
+	  		<div class="col-sm-5 pa0">
+	  			<input class="form-control" type="text" name="thueSuat" ng-model="self.entity.thueSuat" maxlength="10" 
+	  				only-digits required/>
+	  		</div>
+	  		<span ng-show="bieuThueForm.thueSuat.$error.required" class="col-sm-4 input-warning">Thuế suất is required</span>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-3">Kiểu biểu thuế *</label>
+	  		<div class="col-sm-5 pa0">
+	  			<input class="form-control" type="text" name="kieuBieuThue" ng-model="self.entity.kieuBieuThue" maxlength="10" 
+	  				only-digits required/>
+	  		</div>
+	  		<span ng-show="bieuThueForm.kieuBieuThue.$error.required" class="col-sm-4 input-warning">Kiểu biểu thuế is required</span>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-3">Mã hàng hóa *</label>
+	  		<div class="col-sm-5 pa0">
+	  			<input class="form-control" type="text" name="maHS" ng-model="self.entity.maHS" required/>
+	  		</div>
+	  		<span ng-show="bieuThueForm.maHS.$error.required" class="col-sm-4 input-warning">Mã hàng hóa is required</span>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-3">Ngày hiệu lực *</label>
+  			<div class="col-sm-5 pa0">
+		  		<input type="text" name="ngayHL" class="form-control" uib-datepicker-popup="" ng-model="self.entity.ngayHL"
+		  			is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close"
+		  			required/>		  		
+          	</div>
+          	<span class="col-sm-2 input-group-btn">
+	        	<button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+	        </span>
+          	<span ng-show="bieuThueForm.ngayHL.$error.required" class="col-sm-4 input-warning">Ngày có hiệu lực is required</span>
+		</div>
+		<div class="row">
+	  		<label class="col-sm-3">Ngày hết hiệu lực *</label>
+  			<div class="col-sm-5 pa0">
+		  		<input type="text" name="ngayHHL" class="form-control" uib-datepicker-popup="" ng-model="self.entity.ngayHHL"
+		  			is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close"
+		  			required/>
+          	</div>
+          	<span class="col-sm-2 input-group-btn">
+	        	<button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+	        </span>
+          	<span ng-show="bieuThueForm.ngayHHL.$error.required" class="col-sm-4 input-warning">Ngày hết hiệu lực is required</span>
+		</div>		
+	</form>
+  </div>
+  <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="self.saveData()"
+      	ng-disabled="bieuThueForm.maBieuThue.$dirty && bieuThueForm.maBieuThue.$invalid 
+      		|| bieuThueForm.thueSuat.$dirty && bieuThueForm.thueSuat.$invalid
+      		|| bieuThueForm.kieuBieuThue.$dirty && bieuThueForm.kieuBieuThue.$invalid
+      		|| bieuThueForm.maHS.$dirty && bieuThueForm.maHS.$invalid
+      		|| bieuThueForm.ngayHL.$dirty && bieuThueForm.ngayHL.$invalid
+      		|| bieuThueForm.ngayHHL.$dirty && bieuThueForm.ngayHHL.$invalid">Save</button>
+      <button class="btn btn-primary" ng-click="self.cancel()">Cancel</button>
+  </div>
+</div>

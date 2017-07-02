@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-04-20T17:28:24 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ChartDemo" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d5f75304-d117-4963-8d35-0858b3c0a636">
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="trigia_lk" class="java.lang.Double">
+		<fieldDescription><![CDATA[trigia_lk]]></fieldDescription>
+	</field>
+	<field name="sapxep" class="java.lang.Long">
+		<fieldDescription><![CDATA[sapxep]]></fieldDescription>
+	</field>
+	<field name="ten_hang" class="java.lang.String">
+		<fieldDescription><![CDATA[ten_hang]]></fieldDescription>
+	</field>
+	<field name="ky" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ky]]></fieldDescription>
+	</field>
+	<field name="luong_ky" class="java.lang.Double">
+		<fieldDescription><![CDATA[luong_ky]]></fieldDescription>
+	</field>
+	<field name="stt" class="java.lang.Long">
+		<fieldDescription><![CDATA[stt]]></fieldDescription>
+	</field>
+	<field name="thang" class="java.lang.Integer">
+		<fieldDescription><![CDATA[thang]]></fieldDescription>
+	</field>
+	<field name="trigia_ky" class="java.lang.Double">
+		<fieldDescription><![CDATA[trigia_ky]]></fieldDescription>
+	</field>
+	<field name="loai" class="java.lang.String">
+		<fieldDescription><![CDATA[loai]]></fieldDescription>
+	</field>
+	<field name="nam" class="java.lang.Integer">
+		<fieldDescription><![CDATA[nam]]></fieldDescription>
+	</field>
+	<field name="ten_nhom" class="java.lang.String">
+		<fieldDescription><![CDATA[ten_nhom]]></fieldDescription>
+	</field>
+	<field name="luong_lk" class="java.lang.Double">
+		<fieldDescription><![CDATA[luong_lk]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="391">
+			<lineChart>
+				<chart evaluationTime="Report">
+					<reportElement x="20" y="20" width="720" height="249" uuid="f3ccfb4c-f887-42b2-8426-44dbbc32cce8"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["SERIES 1"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{ten_nhom}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{trigia_ky}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<linePlot>
+					<plot/>
+					<categoryAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</valueAxisFormat>
+				</linePlot>
+			</lineChart>
+		</band>
+	</title>
+</jasperReport>

@@ -1,0 +1,63 @@
+package com.tkhq.global.model.bcptbangbieu;
+
+import java.util.List;
+
+public class SLTheoCTTK01DataKy {
+
+	private List<DataKyObj> data;
+	private String ss_ky_truoc;
+	private String ss_ky_nam_truoc;
+	private String min_ky;
+	private String max_ky;
+	
+	public SLTheoCTTK01DataKy(){}
+
+	public SLTheoCTTK01DataKy(List<DataKyObj> data, String ss_ky_truoc, String ss_ky_nam_truoc, String min_ky,
+			String max_ky) {
+		this.data = data;
+		this.ss_ky_truoc = ss_ky_truoc;
+		this.ss_ky_nam_truoc = ss_ky_nam_truoc;
+		this.min_ky = min_ky;
+		this.max_ky = max_ky;
+	}
+
+	public List<DataKyObj> getData() {
+		return data;
+	}
+
+	public void setData(List<DataKyObj> data) {
+		this.data = data;
+	}
+
+	public String getSs_ky_truoc() {
+		return ss_ky_truoc;
+	}
+
+	public void setSs_ky_truoc(String ss_ky_truoc) {
+		this.ss_ky_truoc = ss_ky_truoc;
+	}
+
+	public String getSs_ky_nam_truoc() {
+		return ss_ky_nam_truoc;
+	}
+
+	public void setSs_ky_nam_truoc(String ss_ky_nam_truoc) {
+		this.ss_ky_nam_truoc = ss_ky_nam_truoc;
+	}
+
+	public String getMin_ky() {
+		return min_ky;
+	}
+
+	public void setMin_ky(String min_ky) {
+		this.min_ky = min_ky;
+	}
+
+	public String getMax_ky() {
+		return max_ky;
+	}
+
+	public void setMax_ky(String max_ky) {
+		this.max_ky = max_ky;
+	}
+}

@@ -1,0 +1,47 @@
+package com.tkhq.cmc.dto;
+
+import java.util.Date;
+
+public class QuanLyNhatKyHTDTO {
+	
+	private String tenDangNhap;
+	
+	private String tenDonVi;
+	
+	private int trangThai;
+	
+	private Date thoiGian;
+
+	public String getTenDangNhap() {
+		return tenDangNhap;
+	}
+
+	public void setTenDangNhap(String tenDangNhap) {
+		this.tenDangNhap = tenDangNhap;
+	}
+
+	public String getTenDonVi() {
+		return tenDonVi;
+	}
+
+	public void setTenDonVi(String tenDonVi) {
+		this.tenDonVi = tenDonVi;
+	}
+
+	public int getTrangThai() {
+		return trangThai;
+	}
+
+	public void setTrangThai(int trangThai) {
+		this.trangThai = trangThai;
+	}
+
+	public Date getThoiGian() {
+		return thoiGian;
+	}
+
+	public void setThoiGian(Date thoiGian) {
+		this.thoiGian = thoiGian;
+	}
+
+}

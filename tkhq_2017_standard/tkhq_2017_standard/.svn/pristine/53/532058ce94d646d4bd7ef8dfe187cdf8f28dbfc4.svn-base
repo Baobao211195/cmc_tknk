@@ -1,0 +1,25 @@
+package com.tkhq.global.dao;
+
+import java.util.List;
+
+import com.tkhq.global.model.*;
+
+public interface DanhMucDao {
+	public List<DanhMucChung> getAllNhomPTVT();
+	public List<DanhMucChung> getAllPTVTByNhomPTVT(String maNhomPTVT);
+	public List<TinhTP> getAllTinhTP();
+	public List<DonviHQ> getAllCucHQ(String requestingUsername);
+	public List<DonviHQ> getAllChiCucHQByParentCode(final String maCucHQ, String requestingUsername);
+	public List<MatHangChuYeu> getDSMatHangChuYeu(final String nhx);
+	public List<DanhMucChung> getDSMatHangChuYeuBIEU7(String nhx);
+	public List<DanhMucChung> getDSMatHangChuYeuMaThKe(String nhx);
+	
+	public List<DanhMucChung> getAllPhan();
+	public List<DanhMucChung> getAllChuong();
+	public List<DanhMucChung> getAllNhomByChuong(String chuong);
+	public List<DanhMucChung> getAllKhoiKT();
+	public List<DanhMucChung> getAllNuocByKhoiKT(String khoi);
+	public List<DanhMucChung> getAllThiTruong();
+	public List<DanhMucChung> getAllCuaKhau();
+	public List<DanhMucChung> getAllLoaiHinh(String nhx);
+}

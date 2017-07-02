@@ -1,0 +1,99 @@
+/**
+ * Service of  upload file phi cấu trúc.
+ * 
+ */
+
+'use strict';
+App.factory('displayFileCauTrucService',['$http','$q', 'contextPath', displayFileCauTrucService]);
+
+function displayFileCauTrucService($http, $q, contextPath) {
+
+	
+//	var contextPath = "http://localhost:8080/tkhq_2017_standard";
+	
+	var factory = {
+		GetListFilePhiCauTruc: GetListFilePhiCauTruc,
+		DoDownloadFile : DoDownloadFile,
+		DoDeleteFile : DoDeleteFile,
+		DoUploadFile : DoUploadFile,
+	};
+	
+	return factory;
+
+	function GetListFilePhiCauTruc(chuDe, typeNhapXuat) {
+		var deferred = $q.defer();
+		console.log("hienThiFileCauTruc" + chuDe + "va" + typeNhapXuat);
+		
+		$http.get(contextPath + "/hienThiFileCauTruc?" + "chuDe="+ chuDe +"&typeNhapXuat=" + typeNhapXuat)
+			.then(
+				function(response) {
+					deferred.resolve(response.data)
+				},
+				function (errResponse) {
+					deferred.reject(errResponse);
+					console.log("Có lỗi xảy ra trong khi lấy thông tin");
+				}
+			);
+		return deferred.promise;
+	}
+
+	function DoDownloadFile(fileId) {
+		var deferred = $q.defer();
+		console.log("Hien thi file :" + fileId);
+		// do  dowload
+		$http.get(contextPath + "/downLoadFileCauTruc/?" + "fileId="+ fileId)
+			.then(
+				function(response) {
+					deferred.resolve(response.data)
+				},
+				function (errResponse) {
+					deferred.reject(errResponse);
+					console.log("Có lỗi xảy ra trong khi dowload thông tin");
+				}
+			);
+		return deferred.promise;
+		
+	}
+
+	function DoDeleteFile(fileId) {
+		var deferred = $q.defer();
+		console.log("Xoa thi file :" + fileId);
+		$http.get(contextPath + "/deleteFileCauTruc?" + "fileId="+ fileId)
+			.then(
+				function(response)   {
+					deferred.resolve(response.data)
+				},
+				function (errResponse) {
+					deferred.reject(errResponse);
+					console.log("Có lỗi xảy ra trong khi dowload thông tin");
+				} 
+			);
+		return deferred.promise;
+	}
+
+	function DoUploadFile(fileUpload, fileObj) {
+		var deferred = $q.defer();
+		var formData = new FormData();
+		formData.append('fileUpLoad', fileUpload);
+		formData.append('fileObject', angular.toJson(fileObj, true))
+		var url = contextPath + "/uploadFileCauTruc",formData;
+		$http.post(url, formData,
+					{
+						transformRequest : angular.identity,
+						headers : {
+							'Content-Type': undefined,
+						}
+					}
+			)
+			.then(
+				function(response) {
+					deferred.resolve(response.data)	
+				 },
+			    function(errResponse) {
+					console.log("Có lỗi xảy ra trong khi hoàn thành rà xoát ");
+					deferred.resolve(errResponse.data)	
+			    }
+		);
+		return deferred.promise;
+	}
+}

@@ -1,0 +1,228 @@
+/**
+ * Created by cmcsoft on 6/9/2017.
+ */
+'use strict';
+var myApp = angular.module('myApp');
+
+myApp.controller('tbsQtacVantaiHangxuatNnController', ['$scope',
+                                                        '$PopupMessage',
+                                                        'pagerService',
+                                                        '$uibModal',
+                                                        '$location',
+                                                        'contextPath',
+                                                        'tbsQtacVantaiHangxuatNnService',
+                                                        function($scope,
+                                                                 $PopupMessage,
+                                                                 pagerService,
+                                                                 $uibModal,
+                                                                 $location,
+                                                                 contextPath,
+                                                                 tbsQtacVantaiHangxuatNnService){
+
+        $scope.listData = [];
+
+        $scope.totalItems = 0;
+        $scope.currentPage = 1;
+        $scope.maxSize = 5;
+        $scope.pageSize = 10;
+
+        var idDelete = "";
+
+        $scope.dto = {
+            id             :"",
+            maphuongthucvanchuyen      : "",
+            macuakhaunn  : ""
+        };
+
+        init();
+
+        $scope.doSearch = function(currentPage, pageSize){
+            if( $scope.dto.maphuongthucvanchuyen === "" && $scope.dto.macuakhaunn === ""){
+                getListtbsQtacVantaiHangxuatNn();
+            } else {
+                search(currentPage, pageSize);
+            }
+        }
+
+        $scope.pageChanged = function(){
+            search($scope.currentPage, $scope.pageSize);
+        }
+
+        $scope.doAdd = function () {
+            if($scope.dto.id !== ""){
+                reloadForm();
+                $PopupMessage.Error("Không thể thực hiện được thao tác này.");
+            }
+            if ($scope.dto.maphuongthucvanchuyen === ""){
+                $PopupMessage.Error("Hãy nhập mã thống kê!.");
+                return;
+            }
+            if ($scope.dto.macuakhaunn === ""){
+                $PopupMessage.Error("Hãy nhập trị giá thống kê!.");
+                return;
+            }
+            addData($scope.dto);
+        }
+
+        $scope.doUpdate = function () {
+            if($scope.dto.id === ""){
+                $PopupMessage.Error("Không thể thực hiện được thao tác này.");
+                return;
+            }
+            upDateData($scope.dto);
+        }
+
+        $scope.doEditRow = function(id) {
+            // check exist.
+            copyData ($scope.listData ,id);
+        }
+
+        $scope.doDelete = function (id) {
+            idDelete = id;
+            $PopupMessage.Confirm('Ban có chắc muốn xóa bản ghi', deleteData, null);
+        }
+
+        function getDataById(id) {
+            tbsQtacVantaiHangxuatNnService.GettbsQtacVantaiHangxuatNnById(id)
+                .then(
+                    function (deferred) {
+                        if(deferred !== null){
+                            copyData ($scope.listData ,id);
+                        }else {
+                            $PopupMessage.Error("Dữ liệu đã bị xóa bởi một người sử dụng khác!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Có lỗi trong quá trình xử lý thông tin!");
+                    }
+
+                );
+        }
+
+        function deleteData() {
+            tbsQtacVantaiHangxuatNnService.DoDeletetbsQtacVantaiHangxuatNn(idDelete)
+                .then(
+                    function (deferred) {
+                        if(deferred === 1){
+                            $PopupMessage.Success("Xóa bỏ thông tin thành công!");
+                            getListtbsQtacVantaiHangxuatNn();
+                            reloadForm();
+                        } else {
+                            $PopupMessage.Error("Có lỗi trong quá trình xóa bỏ thông tin.!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Có lỗi trong quá trình xóa bỏ thông tin.!");
+                    }
+                );
+        }
+
+        function addData(data) {
+            tbsQtacVantaiHangxuatNnService.DoAddtbsQtacVantaiHangxuatNn(data)
+                .then(
+                    function (deferred) {
+                        if(deferred === 1){
+                            $PopupMessage.Success("Thêm mới thông tin thành công!");
+                            getListtbsQtacVantaiHangxuatNn();
+                            reloadForm();
+                        }else {
+                            $PopupMessage.Error("Có lỗi trong quá trình thêm mới thông tin.!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Có lỗi trong quá trình thêm mới thông tin.!");
+                        console.error("Có lỗi trong quá trình thêm mới thông tin.!");
+                    }
+                );
+        }
+
+        function upDateData(data) {
+            tbsQtacVantaiHangxuatNnService.DoUpdatetbsQtacVantaiHangxuatNn(data)
+                .then(
+                    function (deferred) {
+                        if(deferred === 1){
+                            $PopupMessage.Success("Cập nhật thông tin thành công!");
+                            getListtbsQtacVantaiHangxuatNn();
+                        }else {
+                            $PopupMessage.Error("Có lỗi trong quá trình cập nhật thông tin.!");
+                        }
+                        reloadForm();
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Có lỗi trong quá trình cập nhật thông tin.!");
+                        console.error("Có lỗi trong quá trình cập nhật thông tin.!");
+                    }
+                );
+        }
+
+        function copyData (listData ,idCopy){
+            for (var i = 0; i < listData.length; i++){
+                if(listData[i].id === idCopy){
+                    $scope.dto = angular.copy(listData[i]);
+                    break;
+                }
+            }
+        }
+
+        function init() {
+            getListtbsQtacVantaiHangxuatNn();
+        }
+
+        function getListtbsQtacVantaiHangxuatNn() {
+            tbsQtacVantaiHangxuatNnService.GetListtbsQtacVantaiHangxuatNn()
+                .then(
+                    function (deferred) {
+                        if (deferred !== null) {
+                            $scope.listData = deferred.content;
+                            $scope.totalItems = deferred.totalItems;
+                        }
+                    },
+                    function (errResponse) {
+                        console.error("Có lỗi trong quá trình lấy dữ liệu");
+                    }
+                );
+        }
+
+        function search(currentPage, pageSize) {
+            var formData = thietLapData($scope.dto.maphuongthucvanchuyen, $scope.dto.macuakhaunn, currentPage, pageSize);
+            tbsQtacVantaiHangxuatNnService.SearchtbsQtacVantaiHangxuatNn(formData)
+                .then(
+                    function (deferred) {
+                        if (deferred.length > 0){
+                            $scope.listData = deferred;
+                        } else {
+                            $PopupMessage.Error("Không có kết quả tìm kiếm!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Không có kết quả tìm kiếm!");
+                    }
+
+                );
+        }
+
+        function thietLapData(maphuongthucvanchuyen, macuakhaunn,currentPage, pageSize) {
+
+            if(typeof currentPage == 'undefined' || currentPage == ''){
+                currentPage = $scope.currentPage;
+            }
+            if(typeof pageSize == 'undefined'){
+                pageSize = $scope.pageSize;
+            }
+            var formData = {};
+            formData.maphuongthucvanchuyen = maphuongthucvanchuyen;
+            formData.macuakhaunn = macuakhaunn;
+            formData.currentPage = currentPage;
+            formData.pageSize = pageSize;
+
+            return formData;
+        }
+
+        function reloadForm() {
+            $scope.dto = {
+                id                   : "",
+                maphuongthucvanchuyen: "",
+                macuakhaunn          : ""
+            };
+        }
+    }]);

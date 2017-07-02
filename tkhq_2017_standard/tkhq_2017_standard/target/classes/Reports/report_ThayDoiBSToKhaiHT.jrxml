@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-05-16T01:38:28 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report_ThayDoiBSToKhaiHT" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="894016eb-bc51-4b66-89f5-3dc30f3119d1">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="ten_dv" class="java.lang.String">
+		<fieldDescription><![CDATA[ten_dv]]></fieldDescription>
+	</field>
+	<field name="ma_hang" class="java.lang.String">
+		<fieldDescription><![CDATA[ma_hang]]></fieldDescription>
+	</field>
+	<field name="don_gia_vnd" class="java.lang.String">
+		<fieldDescription><![CDATA[don_gia_vnd]]></fieldDescription>
+	</field>
+	<field name="tri_gia_tk_vnd" class="java.lang.String">
+		<fieldDescription><![CDATA[tri_gia_tk_vnd]]></fieldDescription>
+	</field>
+	<field name="ma_cuakhau_nk" class="java.lang.String">
+		<fieldDescription><![CDATA[ma_cuakhau_nk]]></fieldDescription>
+	</field>
+	<field name="ten_cuakhau_xk" class="java.lang.String">
+		<fieldDescription><![CDATA[ten_cuakhau_xk]]></fieldDescription>
+	</field>
+	<field name="is_tk" class="java.lang.String">
+		<fieldDescription><![CDATA[is_tk]]></fieldDescription>
+	</field>
+	<field name="sd" class="java.lang.String">
+		<fieldDescription><![CDATA[sd]]></fieldDescription>
+	</field>
+	<field name="tri_gia_vnd" class="java.lang.String">
+		<fieldDescription><![CDATA[tri_gia_vnd]]></fieldDescription>
+	</field>
+	<field name="luong" class="java.lang.String">
+		<fieldDescription><![CDATA[luong]]></fieldDescription>
+	</field>
+	<field name="luong_tk" class="java.lang.Double">
+		<fieldDescription><![CDATA[luong_tk]]></fieldDescription>
+	</field>
+	<field name="mo_ta" class="java.lang.String">
+		<fieldDescription><![CDATA[mo_ta]]></fieldDescription>
+	</field>
+	<field name="ten_cuakhau_nk" class="java.lang.String">
+		<fieldDescription><![CDATA[ten_cuakhau_nk]]></fieldDescription>
+	</field>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="ten_nuoc_XNK" class="java.lang.String">
+		<fieldDescription><![CDATA[ten_nuoc_XNK]]></fieldDescription>
+	</field>
+	<field name="tri_gia_tk_usd" class="java.lang.Double">
+		<fieldDescription><![CDATA[tri_gia_tk_usd]]></fieldDescription>
+	</field>
+	<field name="cang_nn" class="java.lang.String">
+		<fieldDescription><![CDATA[cang_nn]]></fieldDescription>
+	</field>
+	<field name="ma_cuakhau_xk" class="java.lang.String">
+		<fieldDescription><![CDATA[ma_cuakhau_xk]]></fieldDescription>
+	</field>
+	<field name="ma_lh" class="java.lang.String">
+		<fieldDescription><![CDATA[ma_lh]]></fieldDescription>
+	</field>
+	<field name="ngay_dk" class="java.lang.String">
+		<fieldDescription><![CDATA[ngay_dk]]></fieldDescription>
+	</field>
+	<field name="dvt_tk" class="java.lang.String">
+		<fieldDescription><![CDATA[dvt_tk]]></fieldDescription>
+	</field>
+	<field name="isChecked" class="java.lang.String">
+		<fieldDescription><![CDATA[isChecked]]></fieldDescription>
+	</field>
+	<field name="ky" class="java.lang.String">
+		<fieldDescription><![CDATA[ky]]></fieldDescription>
+	</field>
+	<field name="ma_tk" class="java.lang.String">
+		<fieldDescription><![CDATA[ma_tk]]></fieldDescription>
+	</field>
+	<field name="ma_dv" class="java.lang.String">
+		<fieldDescription><![CDATA[ma_dv]]></fieldDescription>
+	</field>
+	<field name="so_tk" class="java.lang.String">
+		<fieldDescription><![CDATA[so_tk]]></fieldDescription>
+	</field>
+	<field name="thang" class="java.lang.String">
+		<fieldDescription><![CDATA[thang]]></fieldDescription>
+	</field>
+	<field name="ma_hq" class="java.lang.String">
+		<fieldDescription><![CDATA[ma_hq]]></fieldDescription>
+	</field>
+	<field name="nuoc_xx" class="java.lang.String">
+		<fieldDescription><![CDATA[nuoc_xx]]></fieldDescription>
+	</field>
+	<field name="tri_gia_usd" class="java.lang.Double">
+		<fieldDescription><![CDATA[tri_gia_usd]]></fieldDescription>
+	</field>
+	<field name="ma_nt" class="java.lang.String">
+		<fieldDescription><![CDATA[ma_nt]]></fieldDescription>
+	</field>
+	<field name="don_gia_usd" class="java.lang.String">
+		<fieldDescription><![CDATA[don_gia_usd]]></fieldDescription>
+	</field>
+	<field name="nuoc_nk" class="java.lang.String">
+		<fieldDescription><![CDATA[nuoc_nk]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="95" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="210" y="46" width="380" height="30" uuid="9deb6a28-a90e-4273-99db-e1396aea3391"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[THAY ĐỔI DO BỔ SUNG TỜ KHAI TỪ CÁC HỆ THỐNG]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="130" y="1" width="100" height="30" uuid="cf97020e-751f-4526-b2df-2cad76ccc630"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[BỘ TÀI CHÍNH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="520" y="1" width="160" height="20" uuid="f0deb3a8-5108-4f89-8769-b74a8148a57f"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cục CNTT & Thống kê Hải quan]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="71" splitType="Stretch">
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="60" height="71" uuid="546efb40-ca3c-4880-b3f9-4368bdda2305">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Số tờ khai]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="60" y="0" width="70" height="71" uuid="9524d528-8403-418d-a0f8-49fee6c6b7c0"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Loại hình]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="130" y="0" width="90" height="71" uuid="f0ad2bd5-79a7-4075-88f4-5cf91f5b7938">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Chi cục đăng kí tờ khai]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="0" width="60" height="71" uuid="5ab5aa32-d723-4e3d-9e47-7957fd5e1f65"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mã đơn vị]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="280" y="0" width="80" height="71" uuid="fce851f9-f5b0-4c5a-94f7-db187c2c5adb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mặt hàng]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="360" y="0" width="80" height="71" uuid="ca9c8ae7-b755-4f42-8de2-d8b9fa2633c6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mã HS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="440" y="0" width="60" height="71" uuid="2131eec8-39d4-4577-9088-f365d151bec1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ĐVT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="500" y="0" width="70" height="71" uuid="65c6cce5-a210-44b3-b956-bcc547bcdce7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lượng thống kê]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="570" y="0" width="70" height="71" uuid="ab06746e-9886-4586-a5ff-b597cde551e3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trị giá USD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="640" y="0" width="70" height="71" uuid="eb7284e9-358c-4a34-bbd1-acc2c13aa1ba">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trị giá thống kê USD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="710" y="0" width="80" height="71" uuid="6a31d900-561c-49c0-b106-a49e37262556">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="710" y="0" width="80" height="71" uuid="021cb0bf-d7ea-4441-9bf7-1519601c9a56"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ten_nuoc_XNK}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="43" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="60" height="38" uuid="de5c5579-6d7a-45fc-86c5-bfdd8b16a248"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{so_tk}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="60" y="0" width="70" height="38" uuid="8aa64104-8cf0-4aff-93b9-1efdc25e8f87"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ma_lh}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="0" width="90" height="38" uuid="43238c7a-79f1-49f8-8b49-aa9a40644164"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ma_hq}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="0" width="60" height="38" uuid="469bf8ac-2e64-4452-8c51-8d0c672de3b0"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ma_dv}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="0" width="80" height="38" uuid="2e820d3b-cbe0-4174-b055-f23e83da3576"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ma_hang}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="360" y="0" width="80" height="38" uuid="30f7ff17-33bc-468a-b7e3-9a7329788680"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ma_tk}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="0" width="60" height="38" uuid="b992999d-7d13-4c70-8301-cc82dff7163c"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{dvt_tk}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="500" y="0" width="70" height="38" uuid="027eef96-ded6-4d87-aa81-6aef266084d7"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{luong_tk}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="570" y="0" width="70" height="38" uuid="ff61bdd4-791b-43d0-be93-3f1b4d86daa1"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tri_gia_usd}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="640" y="0" width="70" height="38" uuid="af3d8afc-7c09-4dc5-b0cc-dda650181e36"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tri_gia_tk_usd}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="710" y="0" width="80" height="38" uuid="b816b00e-50d4-4a8c-9772-07e60eae8f51"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nuoc_nk}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

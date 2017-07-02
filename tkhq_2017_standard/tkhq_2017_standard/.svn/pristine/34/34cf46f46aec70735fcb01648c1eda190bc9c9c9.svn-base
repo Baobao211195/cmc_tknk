@@ -1,0 +1,40 @@
+package com.tkhq.cmc.dto;
+
+import java.math.BigDecimal;
+
+import javax.persistence.Column;
+
+import com.tkhq.cmc.common.PagerInfo;
+
+public class TbsQtacLuongDTO extends PagerInfo{
+	
+	private Long id;
+	
+	private String mathongke;
+	
+	private BigDecimal luonglonnhat;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getMathongke() {
+		return mathongke;
+	}
+
+	public void setMathongke(String mathongke) {
+		this.mathongke = mathongke;
+	}
+
+	public BigDecimal getLuonglonnhat() {
+		return luonglonnhat;
+	}
+
+	public void setLuonglonnhat(BigDecimal luonglonnhat) {
+		this.luonglonnhat = luonglonnhat;
+	}
+}

@@ -1,0 +1,44 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
+<div>
+	<div class="modal-header">
+		<h4 class="modal-title">Thêm mới/Cập nhật Chuyên Đề</h4>
+	</div>
+	<div class="modal-body">
+		<form name="chuyendeForm">
+			<table style="width: 100%">
+				<tr>
+					<td><label class="col-sm-3">Mã Chuyên Đề:</label>
+						<div class="col-sm-3">
+							<input class="input" type="text" ng-model="self.entity.maCDe" maxlength="254" ng-disabled="self.entity.addOrUpdate == 'update' "/>
+						</div></td>	
+						<td><label class="col-sm-3">Tên Chuyên Đề:</label>
+						<div class="col-sm-3">
+							<input class="input" type="text" ng-model="self.entity.tenCDe" maxlength="254"/>
+						</div></td>				
+				</tr>
+				<tr>
+					
+					<td><label class="col-sm-3">Mã Hàng:</label>
+						<div class="col-sm-3">
+							<input class="input" type="text" ng-model="self.entity.maHang" maxlength="254"/>
+						</div></td>
+						<td><label class="col-sm-3">Mô tả Hàng Hóa:</label>
+						<div class="col-sm-3">
+							<input class="input" type="text" ng-model="self.entity.motaHH" maxlength="254"/>
+						</div></td>
+					<td>
+						<input class="input" type="hidden"
+						ng-model="self.entity.addOrUpdate" />
+					</td>
+				</tr>				
+			</table>
+		</form>
+	</div>
+	</br>
+	<div class="modal-footer" align="center">
+		<button class="btn btn-primary" ng-click="self.saveData()">Save</button>
+		<button class="btn btn-primary" ng-click="self.cancel()">Cancel</button>
+	</div>
+</div>

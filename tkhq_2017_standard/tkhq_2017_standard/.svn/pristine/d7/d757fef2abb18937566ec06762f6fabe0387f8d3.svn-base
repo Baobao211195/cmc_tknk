@@ -1,0 +1,37 @@
+package com.tkhq.cmc.dto;
+
+public class dataDTO {
+	public dataDTO(){
+		super();
+	}
+	
+	private String ky;
+	private String gia_tri;
+	private String thang;
+	private String chiso;
+	
+	public String getChiso() {
+		return chiso;
+	}
+	public void setChiso(String chiso) {
+		this.chiso = chiso;
+	}
+	public String getThang() {
+		return thang;
+	}
+	public void setThang(String thang) {
+		this.thang = thang;
+	}
+	public String getKy() {
+		return ky;
+	}
+	public void setKy(String ky) {
+		this.ky = ky;
+	}
+	public String getGia_tri() {
+		return gia_tri;
+	}
+	public void setGia_tri(String gia_tri) {
+		this.gia_tri = gia_tri;
+	}
+}

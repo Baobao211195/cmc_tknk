@@ -1,0 +1,343 @@
+
+/**
+* Controller of upload file phi cau truc.
+*/
+'use strict';
+var myApp = angular.module('myApp');
+
+myApp.controller('displayFileCauTrucController', ['$scope',
+													'$PopupMessage',
+													'$uibModal',
+													'$location',
+													'$parse',
+													'contextPath',
+													'displayFileCauTrucService',
+													function($scope,
+															$PopupMessage,
+															$uibModal,
+															$location,
+															$parse,
+															contextPath,
+															displayFileCauTrucService){
+
+	$scope.listFilePhiCauTrucs = [];
+	$scope.typeNhapXuat = "";
+	$scope.isDeleteId = "";
+	$scope.showReport= false;
+	
+
+	$scope.chuDe = "1";
+	$scope.restDto = {
+		"fileSize" : "",
+		"fileName" : ""
+	}
+
+	init();
+
+	$scope.selectTile = function(chuDe) {
+		var tmpChuDe = thietLapChuDe(chuDe);
+		getListFilePhiCauTruc(tmpChuDe, $scope.typeNhapXuat);
+
+	}
+	function thietLapChuDe (chuDe){
+		var chuDeTmp = "";
+		
+		if (chuDe === "1"){
+			chuDeTmp = "Dầu thô";
+		}else if (chuDe === "2"){
+			chuDeTmp = "Chuyển phát nhanh";
+		}else {
+			chuDeTmp = "Phương tiện xuất nhập cảnh";
+		}
+		return chuDeTmp;
+	}
+
+	$scope.doOpenUploadFile = function() {
+		var typeNhapXuat = $scope.typeNhapXuat;
+		showPopup(typeNhapXuat)
+	}
+	
+	function showPopup(typeNhapXuat){
+		var title = "";
+		if (typeNhapXuat === 'X') {
+			title = "Nhập file cấu trúc xuất khẩu";
+		}else {
+			title = "Nhập file cấu trúc nhập khẩu khẩu";
+		}
+		
+		var modalInstance = $uibModal.open({
+			animation: self.animationsEnabled,
+			ariaLabelledBy: 'modal-title',
+			ariaDescribedBy: 'modal-body',
+			templateUrl: 'uploadFileCauTruc',
+			controller: 'uploadFileCauTrucController',
+			resolve: {
+				title : function() {
+					return title;
+				},
+				typeNhapXuat : function (){
+					return typeNhapXuat;
+				}
+			}
+		});
+	}
+
+	$scope.doDownloadFile = function (fileId) {
+//		displayFileCauTrucService.DoDownloadFile(fileId)
+//			.then(
+//				function(deferred) {
+		$scope.srcReport = contextPath + "/downLoadFileCauTruc/?" + "fileId="+ fileId;
+//				},
+//				function (errResponse) {
+//					console.error('Error while fetching data');
+//				}
+//			);
+	}
+
+	$scope.doDeleteFile = function (fileId) {
+		$scope.isDeleteId = fileId;
+		$PopupMessage.Confirm('Ban co chac chan muon xoa ban ghi', deleteFilePhiCauTruc, null);
+		
+	}
+
+	$scope.doClose = function () {
+		window.history.back();
+	}
+	
+	function deleteFilePhiCauTruc() {
+		displayFileCauTrucService.DoDeleteFile($scope.isDeleteId)
+			.then(
+				function(deferred) {
+					if (deferred == 1) {
+						$PopupMessage.Success("File đã được xóa!");
+					}else if (deferred == 2){
+						$PopupMessage.Error("File đã bị xóa!");
+					} else {
+						$PopupMessage.Error("Có lỗi trong quá trình xóa dữ liệu");
+					}
+					getListFilePhiCauTruc( thietLapChuDe ($scope.chuDe), $scope.typeNhapXuat);
+				},
+				function (errResponse) {
+					console.log('Error while fetching data');
+				}
+			);
+	}
+
+	function init() {
+		var path = $location.absUrl().indexOf("uploadFileCauTrucXuatKhau");
+		if(path != -1){
+			$scope.typeNhapXuat = "X";
+		}else {
+			$scope.typeNhapXuat = "N";
+		}
+		var tmpChuDe = thietLapChuDe ($scope.chuDe);
+		getListFilePhiCauTruc(tmpChuDe, $scope.typeNhapXuat);
+	}
+
+	function getListFilePhiCauTruc(chuDe, typeNhapXuat)	{
+		displayFileCauTrucService.GetListFilePhiCauTruc(chuDe, typeNhapXuat)
+			.then(
+				function(deferred) {
+					$scope.listFilePhiCauTrucs = deferred;
+					console.log("Display data successfully");
+				},
+				function (errResponse) {
+					console.error('Error while fetching data');
+				}
+			);
+	}
+
+}]);
+
+
+myApp.controller('uploadFileCauTrucController', ['$scope',
+													'$PopupMessage',
+													'$uibModal',
+													'$uibModalInstance',
+//													'$location',
+													'title',
+													'typeNhapXuat',
+													'contextPath',
+													'displayFileCauTrucService',
+													 function($scope,
+													 		 $PopupMessage,
+													 		 $uibModal,
+													 		 $uibModalInstance,
+//													 		 $location,
+													 		 title,
+													 		 typeNhapXuat,
+													 		 contextPath,
+													 		 displayFileCauTrucService){
+
+	var MAX_SIZE_FILE_UPLOAD = 5242880 * 2;
+	$scope.disbleBtn = false;
+	var file = "";
+	
+	$scope.chuDe = "";
+
+	init()
+	
+	$scope.doUploadFile = function() {
+		file = $scope.myFile;
+
+		if(!validateChuDeFile($scope.chuDe)){
+			$PopupMessage.Error("Hãy lựa chọn chủ đề.");
+			return;
+		}
+		
+		if(file === undefined){
+			$PopupMessage.Error("Hãy lựa chọn file!");
+			return;
+		}
+		 
+		if(!validateTypeFile(file)){
+			 $PopupMessage.Error("Hãy lựa chọn file excle!");
+			 return;
+		}
+		 
+		if (!validateMaxSizeFile(file)){
+			 $PopupMessage.Error("File size must be less than 10MB.");
+			 return;
+		}
+
+		if(!validateMoTaFile($scope.moTa)){
+			$PopupMessage.Error("Hãy điền chọn mô tả");
+			return;
+		}
+
+		var fileObject = thietLapFileObject();
+		var mota = $scope.moTa;
+
+		displayFileCauTrucService.DoUploadFile(file, fileObject, mota)
+		 	.then(
+				function(deferred) {
+					
+					if(deferred == 1){
+						 $PopupMessage.Success("upload dữ liệu thành công.!");
+						 console.log("Display data successfully");
+						 
+					} else if (deferred == 2){
+						$PopupMessage.Error("File không đúng cấu trúc.");
+					} else {
+						$PopupMessage.Error("upload dữ liệu không thành công.!");
+						
+					}
+					init()
+				},
+				function (errResponse) {
+					$PopupMessage.Error("Có lỗi trong quá trình xử lý thông tin.");
+				}
+			 );
+	}
+	
+	$scope.doClose = function () {
+		window.location.reload();
+	}
+
+	$scope.setChuDe = function(){
+		
+		if ($scope.chuDe === "2"){
+			$scope.disbleBtn = true;
+		}else {
+			$scope.disbleBtn = false;
+		}
+	}
+	
+	$scope.openNhapMoi = function (chuDe){
+		 window.location.href =  contextPath+"/thaoTacFileCauTruc/"+ chuDe +"/" + $scope.typeNhapXuat;
+	}
+	
+	function thietLapChuDe (chuDe){
+		var chuDeTmp = "";
+		
+		if (chuDe === "1"){
+			chuDeTmp = "Dầu thô";
+		}else if (chuDe === "2"){
+			chuDeTmp = "Chuyển phát nhanh";
+		}else {
+			chuDeTmp = "Phương tiện xuất nhập cảnh";
+		}
+		return chuDeTmp;
+	}
+	
+	function thietLapFileObject (){
+		var fileObj = {};
+		fileObj.fileTitle = $scope.chuDe;
+		fileObj.typeNhapXuat = $scope.typeNhapXuat;
+//		fileObj.fileDescription =$scope.moTa;
+
+		return fileObj;
+	}
+
+	function init(){
+		$scope.title = title;
+		$scope.typeNhapXuat = typeNhapXuat;
+		$scope.chuDe = "";
+		if ($scope.chuDe === ""){
+			$scope.disbleBtn = true;
+		}
+		$scope.moTa = "";
+		$('#file').val('');
+	}
+	function validateTypeFile (file) {
+		var validExts = [".xls", ".xlsx"];
+	    var index =  file.name.lastIndexOf(".");
+	    var ext = file.name.substring(index);
+	    if(validExts.indexOf[ext] == -1){
+	    	return false;
+	    }else {
+	    	return true;
+	    }
+	}
+	
+	function validateMaxSizeFile(file){
+		if (file !== null){
+			if(file.size > MAX_SIZE_FILE_UPLOAD){
+				return false;
+			} else if (file.size == 0){
+				return false;
+			}else{
+				return true;
+			}
+		} else {
+			return false;
+		}
+	}
+	
+	function validateChuDeFile(chuDe){
+		if($scope.chuDe == ""){
+			$('#chuDe').focus();
+			return false;
+		}else{
+			return true
+		}
+	}
+	
+	function validateMoTaFile(moTa){
+		if ($scope.moTa == "") {
+			$('#moTa').focus();
+			return false;
+		}else {
+			return true;
+		}
+	}
+
+}]);
+
+myApp.directive('fileModel', ['$parse', function ($parse) {
+   return {
+	  require:'ngModel',
+      restrict: 'A',
+      scope: false,
+      link: function(scope, element, attrs) {
+         var model = $parse(attrs.fileModel);
+         var modelSetter = model.assign;
+         
+         element.bind('change', function(){
+            scope.$apply(function(){
+               modelSetter(scope, element[0].files[0]);
+            });
+         });
+      }
+   };
+}]);

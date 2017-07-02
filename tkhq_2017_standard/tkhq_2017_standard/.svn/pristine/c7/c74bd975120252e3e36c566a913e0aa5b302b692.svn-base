@@ -1,0 +1,58 @@
+package com.tkhq.cmc.dto;
+
+public class ThayDoiDoNVHQTongThe {
+	public String getLydo() {
+		return lydo;
+	}
+	public void setLydo(String lydo) {
+		this.lydo = lydo;
+	}
+	public Double getTong_tk() {
+		return tong_tk;
+	}
+	public void setTong_tk(Double tong_tk) {
+		this.tong_tk = tong_tk;
+	}
+	public Double getTong_dh() {
+		return tong_dh;
+	}
+	public void setTong_dh(Double tong_dh) {
+		this.tong_dh = tong_dh;
+	}
+	public Double getTrigia_cu() {
+		return trigia_cu;
+	}
+	public void setTrigia_cu(Double trigia_cu) {
+		this.trigia_cu = trigia_cu;
+	}
+	public Double getTrigia_moi() {
+		return trigia_moi;
+	}
+	public void setTrigia_moi(Double trigia_moi) {
+		this.trigia_moi = trigia_moi;
+	}
+	public Double getThaydoi() {
+		return thaydoi;
+	}
+	public void setThaydoi(Double thaydoi) {
+		this.thaydoi = thaydoi;
+	}
+	private String lydo;
+	public ThayDoiDoNVHQTongThe(String lydo, Double tong_tk, Double tong_dh,
+			Double trigia_cu, Double trigia_moi, Double thaydoi) {
+		super();
+		this.lydo = lydo;
+		this.tong_tk = tong_tk;
+		this.tong_dh = tong_dh;
+		this.trigia_cu = trigia_cu;
+		this.trigia_moi = trigia_moi;
+		this.thaydoi = thaydoi;
+	}
+	public ThayDoiDoNVHQTongThe(){
+	}
+	private Double tong_tk;
+	private Double tong_dh;
+	private Double trigia_cu;
+	private Double trigia_moi;
+	private Double thaydoi;
+}

@@ -1,0 +1,68 @@
+package com.tkhq.cmc.services;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tkhq.cmc.dao.UploadFileCauTrucDAO;
+import com.tkhq.cmc.dto.DuLieuFileCauTrucDto;
+import com.tkhq.cmc.dto.TbdNhapMoiFileDto;
+import com.tkhq.cmc.dto.Tbs_QuocGiaDto;
+import com.tkhq.cmc.dto.UploadFileCauTrucDto;
+
+@Service
+@Transactional
+public class UploadFileCauTrucServiceImpl implements UploadFileCauTrucService{
+
+	@Autowired
+	UploadFileCauTrucDAO uploadFileCauTrucDAO;
+
+	public List<UploadFileCauTrucDto> getListFileCauTruc(String chuDe, String typeNhapXuat) {
+		return uploadFileCauTrucDAO.getListFileCauTruc(chuDe, typeNhapXuat);
+	}
+
+	public UploadFileCauTrucDto getFileCauTrucById(int fileId) {
+		return uploadFileCauTrucDAO.getFileCauTrucById(fileId);
+	}
+
+	public int deleteFileCauTruc(int fileId) {
+		return uploadFileCauTrucDAO.deleteFileCauTruc(fileId);
+	}
+	// dành cho màn hình upload
+	public int insertThongTinFileCauTruc(UploadFileCauTrucDto uploadFileCauTrucDto) {
+		return uploadFileCauTrucDAO.insertThongTinFileCauTruc(uploadFileCauTrucDto);
+	}
+
+	@Override
+	public int insertDulieuFileCauTruc (List<DuLieuFileCauTrucDto> listDuLieuFileCauTrucDto){
+		int result  = 0;
+		for (DuLieuFileCauTrucDto dto : listDuLieuFileCauTrucDto){
+			result = uploadFileCauTrucDAO.insertDulieuFileCauTruc(dto);
+		}
+		return result;
+	}
+	
+	// Dành cho màn hình nhập mới.
+	@Override
+	public List<TbdNhapMoiFileDto> getListNhapMoiFileDto(String chuDe, String typeNhapXuat) {
+		return uploadFileCauTrucDAO.getListNhapMoiFileDto(chuDe, typeNhapXuat);
+	}
+
+	@Override
+	public List<DuLieuFileCauTrucDto> getListPhuongTienXuatNhapCanh(String chuDe, String typeNhapXuat) {
+		return uploadFileCauTrucDAO.getListPhuongTienXuatNhapCanh(chuDe, typeNhapXuat);
+	}
+
+	@Override
+	public int insertThongTinNhapMoi(TbdNhapMoiFileDto tbdNhapMoiFileDto) {
+		
+		return uploadFileCauTrucDAO.insertThongTinNhapMoi(tbdNhapMoiFileDto);
+	}
+
+	@Override
+	public List<Tbs_QuocGiaDto> getlistCountry() {
+		return uploadFileCauTrucDAO.getlistCountry();
+	}
+}

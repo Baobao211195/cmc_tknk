@@ -1,0 +1,211 @@
+package com.tkhq.cmc.common;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.FontCharset;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+public class CExcel {
+	public static Map<String, CellStyle> createStyles(Workbook wb){
+		Map<String, CellStyle> styles = new HashMap<String, CellStyle>();
+        CellStyle style;
+        
+        // Header style
+        Font headerFont = wb.createFont();
+        headerFont.setFontHeightInPoints((short)11);
+        headerFont.setColor(IndexedColors.BLACK.getIndex());
+        headerFont.setFontName("Times New Roman");
+        
+        style = wb.createCellStyle();
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        style.setFillForegroundColor(IndexedColors.ROYAL_BLUE.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        style.setBorderRight(BorderStyle.THIN);
+        style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderTop(BorderStyle.THIN);
+        style.setTopBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+        style.setFont(headerFont);
+        style.setWrapText(true);
+        styles.put("header", style);
+        
+        Font cellFont = wb.createFont();
+        cellFont.setFontHeightInPoints((short)10);
+        cellFont.setColor(IndexedColors.BLACK.getIndex());
+        cellFont.setFontName("Times New Roman");
+        //cellFont.setCharSet(FontCharset.VIETNAMESE.getValue());
+        
+        // Cell data style
+        style = wb.createCellStyle();
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        style.setFont(cellFont);
+        style.setWrapText(true);
+        style.setBorderRight(BorderStyle.THIN);
+        style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderTop(BorderStyle.THIN);
+        style.setTopBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+        styles.put("cell_str_center", style);
+        
+        style = wb.createCellStyle();
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        style.setAlignment(HorizontalAlignment.LEFT);
+        style.setFont(cellFont);
+        style.setBorderRight(BorderStyle.THIN);
+        style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderTop(BorderStyle.THIN);
+        style.setTopBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+        style.setWrapText(true);
+        styles.put("cell_str", style);
+        
+        return styles;
+	}
+	
+	private static Workbook getWorkbook(FileInputStream inputStream, String excelFilePath) {
+		Workbook workbook = null;
+		try {
+			if (excelFilePath.endsWith("xlsx")) {
+				workbook = new XSSFWorkbook(inputStream);
+			} else if (excelFilePath.endsWith("xls")) {
+				workbook = new HSSFWorkbook(inputStream);
+			} else {
+				throw new IllegalArgumentException("The specified file is not Excel file");
+			}
+		} catch (IOException e) {
+			
+		}
+		return workbook;
+	}
+	
+	
+	@SuppressWarnings(value = "unchecked")
+    protected static <T> T createInstance(Constructor<?> ctor, Object[] args) {
+        try {
+            T t =  (T) ctor.newInstance(args);
+            return t;
+        } catch (IllegalArgumentException e) {
+            StringBuilder sb = new StringBuilder("no constructor taking:\n");
+            for (Object object : args) {
+            	sb.append("\t").append(object == null ? "null" : object.getClass().getName()).append("\n");
+            }
+            throw new RuntimeException(sb.toString(), e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+	
+	@SuppressWarnings({ "unchecked", "deprecation" })
+    public static <T> List<T> readToList(String filePath,Class<T> clazz) throws FileNotFoundException {
+		FileInputStream inputStream = new FileInputStream(new File(filePath));
+		Workbook workbook = getWorkbook(inputStream, filePath);
+		
+		Sheet sheet = workbook.getSheetAt(0);
+        List<T> result = new ArrayList<T>();
+        Constructor<?> ctor = getConstructor(clazz);
+        for (int i = 1; i < sheet.getLastRowNum(); i++){
+        	Object[] objs = new Object[ctor.getParameterTypes().length];
+        	Type[] type = ctor.getGenericParameterTypes();
+        	for (int j = 0; j < ctor.getParameterTypes().length; j++) {
+        		objs[j] = convert(type[j], sheet.getRow(i).getCell(j));
+            }
+            result.add((T) createInstance(ctor, objs));
+        }
+        return result;
+    }
+	
+	private static Object convert(Type t, Cell cell) {
+
+		switch (cell.getCellTypeEnum()) {
+
+		case STRING:
+			if (t.toString().substring(6, t.toString().length()).equals("java.util.Date")) {
+				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+				try {
+					return formatter.parse(cell.getStringCellValue());
+				} catch (ParseException e) {
+					return new Date();
+				}
+			} else {
+				return cell.getStringCellValue();
+			}
+		case NUMERIC:
+			if (DateUtil.isCellDateFormatted(cell))
+				return cell.getDateCellValue();
+			Double d = Double.valueOf(cell.getNumericCellValue());
+			switch (t.toString()) {
+			case "double":
+				return cell.getNumericCellValue();
+			case "float":
+				return d.floatValue();
+			case "int":
+				return d.intValue();
+
+			default:
+				return cell.getNumericCellValue();
+			}
+		case BLANK:
+			return Constants.EMPTY;
+		default:
+			return Constants.EMPTY;
+		}
+	}
+	
+	private static Constructor<?> getConstructor(Class<?> clazz){
+		Constructor<?> ctor = null;
+		for (Constructor<?> ct : clazz.getDeclaredConstructors()) {
+//			if (ct.getParameterTypes().length == clazz.getDeclaredFields().length) {
+//			}
+				ctor = ct;
+				break;
+		}
+
+		if (ctor == null) {
+			StringBuilder sb = new StringBuilder("no constructor taking: ");
+			for (int i = 0; i <= clazz.getDeclaredFields().length; i++) {
+				sb.append(clazz.getDeclaredFields()[i].getName()+ ",");
+			}
+			throw new RuntimeException(sb.toString());
+		}
+		return ctor;
+	}
+}

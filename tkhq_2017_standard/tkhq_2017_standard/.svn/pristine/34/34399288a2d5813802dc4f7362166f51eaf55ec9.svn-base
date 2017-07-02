@@ -1,0 +1,151 @@
+<%@page language="java" pageEncoding="UTF-8"
+	contentType="text/html; charset=UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<script type="text/javascript" src="<c:url value='/static/js/ddsmoothmenu.js' />"></script>
+
+<link rel="stylesheet" type="text/css" href="<c:url value='/static/css/ddsmoothmenu.css' />">
+<link rel="stylesheet" type="text/css" href="<c:url value='/static/css/ddsmoothmenu-v.css' />">
+<script type="text/javascript">
+	ddsmoothmenu.init({
+		mainmenuid : "smoothmenu2", //Menu DIV id
+		orientation : 'v', //Horizontal or vertical menu: Set to "h" or "v"
+		classname : 'ddsmoothmenu-v', //class added to menu's outer DIV
+		method : 'toggle', // set to 'hover' (default) or 'toggle'
+		arrowswap : true, // enable rollover effect on menu arrow images?
+		//customtheme: ["#804000", "#482400"],
+		contentsource : "markup" //"markup" or ["container_id", "path_to_menu_file"]
+	})
+</script>
+<aside class="main-sidebar">
+	<!-- sidebar: style can be found in sidebar.less -->
+	<section class="sidebar">
+		<a class="animateddrawer" id="ddsmoothmenu-mobiletoggle" href="#">
+			
+		</a>
+		<div id="smoothmenu2" class="ddsmoothmenu-v">
+			<ul>
+				<li><a href="#">1. Quản trị quản lý</a>
+					<ul>
+						<li><a href="danhsachNhomNSD">1. Danh sách nhóm</a></li>
+						<li><a href="danhsachNSD">2. Danh sách người dùng</a></li>
+						<li><a href="pheDuyetKhaiThacDuLieu">3. Phê duyệt khai thác dữ liệu</a></li>
+						<li><a href="quanLyToChucCaNhanTK">4. Quản lý tổ chức cá nhân làm công tác thống kê</a></li>
+						<li><a href="qlUserSDTK">5. Quản lý cá nhân tổ chức sử dụng sản phẩm thống kê</a></li>
+						<li><a href="phanquyenNSD">6. Phân quyền người dùng</a></li>
+						<li><a href="quanLyNhatKyHT">7. Quản lý nhật ký hệ thống</a></li>
+						<li><a href="lockUsers">8. Xóa và cảnh báo người xử dụng treo</a></li>
+						<li><a href="dm_tonghop">9. Quản lý bảng, danh mục thống kê tiêu chuẩn</a></li>
+						<li><a href="thietlapthamso">10. Quản lý thiết lập tham số</a></li>
+					</ul></li>
+
+				<li><a href="#">2. Phân hệ PTDL tổng hợp</a></li>
+				<li><a href="#">2.1. PT thay đổi của dữ liệu</a>
+					<ul>
+						<li><a href="thayDoiDoNVHQ">1. Thay đổi do nghiệp vụ hải quan</a></li>
+						<li><a href="thayDoiBoSungToKhaiHeThong">2. Thay đổi do bổ sung tờ khai</a></li>
+						<li><a href="XemThayDoi">3. Thay đổi do cập nhập thông tin</a></li>
+						<li><a href="thayDoiDoTHQTNV">4. Thay đổi do quy trình nghiệp vụ</a></li>
+					</ul></li>
+				<li><a href="thayDoiBoSungToKhaiHeThong">2.2 PTDL sử dụng
+						bảng biểu</a>
+					<ul>
+						<li><a href="dienBienSoLieuChiTieuTK">1. Diễn biến
+								số liệu theo chỉ tiêu TK tổng hợp theo thời gian</a></li>
+						<li><a href="canhBaoDienbienSLTK">2. Diễn biến số
+								lượng tờ khai theo Cục, Chi cục hải quan</a></li>
+						<li><a href="HTCBTGTXNK">3. Diễn biến tổng trị giá
+								XNK</a></li>
+						<li><a href="dienbienHHXNK">4. Diễn biến về lượng,
+								đơn giá, trị giá mặt hàng</a></li>
+						<li><a href="canhBaoTriGiaMHPTHS">5. Diễn biến về
+								trị giá mặt hàng theo phân tổ HS 02, 04</a></li>
+						<li><a href="HTCBBTGTMHSITC">6. Diễn biến về trị giá
+								mặt hàng theo phân tổ SITC</a></li>
+						<li><a href="dienBienXuTheChiSo">7. Diễn biến số
+								liệu theo định gốc, liên hoàn</a></li>
+						<li><a href="canhBaoTriGiaTT">8. Diễn biến về trị
+								giá theo thị trường, khối kinh tế</a></li>
+						<li><a href="HTCBBTDBXTL">9. Diễn biến về lượng, đơn
+								giá, trị giá mặt hàng của thị trường XNK</a></li>
+						<li><a href="dienBienSLDoanhNghiepFDI">10. Diễn biến
+								về lượng, đơn giá, trị giá mặt hàng của các DN FDI</a></li>
+						<li><a href="canhBaoTriGiaXNKTTP">11. Diễn biến về
+								trị giá XNK của tỉnh, thành phố</a></li>
+						<li><a href="HTCBBTTGXNKHQ">12. Diễn biến về trị giá
+								XNK của cục HQ, chi cục HQ</a></li>
+						<li><a href="dienBienXNKVanTai">13. Diễn biến về trị
+								giá XNK theo phương thức vận tải</a></li>
+						<li><a href="canhBaoSoTKTTG">14. Diễn biến số tờ
+								khai, trị giá theo ngày, tuần, quý, tháng, năm</a></li>
+						<li><a href="HTCBBTTTCK">15. Diễn biến theo các tiêu
+								chí khác theo chỉ tiêu thống kê</a></li>
+					</ul></li>
+				<li><a href="bcpt/XemThayDoi">2.3 PTDL sử dụng biểu đồ</a>
+				<ul>
+						<li><a href="dienBienSoLieuChiTieuTK_chart">1. Diễn
+								biến số liệu theo chỉ tiêu TK tổng hợp theo thời gian</a></li>
+						<li><a href="canhBao_SLToKhaiXNK_chart">2. Diễn biến
+								số lượng tờ khai theo Cục, Chi cục hải quan</a></li>
+						<li><a href="HTCBTGTXNK_chart">3. Diễn biến tổng trị
+								giá XNK</a></li>
+						<li><a href="dienBienHangHoaXNK_chart">4. Diễn biến
+								về lượng, đơn giá, trị giá mặt hàng</a></li>
+						<li><a href="canhBaoTriGiaMHPTHSBD">5. Diễn biến về
+								trị giá mặt hàng theo phân tổ HS 02, 04</a></li>
+						<li><a href="HTCBBTGTMHSITCBieuDo">6. Diễn biến về
+								trị giá mặt hàng theo phân tổ SITC</a></li>
+						<li><a href="dienBienXuTheChiSo_chart">7. Diễn biến
+								số liệu theo định gốc, liên hoàn</a></li>
+						<li><a href="canhBaoTriGiaTTBD">8. Diễn biến về trị
+								giá theo thị trường, khối kinh tế</a></li>
+						<li><a href="HTCBBTDBXTLBieuDo">9. Diễn biến về
+								lượng, đơn giá, trị giá mặt hàng của thị trường XNK</a></li>
+						<li><a href="dienBienSLDoanhNghiepFDI_chart">10.
+								Diễn biến về lượng, đơn giá, trị giá mặt hàng của các DN FDI</a></li>
+						<li><a href="canhBaoTriGiaXNKTTPBD">11. Diễn biến về
+								trị giá XNK của tỉnh, thành phố</a></li>
+						<li><a href="HTCBBTTGXNKHQBieuDo">12. Diễn biến về
+								trị giá XNK của cục HQ, chi cục HQ</a></li>
+						<li><a href="dienBienXNKVanTai_chart">13. Diễn biến
+								về trị giá XNK theo phương thức vận tải</a></li>
+						<li><a href="canhBaoSoTKTTGBD">14. Diễn biến số tờ
+								khai, trị giá theo ngày, tuần, quý, tháng, năm</a></li>
+						<li><a href="HTCBBTTTCKBieuDo">15. Diễn biến theo
+								các tiêu chí khác theo chỉ tiêu thống kê</a></li>
+					</ul></li>
+				<li><a href="#">2.4. Hiển thị Dashboard</a></li>
+				<li><a href="#">2.5. Rà soát SPTK đầu ra</a>
+					<ul>
+						<li><a href="rasoatqd15">1. Rà soát QĐ 15</a></li>
+						<li><a href="rasoatbaocaokhac">2. Rà soát các báo cáo khác</a></li>
+						<li><a href="hoanThanhRaXoatSanPhamTK">3. Hoàn thành rà soát</a></li>
+					</ul></li>
+				<li><a href="#">3. Phân hệ thống kê</a></li>
+				<li><a href="lichCBTTTK">3.1. Lịch công bố thống kê </a></li>
+				<li><a href="QLLDTPB">3.2. Lãnh đạo phê duyệt </a></li>
+				<li><a href="#">3.3. Phổ biến trong nước</a>
+					<ul>
+						<li><a href="phobienbangbieuQD15">1. Phổ biến theo QĐ 15</a></li>
+						<li><a href="phobienbangbieuBTC">2. Phổ biến theo BTC</a></li>
+						<li><a href="phobienbangbieuTC">3. Phổ biến theo Tổng cục</a></li>
+						<li><a href="phobienbangbieuCQK">4. Phổ biến theo cơ quan khác</a></li>
+						<li><a href="phobienbangbieuSP">5. Phổ biến song phương, khu vực và quốc tế</a></li>
+						<li><a href="phobienbangbieuCHQ">6. Phổ biến theo Cục HQ</a></li>
+					</ul></li>
+				<li><a href="#">4.Phân hệ xử lý dữ liệu chi tiết</a>
+					<ul>
+						<li><a href="uploadFileCauTrucXuatKhau">1. Nhập (import) file dữ liệu xuất khẩu đầu vào có cấu trúc </a></li>
+						<li><a href="uploadFileCauTrucNhapKhau">2. Nhập (import) file dữ liệu nhập khẩu đầu vào có cấu trúc</a></li>
+						<li><a href="uploadFilePhiCauTrucXuatKhau">3. Nhập (import) file phi/không có cấu trúc có các thông tin liên quan đến hàng hóa xuất khẩu</a></li>
+						<li><a href="uploadFilePhiCauTrucNhapKhau">4. Nhập (import) file phi/không có cấu trúc có các thông tin liên quan đến hàng hóa nhập khẩu</a></li>
+					</ul>
+				</li>
+			</ul>
+			<br style="clear: left" />
+		</div>
+		<!-- /.sidebar-menu -->
+	</section>
+	<!-- /.sidebar -->
+</aside>
+
+

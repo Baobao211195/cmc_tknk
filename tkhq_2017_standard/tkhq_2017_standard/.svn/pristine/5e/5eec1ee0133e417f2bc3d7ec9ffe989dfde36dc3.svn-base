@@ -1,0 +1,28 @@
+package com.tkhq.cmc.dao;
+
+import java.util.List;
+
+import com.tkhq.cmc.model.TbsCapnhatTygia;
+import com.tkhq.cmc.model.Tbs_BieuThue;
+
+public interface TbsCapnhatTygiaDAO {
+	TbsCapnhatTygia findById(Long tygiaId);
+	
+//	List<TbsCapnhatTygia> findByName(String );
+	
+	void insertTbsCapnhatTygia(TbsCapnhatTygia tbsCapnhatTygia) throws Exception;
+	
+	void updateTbsCapnhatTygia(TbsCapnhatTygia tbsCapnhatTygia);
+	
+	void deleteById(Long tygiaId);
+
+	List<TbsCapnhatTygia> findAll();
+	
+	void deleteAll();
+	
+//	Integer getSequence();
+	
+	List<TbsCapnhatTygia> searchTygia(String ngay, String maNt, int minRow, int maxRow);
+	
+	long countTotal(String ngay, String maNt);
+}

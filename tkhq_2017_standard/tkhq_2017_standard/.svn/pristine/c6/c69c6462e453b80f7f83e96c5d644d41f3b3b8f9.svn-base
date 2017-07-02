@@ -1,0 +1,248 @@
+/**
+ * Controller of model TBS_BIEUTHUE
+ */
+
+'use strict';
+
+App.controller('dienBienXNKVanTaiController', dienBienXNKVanTaiController);
+dienBienXNKVanTaiController.$inject = ['$scope', 'dienBienXNKVanTaiService', 'pagerService', '$uibModal', '$PopupMessage', '$rootScope', 'contextPath'];
+
+function dienBienXNKVanTaiController($scope, dienBienXNKVanTaiService, 
+		pagerService, $uibModal, $PopupMessage, $rootScope, contextPath) {		
+	console.log('start dienBienXNKVanTaiController');
+		var self = this;
+		self.lstTrangThai = [];
+		self.lstManager = [];		
+		self.soLieuChiTieuTK = [];               
+		self.lstCucHQ = [];
+		self.lstChiCucHQ = [];
+		self.lstNhomPTVT = [];
+		self.lstPTVT = [];
+        self.feedBack = feedBack;                
+        self.showPopup = showPopup;
+        self.animationsEnabled = true;
+        self.nhx = 'X';
+        self.showChart1 = false;
+        self.linkAPI = contextPath+'/pbtk/API_dienBienXNKVanTai_ky?nhx=X&trangThai=SB&radioBox=KY&maCucHQ=29&maChicucHQ=32d&group_transport=1&transport=005&loaiTK=dongiaTK';
+        self.loai_bc = '13';
+        self.CucHQSelect = CucHQSelect;
+        self.NhomPTVTSelect = NhomPTVTSelect;
+        GetCucHQ();
+        GetNhomPTVT();
+        GetNewPage();
+        $scope.showReport1 = true;
+//        GetSoLieuChiTieuTK01();
+        
+        function GetCucHQ() {
+        	dienBienXNKVanTaiService.GetCucHQ()
+            	.then(
+        			function (deferred) {
+        				self.lstCucHQ = deferred;
+        				$scope.CucHQ = self.lstCucHQ[0];
+        				self.CucHQSelect($scope.CucHQ);
+                    },
+                    function (errResponse) {
+                        console.error('Error while fetching data');
+                    }
+                );        	
+        }  
+        
+        function CucHQSelect(Item) {
+        	console.log("CucHQSelect@Item:"+Item);
+        	dienBienXNKVanTaiService.GetChiCucHQByCuc(Item.ma)
+            	.then(
+        			function (deferred) {
+        				self.lstChiCucHQ = deferred;
+        				self.lstChiCucHQ = [{"ma": "","ten": "---chọn---"}].concat(self.lstChiCucHQ);
+        				$scope.ChiCucHQ = self.lstChiCucHQ[0];
+                    },
+                    function (errResponse) {
+                        console.error('Error while fetching data');
+                    }
+                );        	
+        }
+        
+        function GetNhomPTVT() {
+        	dienBienXNKVanTaiService.GetNhomPTVT()
+            	.then(
+        			function (deferred) {
+        				self.lstNhomPTVT = deferred;
+        				$scope.nhomPTVT = self.lstNhomPTVT[0];
+        				self.NhomPTVTSelect($scope.nhomPTVT);
+                    },
+                    function (errResponse) {
+                        console.error('Error while fetching data');
+                    }
+                );        	
+        }  
+        
+        function NhomPTVTSelect(Item) {
+        	console.log("NhomPTVTSelect@Item:"+Item);
+        	dienBienXNKVanTaiService.GetPTVTByNhom(Item.ma)
+            	.then(
+        			function (deferred) {
+        				self.lstPTVT = deferred;
+        				self.lstPTVT = [{"ma": "","ten": "---chọn---"}].concat(self.lstPTVT);
+        				$scope.PTVT = self.lstPTVT[0];
+                    },
+                    function (errResponse) {
+                        console.error('Error while fetching data');
+                    }
+                );        	
+        }
+        
+        function GetSoLieuChiTieuTK13() {
+        	$rootScope.showLoading = true;
+        	console.log('Controller GetSoLieuChiTieuTK13@trangThai:'+$scope.trangThai.ma+'|self.nhx:'+self.nhx+
+        			'|ChiCucHQ:'+$scope.ChiCucHQ.ma+'|CucHQ:'+$scope.CucHQ.ma);        	
+        	dienBienXNKVanTaiService.GetSoLieuChiTieuTK13($scope.trangThai.ma, 
+        			self.nhx, $scope.CucHQ.ma, $scope.ChiCucHQ.ma, $scope.nhomPTVT.ma, $scope.PTVT.ma)
+    		.then(function(respone){        			
+	    			self.soLieuChiTieuTK = respone;    			    			
+	    			console.log('Controller GetSoLieuChiTieuTK13@length respone:'+self.soLieuChiTieuTK);
+	    			
+	    			for(var i = 0; i < self.soLieuChiTieuTK.length; i++){
+						for(var ii = 0; ii < self.soLieuChiTieuTK[i].group_data.length; ii++){
+							var maxKy = 0;
+							var minKy = self.soLieuChiTieuTK[i].group_data[ii].data_ky.data[0].gia_tri;
+							var maxThang = 0;
+							var minThang = self.soLieuChiTieuTK[i].group_data[ii].data_thang.data[0].gia_tri;
+							for(var j = 0; j < self.soLieuChiTieuTK[i].group_data[ii].data_ky.data.length; j++){
+								if(parseFloat(self.soLieuChiTieuTK[i].group_data[ii].data_ky.data[j].gia_tri) > parseFloat(maxKy)){
+									maxKy = self.soLieuChiTieuTK[i].group_data[ii].data_ky.data[j].gia_tri;
+								}
+								if(parseFloat(self.soLieuChiTieuTK[i].group_data[ii].data_ky.data[j].gia_tri) < parseFloat(minKy)){
+									minKy = self.soLieuChiTieuTK[i].group_data[ii].data_ky.data[j].gia_tri;
+								}
+							}
+							for(var k = 0; k < self.soLieuChiTieuTK[i].group_data[ii].data_thang.data.length; k++){
+								if(parseFloat(self.soLieuChiTieuTK[i].group_data[ii].data_thang.data[k].gia_tri) > parseFloat(maxThang)){
+									maxThang = self.soLieuChiTieuTK[i].group_data[ii].data_thang.data[k].gia_tri;
+								}
+								if(parseFloat(self.soLieuChiTieuTK[i].group_data[ii].data_thang.data[k].gia_tri) < parseFloat(minThang)){
+									minThang = self.soLieuChiTieuTK[i].group_data[ii].data_thang.data[k].gia_tri;
+								}
+							}
+							self.soLieuChiTieuTK[i].group_data[ii].data_ky["maxKy"] = maxKy;
+							self.soLieuChiTieuTK[i].group_data[ii].data_ky["minKy"] = minKy;
+							self.soLieuChiTieuTK[i].group_data[ii].data_thang["maxThang"] = maxThang;
+							self.soLieuChiTieuTK[i].group_data[ii].data_thang["minThang"] = minThang;
+						}
+					}
+	    			
+					if(self.soLieuChiTieuTK != '' && self.soLieuChiTieuTK != null){
+						for(var i = 0;i< self.soLieuChiTieuTK.length;i++){
+			    			if (self.soLieuChiTieuTK[i].group_data[0].data_ky.data.length > 0 
+			    					&& self.soLieuChiTieuTK[i].group_data[0].data_ky.data.length %2 != 0 ) {		    				
+			    				self.soLieuChiTieuTK[i].group_data[0].data_ky.data.push({"ky":null, "gia_tri":null});
+			    			}
+						}
+					}
+					$scope.showReport1 = false;
+					$rootScope.showLoading = false;
+    			},
+    			function(errResponse){
+    				console.error(errResponse);
+    				$rootScope.showLoading = false;
+    			}
+    		); 
+        }
+        
+        function GetNewPage() {
+        	self.lstTrangThai = [{
+    	                	    "ma": "SB",
+    	                	    "ten": "Sơ bộ"
+    	                	  },
+    	                	  {
+    	                	    "ma": "DC",
+    	                	    "ten": "Điều chỉnh"
+    	                	  },
+    	                	  {
+    	                	    "ma": "CT",
+    	                	    "ten": "Chính thức"
+    	                	  }];
+        	$scope.trangThai = self.lstTrangThai[0];
+        	$scope.radioBox = 'KY';
+        	$rootScope.$emit('PhanHoiQuyTrinhXLDL', self.loai_bc);
+        }                                           
+        
+        $rootScope.$on('childEmit', function(event, data) {
+            console.log(data);
+            self.nhx = data;
+          });
+        
+        $scope.getBaoCao = function() {            
+        	GetSoLieuChiTieuTK13();
+        };
+        
+        $scope.clickDongButton = function() {
+        	self.showChart1 = false;
+        };
+        
+        $scope.showChart = function() {
+        	self.linkAPI = contextPath+'/pbtk/API_dienBienXNKVanTai_ky?nhx='
+            	+self.nhx+'&trangThai='+$scope.trangThai.ma+'&radioBox='+$scope.radioBox
+        		+'&maCucHQ='+$scope.CucHQ.ma+'&maChicucHQ='+$scope.ChiCucHQ.ma
+        		+'&group_transport='+ $scope.nhomPTVT.ma +'&transport='+ $scope.PTVT.ma +'&loaiTK=dongiaTK';       	
+            console.log('showChart@self.linkAPI:'+self.linkAPI);
+            $scope.showChart2 = true;
+            self.showChart1 = true;
+        };
+        
+        $scope.doExport = function(){
+    		var param = {};
+        	param["trangthai"] = $scope.trangThai.ma;
+        	param["maCucHQ"] = $scope.CucHQ.ma;
+        	param["maChiCucHQ"] = $scope.ChiCucHQ.ma == null ? '' : $scope.ChiCucHQ.ma;
+        	param["nhomPTVT"] = $scope.nhomPTVT.ma;
+        	param["PTVT"] = $scope.PTVT.ma == null ? '' : $scope.PTVT.ma;
+        	param["nhx"] = self.nhx;   
+        	dienBienXNKVanTaiService.doExport(param);
+    	};
+    	
+    	$scope.btnPhanHoi_Click = function () {
+			$rootScope.$emit('PhanHoiQuyTrinhXLDL', self.loai_bc);
+		};
+    	
+    	function feedBack(){
+    		console.log('Id to be edited');            
+            self.showPopup(self.soLieuChiTieuTK);
+    	}    	
+    	
+    	function showPopup(grid){
+    		var modalInstance = $uibModal.open({
+    			animation: self.animationsEnabled,
+    			ariaLabelledBy: 'modal-title',
+    			ariaDescribedBy: 'modal-body',
+    			templateUrl: 'phanHoiQuyTrinhXLDL',
+    			controller: 'dienBienXNKVanTaiModalCtrl',
+    			controllerAs: 'self',
+    			resolve: {
+    				grid : function() {
+						return grid;
+					}
+    			}
+    		});
+    		
+    		modalInstance.result.then(function (data) {
+//				if(data == 'success'){
+//					self.currentPage = 1;
+//					search(self.currentPage, self.pageSize);
+//				}else{
+//					console.log('Có lỗi xảy ra');
+//				}
+		    }, function () {
+		    	});
+    	} 
+}
+
+angular.module('myApp').controller('dienBienXNKVanTaiModalCtrl', dienBienXNKVanTaiModalCtrl);
+dienBienXNKVanTaiModalCtrl.$inject = ['$uibModalInstance', 'grid', 'dienBienXNKVanTaiService']
+function dienBienXNKVanTaiModalCtrl($uibModalInstance, grid, dienBienXNKVanTaiService) {
+	var self = this;
+//	self.soLieuChiTieuTK = angular.copy(grid);
+	self.cancel = function () {
+	    $uibModalInstance.dismiss('cancel');
+	};	  
+	
+}

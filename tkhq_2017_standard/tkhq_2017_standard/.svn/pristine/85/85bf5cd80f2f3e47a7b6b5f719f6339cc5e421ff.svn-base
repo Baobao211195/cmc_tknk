@@ -1,0 +1,94 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<div>
+  <div class="modal-header">
+      <h4 class="modal-title">Thêm mới/Cập nhật Tổ chức, cá nhân sử dụng sản phẩm thống kê</h4>
+  </div>
+  <div class="modal-body">
+    <form name="UserForm">
+		<div class="row mab10">
+	  		<label class="col-sm-3">Tổ chức sử dụng</label>
+	  		<div class="col-sm-5 pa0">
+	  			<input class="form-control" type="text" name="tochuc" ng-model="self.entity.tenTochuc"/>
+	  		</div>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-3">Cá nhân sử dụng</label>
+	  		<div class="col-sm-5 pa0">
+	  			<input class="form-control" type="text" ng-model="self.entity.tenCanhan"/>
+	  		</div>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-3">Email</label>
+	  		<div class="col-sm-5 pa0">
+	  			<input class="form-control" type="text" ng-model="self.entity.email"/>
+	  		</div>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-3">Điện thoại</label>
+	  		<div class="col-sm-5 pa0">
+	  			<input class="form-control" type="text" ng-model="self.entity.mobile"/>
+	  		</div>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-12">Mô tả chi tiết nhu cầu thông tin/số liệu của người sử dụng</label>
+	  		<textarea class="form-control" ng-model="self.entity.mota"></textarea>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-5">Các chỉ tiêu thống kê chính</label>
+	  		<div class="col-sm-5 pa0">
+	  			<input class="form-control" type="text" ng-model="self.entity.chitieuTK"/>
+	  		</div>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-5">Các khái niệm, định nghĩa(nếu có)</label>
+	  		<div class="col-sm-5 pa0">
+	  			<input class="form-control" type="text" ng-model="self.entity.khainiem"/>
+	  		</div>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-12">Căn cứ vào công văn, bản ghi nhớ, thỏa thuận, thông tư, nghị định, quyết định</label>
+	  		<div class="col-sm-12 pa0">
+	  			<input class="form-control" type="text" ng-model="self.entity.cancu"/>
+	  		</div>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-12">Tần suất Thường Xuyên(ngày, tuần, tháng,...)/Không thường xuyên</label>
+	  		<div class="col-sm-12 pa0">
+	  			<input class="form-control" type="text" ng-model="self.entity.tansuat"/>
+	  		</div>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-5">Đề xuất dạng dữ liệu(MS Excel, Word, thư điện tử,...)</label>
+	  		<div class="col-sm-5 pa0">
+	  			<input class="form-control" type="text" ng-model="self.entity.dexuatDL"/>
+	  		</div>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-5">Công chức được phân công xử lý</label>
+	  		<div class="col-sm-5 pa0">
+		  		<select name="congchucSelect" class="form-control" ng-model="self.entity.userId">
+	        		<option value="">---Please select---</option>
+	   				<option ng-repeat="option in self.lstUser" value="{{option.userId}}">{{option.userName}}</option>
+	 			</select>
+ 			</div>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-3">Ghi chú</label>
+	  		<div class="col-sm-5 pa0">
+	  			<input class="form-control" type="text" ng-model="self.entity.ghichu"/>
+	  		</div>
+		</div>
+		<div class="row mab10">
+	  		<label class="col-sm-3">Mức độ đáp ứng</label>
+	  		<div class="col-sm-5 pa0">
+	  			<input class="form-control" type="text" ng-model="self.entity.mucdo"/>
+	  		</div>
+		</div>
+	</form>
+  </div>
+  <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="self.saveData()">Lưu</button>
+      <button class="btn btn-primary" ng-click="self.cancel()">Hủy bỏ</button>
+  </div>
+</div>

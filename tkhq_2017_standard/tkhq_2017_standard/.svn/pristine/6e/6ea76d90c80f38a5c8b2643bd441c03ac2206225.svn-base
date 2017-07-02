@@ -1,0 +1,152 @@
+package com.tkhq.cmc.dao;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.jdbc.ReturningWork;
+import org.springframework.stereotype.Repository;
+
+import com.tkhq.cmc.dto.TbdSysPhancongCvDTO;
+import com.tkhq.cmc.model.TbdSysPhancongCv;
+import com.tkhq.cmc.utils.Utils;
+
+import oracle.jdbc.internal.OracleTypes;
+
+@Repository
+public class TbdSysPhancongCvDAOImpl extends BaseDAO<Long, TbdSysPhancongCv> implements TbdSysPhancongCvDAO {
+
+	public void createPhancong(TbdSysPhancongCv entity) {
+		try {
+			this.persist(entity);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void deletePhancong(long status) {
+		TbdSysPhancongCv entity = new TbdSysPhancongCv();
+		entity.setStt(status);
+		try {
+			this.delete(entity);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public TbdSysPhancongCv update(TbdSysPhancongCvDTO entity) {
+		try {
+			TbdSysPhancongCv phancong = new TbdSysPhancongCv(entity.getMaCv(), entity.getTenCv(), entity.getTuNgay(),
+					entity.getDenNgay(), entity.getMatHang(), entity.getMaThke(), entity.getUserIdPa1(),
+					entity.getUserNamePa1(), entity.getUserIdPa2(), entity.getUserNamePa2(), entity.getUserIdPa3(),
+					entity.getUserNamePa3(), entity.getGhiChu(), entity.getMaHq(), entity.getNhx()
+
+			);
+
+			this.update(phancong);
+			return phancong;
+		} catch (Exception e) {
+			return null;
+		}
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<TbdSysPhancongCvDTO> getAllPhancong() {
+		Criteria cri = this.getSession().createCriteria(TbdSysPhancongCv.class);
+		List<TbdSysPhancongCvDTO> listPhancong = cri.list();
+		if (listPhancong != null) {
+			return listPhancong;
+		} else
+			return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<TbdSysPhancongCv> findByMaCV(String maCv) {
+		Criteria cri = this.getSession().createCriteria(TbdSysPhancongCv.class);
+		List<TbdSysPhancongCv> list = cri.add(Restrictions.eq("maCv", maCv)).list();
+		if (list != null) {
+			return list;
+		} else {
+			return null;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<TbdSysPhancongCvDTO> search(final String type, final String maCv) {
+		/*
+		 * Criteria cri =
+		 * this.getSession().createCriteria(TbdSysPhancongCv.class);
+		 * 
+		 * if (!Utils.isEmpty(type) && !"".equals(type)) {
+		 * cri.add(Restrictions.eq("nhx", type)); } if (!Utils.isEmpty(maCv) &&
+		 * !"".equals(maCv)) { cri.add(Restrictions.eq("maCv", maCv)); }
+		 * 
+		 * List<TbdSysPhancongCv> list = cri.list();
+		 * 
+		 * return list;
+		 */
+
+		return this.getSession().doReturningWork(new ReturningWork<List<TbdSysPhancongCvDTO>>() {
+
+			@Override
+			public List<TbdSysPhancongCvDTO> execute(Connection connection) throws SQLException {
+				List<TbdSysPhancongCvDTO> list = new ArrayList<TbdSysPhancongCvDTO>();
+
+				try {
+					CallableStatement call = connection.prepareCall(
+							"{call " + Utils.readProperties("PK_NGUOIDUNG.ts_SearchPhancong") + "(?,?,?)}");
+
+					call.setString(1, type);
+					call.setString(2, maCv);
+					call.registerOutParameter(3, OracleTypes.CURSOR);
+					call.execute();
+
+					ResultSet result = (ResultSet) call.getObject(3);
+					while (result.next()) {
+						TbdSysPhancongCvDTO phancong = new TbdSysPhancongCvDTO(result.getLong("STT"),
+								result.getString("TEN_CV"), result.getDate("TU_NGAY"), result.getDate("DEN_NGAY"),
+								result.getString("MAT_HANG"), result.getString("MA_THKE"), result.getString("NHX"),
+								result.getString("USER_NAME_PA1"), result.getString(12),
+								result.getString("USER_NAME_PA2"), result.getString(13),
+								result.getString("USER_NAME_PA3"), result.getString(14), result.getString("GHI_CHU"),
+								result.getString("TEN"));
+						list.add(phancong);
+
+					}
+					return list;
+				} catch (Exception e) {
+					return null;
+				}
+			}
+		});
+	}
+
+	@Override
+	public void deleteList(String s) {
+		List<String> compile = new ArrayList<String>(Arrays.asList(s.split(",")));
+		// List<Long> stts = new ArrayList<Long>();
+		for (int i = 0; i < compile.size(); i++) {
+			Long l = Long.parseLong(compile.get(i));
+			TbdSysPhancongCv pc = new TbdSysPhancongCv();
+			pc.setStt(l);
+			delete(pc);
+
+		}
+		// Query query = this.getSession()
+		// .createQuery("Delete from TBD_SYS_PHANCONG_CV pc where pc.stt
+		// in(:list)" );
+		// query.setParameterList("list", stts);
+		// query.executeUpdate();
+
+	}
+}

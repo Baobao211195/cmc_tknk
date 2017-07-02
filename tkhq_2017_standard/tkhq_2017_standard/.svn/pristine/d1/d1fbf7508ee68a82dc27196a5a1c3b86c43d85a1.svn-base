@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-05-23T18:00:13 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BCThayDoiDoNVHQTongThe" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="336b1272-7675-44cd-b572-2d6ac7285218">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="trigia_moi" class="java.lang.Double">
+		<fieldDescription><![CDATA[trigia_moi]]></fieldDescription>
+	</field>
+	<field name="trigia_cu" class="java.lang.Double">
+		<fieldDescription><![CDATA[trigia_cu]]></fieldDescription>
+	</field>
+	<field name="row_index" class="java.lang.Integer">
+		<fieldDescription><![CDATA[row_index]]></fieldDescription>
+	</field>
+	<field name="thaydoi" class="java.lang.Double">
+		<fieldDescription><![CDATA[thaydoi]]></fieldDescription>
+	</field>
+	<field name="lydo" class="java.lang.String">
+		<fieldDescription><![CDATA[lydo]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="150" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="-3" y="36" width="110" height="20" uuid="9f48da25-328b-4718-b59a-101ed1bee23e"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TỔNG CỤC HẢI QUAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="16" width="100" height="30" uuid="e00eb3b4-8a74-4c07-8814-d994824786e6"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[BỘ TÀI CHÍNH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="16" width="160" height="20" uuid="62cfd0f2-5c74-4624-bfdc-5e68c39864cc"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cục CNTT & Thống kê Hải quan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="80" y="61" width="380" height="30" uuid="3830c04a-42f4-4c03-86f4-cc78de6b1437"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[THAY ĐỔI NGHIỆP VỤ HẢI QUAN ]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="210" y="0" width="115" height="31" uuid="3cbde73a-14df-4c82-8557-c7fe85fd8730">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trị giá cũ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="325" y="0" width="115" height="31" uuid="5479dc97-e018-451f-b109-49445c57843b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trị giá mới]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="210" height="31" uuid="32aa0fd6-39da-4fee-b83f-09e0254d4de0">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Lý do thay đổi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="440" y="0" width="115" height="31" uuid="178ece3e-d6e1-4d3b-8be6-c88fd523197e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Thay đổi]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[$F{row_index} == 0.0]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="210" height="30" uuid="2b98ed85-69fb-47a3-be43-fa4369c98d1b">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box padding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{lydo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
+				<reportElement x="210" y="0" width="115" height="30" uuid="fc0b6e0f-584b-4d20-aa25-9b3467b71cf8"/>
+				<box padding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{trigia_cu}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
+				<reportElement x="325" y="0" width="115" height="30" uuid="9df24eb1-0bee-4d60-9b5f-0dc1b5824939"/>
+				<box padding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{trigia_moi}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
+				<reportElement x="440" y="0" width="115" height="30" uuid="21adf569-07d1-4d15-9699-dc375e4ef605"/>
+				<box padding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{thaydoi}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="30">
+			<printWhenExpression><![CDATA[$F{row_index} != 0.0]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="210" height="30" uuid="a9bef2bd-e19d-4ed8-8e24-52207be7cd6f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box topPadding="3" leftPadding="10" bottomPadding="3" rightPadding="3">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{row_index} +". "+ $F{lydo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
+				<reportElement x="210" y="0" width="115" height="30" uuid="dccc8d77-c428-4434-b095-25de0ecb7658"/>
+				<box padding="3">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{trigia_cu}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
+				<reportElement x="325" y="0" width="115" height="30" uuid="8c33218a-7fe0-444a-8469-bc4e921f4bd8"/>
+				<box padding="3">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{trigia_moi}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
+				<reportElement x="440" y="0" width="115" height="30" uuid="350d3389-7ba2-4a0b-92a9-5f2a5ca37b63"/>
+				<box padding="3">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{thaydoi}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="30">
+			<textField>
+				<reportElement x="264" y="15" width="115" height="15" uuid="3dd207be-55e3-46e5-a040-aeba5c2da64f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Trang " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="1">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="0" uuid="2f847b7c-5a13-40f2-8491-62d42f1380be">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[Static Text]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

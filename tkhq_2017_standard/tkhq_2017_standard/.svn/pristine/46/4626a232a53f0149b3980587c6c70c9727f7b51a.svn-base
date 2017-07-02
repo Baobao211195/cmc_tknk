@@ -1,0 +1,104 @@
+package com.tkhq.cmc.controller.rest;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tkhq.cmc.dto.TbdSysPhancongCvDTO;
+import com.tkhq.cmc.model.TbdSysPhancongCv;
+import com.tkhq.cmc.model.TbsPhancongCongviec;
+import com.tkhq.cmc.services.Phancong_CongviecService;
+
+@RestController
+public class Tbs_Phancong_CongviecRestController {
+
+	@Autowired
+	private Phancong_CongviecService phancong_CongviecService;
+
+	/**
+	 * su dung cho phan tao va chinh sua cong viec
+	 * 
+	 */
+
+	@RequestMapping(value = "/getAllCongviec", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<TbsPhancongCongviec>> getAllCongviec() {
+		List<TbsPhancongCongviec> listCongviec = phancong_CongviecService.getAllCongviec();
+		if (listCongviec != null) {
+			return new ResponseEntity<List<TbsPhancongCongviec>>(listCongviec, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<TbsPhancongCongviec>>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	/**
+	 * su dung cho phan phan cong cong viec
+	 */
+	@RequestMapping(value = "/getAllPhancong", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<TbdSysPhancongCv>> getAllPhancong() {
+		List<TbdSysPhancongCv> listPhancong = phancong_CongviecService.getAllPhancong();
+		if (listPhancong != null) {
+			return new ResponseEntity<List<TbdSysPhancongCv>>(listPhancong, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<TbdSysPhancongCv>>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@RequestMapping(value = "/getAllPhancong/{maCv}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<TbdSysPhancongCv>> getAllPhancong(@PathVariable("maCv") String maCv) {
+		List<TbdSysPhancongCv> list = phancong_CongviecService.getByMacv(maCv);
+		if (list != null) {
+			return new ResponseEntity<List<TbdSysPhancongCv>>(list, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<TbdSysPhancongCv>>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@RequestMapping(value = "/phancong/search", method = RequestMethod.POST)
+	public ResponseEntity<List<TbdSysPhancongCv>> search(@RequestParam("maCv") String maCv,
+			@RequestParam("type") String type) {
+
+		List<TbdSysPhancongCv> list = phancong_CongviecService.search(type, maCv);
+
+		return new ResponseEntity<List<TbdSysPhancongCv>>(list, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/phancong/create", method = RequestMethod.PUT)
+	public ResponseEntity<Integer> create(@RequestBody TbdSysPhancongCvDTO entity) {
+		int resutl = phancong_CongviecService.createPhancong(entity);
+		if (resutl == 1) {
+			return new ResponseEntity<Integer>(resutl, HttpStatus.CREATED);
+		}else if(resutl ==0){
+			return new ResponseEntity<Integer>(resutl,HttpStatus.NOT_FOUND);
+		}else {
+			return new ResponseEntity<Integer>(resutl,HttpStatus.CONFLICT);
+		}
+
+	}
+
+	@RequestMapping(value = "/phancong/update{stt}", method = RequestMethod.PUT)
+	public ResponseEntity<TbdSysPhancongCv> updatePhancong(@PathVariable("stt") int stt,
+			@RequestBody TbdSysPhancongCvDTO entity) {
+		TbdSysPhancongCv tbdSysPhancongCv = phancong_CongviecService.updatePhancong(entity);
+		return new ResponseEntity<TbdSysPhancongCv>(tbdSysPhancongCv, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/phancong/delete/{stt}",method= RequestMethod.DELETE)
+	public ResponseEntity<?> deletePhancong(@PathVariable("stt") String listStt){
+		try {
+			phancong_CongviecService.deleteList(listStt);
+			return new ResponseEntity(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity(HttpStatus.EXPECTATION_FAILED);
+		}
+		
+	}
+}

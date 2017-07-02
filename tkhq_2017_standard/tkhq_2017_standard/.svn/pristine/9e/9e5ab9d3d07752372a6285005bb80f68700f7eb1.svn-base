@@ -1,0 +1,26 @@
+package com.tkhq.cmc.dao;
+
+import java.util.List;
+
+import com.tkhq.cmc.dto.TbsQtacCuakhauDbVnDto;
+import com.tkhq.cmc.model.TbsQtacCuakhauDbVn;
+
+public interface TbsQtacCuakhauDbVnDao {
+	public void insert(TbsQtacCuakhauDbVn entity);
+
+	public void update(TbsQtacCuakhauDbVnDto entity);
+
+	public void delete(long id);
+
+	public TbsQtacCuakhauDbVn findById(Long id);
+
+	public List<TbsQtacCuakhauDbVn> findAll();
+	
+	public List<TbsQtacCuakhauDbVn> searchData(String maCuaKhau, String maNuocDen, String maCKDen,
+			String tenCuaKhau, String tenNuocDen, String tenCuaKhauDen, int minRow,int maxRow);
+	
+	public long countTotal(String maCuaKhau, String maNuocDen, String maCKDen,
+							String tenCuaKhau, String tenNuocDen, String tenCkDen);
+	
+	public int insertList(List<TbsQtacCuakhauDbVn> listEntity);
+}

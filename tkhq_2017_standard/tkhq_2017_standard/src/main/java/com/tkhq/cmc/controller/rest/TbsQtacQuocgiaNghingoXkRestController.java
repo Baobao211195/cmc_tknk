@@ -1,0 +1,115 @@
+package com.tkhq.cmc.controller.rest;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tkhq.cmc.common.Constants;
+import com.tkhq.cmc.dto.TbsQtacQuocgiaNghingoDTO;
+import com.tkhq.cmc.model.TbsQtacQuocgiaNghingoXk;
+import com.tkhq.cmc.services.TbsQtacQuocgiaNghingoXkService;
+
+@RestController
+public class TbsQtacQuocgiaNghingoXkRestController {
+	@Autowired
+	private TbsQtacQuocgiaNghingoXkService tbsQtacQuocgiaNghingoXkService;
+	
+	@RequestMapping(value="/tbsQtacQuocgiaNghingoXk", method=RequestMethod.GET)
+	public ResponseEntity<TbsQtacQuocgiaNghingoDTO> getAllData (){
+		
+		TbsQtacQuocgiaNghingoDTO dto = new TbsQtacQuocgiaNghingoDTO();
+		List<TbsQtacQuocgiaNghingoXk> listData = tbsQtacQuocgiaNghingoXkService.findAll();
+		long totalCount = tbsQtacQuocgiaNghingoXkService.countTotal(Constants.EMPTY, Constants.EMPTY);
+		dto.setContent(listData);
+		dto.setTotalItems(totalCount);
+		if(listData == null){
+			return new ResponseEntity<TbsQtacQuocgiaNghingoDTO>(dto, HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<TbsQtacQuocgiaNghingoDTO>(dto, HttpStatus.OK);
+		
+	}
+	
+	@RequestMapping(value="/tbsQtacQuocgiaNghingoXkById", method=RequestMethod.GET)
+	public ResponseEntity<TbsQtacQuocgiaNghingoXk> getDataById(String id){
+		TbsQtacQuocgiaNghingoXk dto = tbsQtacQuocgiaNghingoXkService.findById(Long.parseLong(id));
+		if(dto == null){
+			return new ResponseEntity<TbsQtacQuocgiaNghingoXk>(dto, HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<TbsQtacQuocgiaNghingoXk>(dto, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/delete/tbsQtacQuocgiaNghingoXk", method=RequestMethod.GET)
+	public ResponseEntity<Integer> doDeleteData(String id){
+		Long idDelete = Long.parseLong(id);
+		TbsQtacQuocgiaNghingoXk dto = tbsQtacQuocgiaNghingoXkService.findById(idDelete);
+		if(dto == null){
+			return new ResponseEntity<Integer>(Constants.FAILED, HttpStatus.CONFLICT);
+		}
+		tbsQtacQuocgiaNghingoXkService.delete(idDelete);
+		return new  ResponseEntity<Integer>(Constants.SUCCESS, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/add/tbsQtacQuocgiaNghingoXk", method=RequestMethod.POST)
+	public ResponseEntity<Integer> doAddData(@RequestBody TbsQtacQuocgiaNghingoXk tbsqtacdntrigianhapkhau){
+		try {
+			tbsQtacQuocgiaNghingoXkService.insert(tbsqtacdntrigianhapkhau);
+			return new  ResponseEntity<Integer>(Constants.SUCCESS, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<Integer>(Constants.FAILED, HttpStatus.CONFLICT);
+		}
+	}
+	
+	@RequestMapping(value="/update/tbsQtacQuocgiaNghingoXk", method=RequestMethod.POST)
+	public ResponseEntity<Integer> doUpdateData(@RequestBody TbsQtacQuocgiaNghingoDTO paramDto){
+		try {
+			TbsQtacQuocgiaNghingoXk dto = tbsQtacQuocgiaNghingoXkService.findById(paramDto.getId());
+			if (dto == null){
+				return new ResponseEntity<Integer>(Constants.FAILED, HttpStatus.CONFLICT);
+			}
+			tbsQtacQuocgiaNghingoXkService.update(paramDto);
+			return new  ResponseEntity<Integer>(Constants.SUCCESS, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<Integer>(Constants.FAILED, HttpStatus.CONFLICT);
+		}
+	}
+	
+	@RequestMapping(value="/search/tbsQtacQuocgiaNghingoXk", method=RequestMethod.POST)
+	public ResponseEntity<TbsQtacQuocgiaNghingoDTO> SearchData(@RequestBody TbsQtacQuocgiaNghingoDTO tbsqtacluongdto){
+		List<TbsQtacQuocgiaNghingoXk> listData = null;
+		TbsQtacQuocgiaNghingoDTO dto = null;
+		try {
+			int minRow = (tbsqtacluongdto.getCurrentPage() - 1) * tbsqtacluongdto.getPageSize();
+			int maxRow = tbsqtacluongdto.getPageSize();
+			
+			long totalCount = tbsQtacQuocgiaNghingoXkService.countTotal(tbsqtacluongdto.getManuoc(), tbsqtacluongdto.getTennuoc());
+			if (totalCount == 0) {
+				dto = new TbsQtacQuocgiaNghingoDTO();
+				dto.setContent(new ArrayList<TbsQtacQuocgiaNghingoDTO>());
+				dto.setCurrentPage(Constants.CURRENT_PAGE);
+				dto.setMaxPage(Constants.MAX_PAGE);
+				dto.setPageSize(Constants.PAGE_SIZE_10);
+				dto.setTotalItems(Constants.ZEZO);
+				return new ResponseEntity<TbsQtacQuocgiaNghingoDTO>(dto, HttpStatus.ACCEPTED);
+			}
+			listData = tbsQtacQuocgiaNghingoXkService.searchData(tbsqtacluongdto.getManuoc(), tbsqtacluongdto.getTennuoc(),
+															     minRow, maxRow);
+			int maxPage = (int) Math.ceil(totalCount / Integer.valueOf(tbsqtacluongdto.getPageSize()));
+			dto = new TbsQtacQuocgiaNghingoDTO();
+			dto.setContent(listData);
+	    	dto.setCurrentPage(tbsqtacluongdto.getCurrentPage());
+	    	dto.setMaxPage(maxPage);
+	    	dto.setPageSize(Integer.valueOf(Constants.PAGE_SIZE_10));
+	    	dto.setTotalItems(totalCount);
+			return new ResponseEntity<TbsQtacQuocgiaNghingoDTO>(dto, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<TbsQtacQuocgiaNghingoDTO>(new TbsQtacQuocgiaNghingoDTO(), HttpStatus.ACCEPTED);
+		}
+	}
+}

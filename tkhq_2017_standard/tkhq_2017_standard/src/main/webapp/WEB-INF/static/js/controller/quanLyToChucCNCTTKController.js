@@ -1,0 +1,213 @@
+/**
+ * Controller of TBD_KetXuatTNHT
+ */
+
+'use strict';
+
+var myApp = angular.module('myApp');
+
+myApp.controller('quanLyToChucCNCTTKController', 
+  				['$scope',
+  				 '$window',
+  				 '$uibModal',
+  				 '$PopupMessage',
+  				 '$timeout',
+  				 'contextPath',
+  				 'quanLyToChucCNCTTKService',
+  				 'Tbs_sysGroupsService',
+  				  function ($scope,
+  				  			$window,
+  				  			$uibModal,
+  				  			$PopupMessage,
+  				  			$timeout,
+  				  			contextPath,
+  				  			quanLyToChucCNCTTKService,
+  				  			Tbs_sysGroupsService) {
+
+  	var DANG_HOAT_DONG = "1";
+  	var NGUNG_HOAT_DONG = "0";
+  	var REST_API_URL = contextPath;
+
+  	$scope.listNhomNguoiSD = [];
+  	$scope.listTongCuc = [];
+  	$scope.listChiCuc = [];
+  	$scope.listPerson = [];
+  	
+  	$scope.nhomNgSd = "";
+  	$scope.status = "";
+  	$scope.maTongCuc = "";
+  	$scope.maChiCuc = "";
+  	
+  	var maGroup ="";
+  	
+  	$scope.groupId = "";
+  	$scope.tongCucId = "";
+  	$scope.chiCucId = "";
+  	
+  	$scope.showReport = false;
+  	$scope.trangThai = "1";
+  	
+  	$scope.nhom  = {
+  		groupId : "0",
+  		groupCode : "Tất cả"
+  	};
+  	
+  	$scope.cuc  = {
+		ma : "",
+		ten : ""
+  	};
+  	
+  	$scope.chiCuc = {
+		ma : "",
+		ten : ""
+  	};
+
+  	init();
+
+  	$scope.doSearch = function () {
+  		if($scope.nhom.groupId === ""){
+  			$PopupMessage.Error("Nhóm người sử dụng chưa chọn.");
+  			return;
+  		}
+  		filterThongTinQuanLy($scope.nhom.groupId, parseInt($scope.trangThai), $scope.cuc.ma, $scope.chiCucId);
+  	}
+
+	$scope.doExport = function (typeKetXuat) {
+		ExportThôngTinQL (typeKetXuat, $scope.nhom.groupId, parseInt($scope.trangThai), $scope.cuc.ma, $scope.chiCucId);
+	}
+
+	$scope.hideReport = function () {
+		$scope.srcReport = "";	
+		$scope.showReport = false;
+
+	}
+	
+	$scope.selectTongCuc = function (tongCucId){
+		getChiCuc(tongCucId);
+	}
+	
+	function getChiCuc(maTongCuc){
+		quanLyToChucCNCTTKService.GetChiCucHQByCuc(maTongCuc).
+			then(
+				function(deferred) {
+					$scope.listChiCuc = deferred;
+				}, 
+				function(errResponse) {
+					console.error('Error while fetching data');
+				}
+			);
+	}
+	
+	function GetCucHQ() {
+		quanLyToChucCNCTTKService.GetCucHQ()
+			.then(
+				function(deferred) {
+					$scope.listTongCuc = deferred;
+					$scope.cuc.ma = $scope.listTongCuc[0].ma;
+					getChiCuc($scope.cuc.ma);
+				},
+				function(errResponse) {
+					console.error('Error while fetching data');
+				}
+			);
+	}
+
+	function init() {
+		GetCucHQ();
+		getListGroup();
+		$scope.trangThai = "2";
+        $scope.isExport = true;
+		$scope.showReport = false;
+	}
+	
+	function filterThongTinQuanLy (nhomId, trangThai, tongCucId, chiCucId) {
+
+		quanLyToChucCNCTTKService.GetListThôngTinQL(nhomId, trangThai, tongCucId, chiCucId)
+  			.then(
+  				function(deferred) {
+  					$scope.listPerson = deferred;
+  					if ($scope.listPerson.length <= 0){
+  						$scope.isExport = true;
+  						$PopupMessage.Error("Không tìm thấy kết quả");
+  						return;
+  					}
+  					$scope.isExport = false;
+  					displayThôngTinQL($scope.listPerson);
+  					
+  					
+  				},
+  				function (errResponse) {
+  					console.error('Error while fetching data');
+  				}
+  			);
+  	}
+	
+	function getListGroup(){
+		Tbs_sysGroupsService.GetGroups()
+			.then(
+				function (deferred){
+					$scope.listNhomNguoiSD = deferred;
+				},
+				function (){
+					console.error('Không thể lấy được list group');
+				}
+			);
+	}
+	
+	function ExportThôngTinQL (typeKetXuat, nhomId, trangThai, maTongCuc, maChiCuc) {
+		$scope.srcReport =  contextPath + "/exportThongTinQL?"  + "typeKetXuat="+ typeKetXuat + "&nhomId="+ nhomId +
+		"&trangThai=" + trangThai + "&maTongCuc=" + maTongCuc + "&maChiCuc=" + maChiCuc;	
+		if(typeKetXuat === 1){
+			var modalInstance = $uibModal.open({
+				animation : self.animationsEnabled,
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				controller : 'ModalInstanceCtrl',
+				templateUrl : 'Report',
+				windowClass : 'app-modal-window',
+				resolve : {
+					Url : function() {
+						return $scope.srcReport
+					}
+				}
+			});
+			
+		}
+	}
+
+	function displayThôngTinQL (listData) {
+		
+		for (var i = 0; i < listData.length; i++) {
+			if(listData[i].trangThai === DANG_HOAT_DONG) {
+				listData[i].trangThai = "Đang hoạt động";
+				continue;
+			} 
+  			if (listData[i].trangThai === NGUNG_HOAT_DONG) {
+  				listData[i].trangThai = "Ngừng hoạt động";
+  				continue;
+  			} 
+  		}
+  	}
+}]);
+
+myApp.controller('ModalInstanceCtrl', 
+			['$scope',
+			 '$window',
+			 '$uibModal',
+			 '$PopupMessage',
+			 '$modalInstance',
+			 'Url',
+			  function ($scope,
+			  			$window,
+			  			$uibModal,
+			  			$PopupMessage,
+			  			$modalInstance,
+			  			Url) {
+				
+	$scope.Url = Url;
+	$scope.UrlPDF=Url+"&type=PDFATTACH";
+	$scope.cancel = function() {
+		$modalInstance.dismiss('cancel');
+	};
+}]);
+

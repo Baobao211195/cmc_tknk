@@ -1,0 +1,57 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<style>
+.col-sm-5, .col-sm-6 {
+	padding-left: 4px;
+	padding-right: 5px;
+	padding-top: 5px;
+}
+</style>
+<div >
+	<section class="content-header panel panel-success"
+		style="height: 50px;">
+		<h3 class="modal-title">Thêm mới/Cập nhật cửa khẩu nước ngoài</h3>
+	</section>
+	<section>
+		<form name="cangnnVnaccsForm" >
+			<table style="margin-top: 10px">
+				<tr>
+					<td class="col-sm-6"><label class="col-sm-5">Mã cảng:</label>
+						<div class="col-sm-7">
+							<input class="input" type="text" ng-model="self.entity.maCang" name="maCang"
+								maxlength="20" ng-pattern="/^[a-zA-Z0-9_]*$/" ng-required= true
+								ng-disabled="self.entity.addOrUpdate == 'update' " />
+								<span
+							class="error" ng-show="cangnnVnaccsForm.maCang.$error.required ">Vui lòng nhập mã cảng</span>
+							<span class="error " ng-show="cangnnVnaccsForm.maCang.$error.pattern">Mã cảng không được có ký tự đặc biệt</span>
+						</div></td>
+					<td class="col-sm-6"><label class="col-sm-5">Tên thành phố:</label>
+						<div class="col-sm-7">
+							<input class="input" type="text" ng-model="self.entity.tenTP"
+								maxlength="100" />
+						</div></td>
+					<td><input class="input" type="hidden"
+						ng-model="self.entity.addOrUpdate" /></td>
+				</tr>
+				<tr>
+					<td class="col-sm-6"><label class="col-sm-5">Tên nước:</label>
+						<div class="col-sm-7">
+							<input class="input" type="text" ng-model="self.entity.tenNuoc"
+								maxlength="100" />
+						</div></td>
+					<td class="col-sm-6"><label class="col-sm-5">Mã nước:</label>
+						<div class="col-sm-7">
+							<input class="input" type="text" ng-model="self.entity.maNuoc" name="maNuoc"
+								maxlength="20" />
+								<span class="error " ng-show="cangnnVnaccsForm.maNuoc.$error.pattern">Mã nước không được có ký tự đặc biệt</span>
+						</div></td>
+				</tr>
+			</table>
+		</form>
+		</br>
+		<div class="modal-footer" align="center">
+			<button class="btn btn-primary" ng-click="self.saveData()" ng-disabled="cangnnVnaccsForm.maCang.$error.required">Lưu</button>
+			<button class="btn btn-primary" ng-click="self.cancel()">Hủy bỏ</button>
+		</div>
+	</section>
+</div>

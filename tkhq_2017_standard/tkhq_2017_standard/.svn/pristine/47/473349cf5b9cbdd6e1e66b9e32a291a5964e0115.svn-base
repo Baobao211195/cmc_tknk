@@ -1,0 +1,104 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<div	>
+	<div class="generic-container" style="width: 100%;">
+		<fieldset class="form-group form-wrapper">
+			<form class="form-search">
+				<table>
+					<tr>
+
+						<td class="col-md-4">
+							<div class="col-md-4">
+								<input type="radio" ng-model="radLoaiBD.value" value="ky">
+								Kỳ
+							</div>
+						</td>
+						<td class="col-md-4">
+							<div class="col-md-4">
+								<input type="radio" ng-model="radLoaiBD.value" value="thang">
+								Tháng
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="col-md-4"><label class="col-md-4">Trạng
+								thái</label>
+							<div class="col-md-8">
+								<select class="form-control"
+									ng-options="item as item.Ten for item in lstTrangThai"
+									ng-model="cmbTrangThai"></select>
+							</div></td>
+						<td class="col-md-4"><label class="col-md-4">Phần</label>
+							<div class="col-md-8">
+								<select class="form-control"
+									ng-options="item as item.ten for item in lstPhan"
+									ng-model="cmbPhan"></select>
+							</div></td>
+					</tr>
+					<tr>
+						<td class="col-md-4"><label class="col-md-4">Cục hải
+								quan</label>
+							<div class="col-md-8">
+								<select class="form-control"
+									ng-options="item as item.ten for item in lstCucHQ"
+									ng-model="cmbCucHQ" ng-change="CucHQSelected(cmbCucHQ)"></select>
+							</div></td>
+						<td class="col-md-4"><label class="col-md-4">Chi cục
+								hải quan</label>
+							<div class="col-md-8">
+								<select class="form-control"
+									ng-options="item as item.ten for item in lstChiCucHQ"
+									ng-model="cmbChiCucHQ"></select>
+							</div></td>
+					</tr>
+				</table>
+			</form>
+		</fieldset>
+	</div>
+	<br/>
+	<div class="form-group row form-btn-align" align="center">
+		<button type="button" class="btn btn-primary"
+			ng-click="btnXemBieuDo_Click()">
+			<i class="glyphicon icon-white"></i> Xem biểu đồ
+		</button>
+	</div>
+	<div class="form-group row form-btn-align" align="right">
+		<label>ĐVT: Triệu USD</label>
+	</div>
+	<div align="center">
+		<iframe id="frReport" src="{{srcBieuDo}}" class=""
+			style="display: block; width: 100%; height: 330px;"></iframe>
+			</br>
+	<div class="form-group row form-btn-align" align="center">
+		<button type="button" class="btn btn-primary" data-toggle="modal"
+			data-target="#myModal" ng-click="btnPhanHoi_Click()">
+			<i class="glyphicon icon-white"></i> Phản hồi
+		</button>
+		<button type="button" id="btnClose" class="btn btn-primary"
+			ng-click="btnClose_Click()" ng-show="showChart1">
+			<i class="glyphicon icon-white"></i> Đóng
+		</button>
+	</div>
+	</div>
+	
+	</br>
+	<div class="form-group row form-btn-align" align="center">
+		<div class="row">
+			<div></div>
+			<div></div>
+
+		</div>
+	</div>
+
+</div>
+<style>
+.red {
+	background-color: red;
+}
+
+.green {
+	background-color: green;
+}
+</style>

@@ -1,0 +1,315 @@
+/**
+ * Created by cmcsoft on 6/2/2017.
+ */
+'use strict';
+var myApp = angular.module('myApp');
+
+myApp.controller('tbsQtacDongiaXuatkhauController', ['$scope',
+                                                    '$PopupMessage',
+                                                    'pagerService',
+                                                    '$uibModal',
+                                                    '$location',
+                                                    'contextPath',
+                                                    'tbsDmQtacService',
+                                                    'tbsQtacDongiaXuatkhauService',
+                                                    function($scope,
+                                                             $PopupMessage,
+                                                             pagerService,
+                                                             $uibModal,
+                                                             $location,
+                                                             contextPath,
+                                                             tbsDmQtacService,
+                                                             tbsQtacDongiaXuatkhauService){
+
+        $scope.listData = [];
+
+        $scope.totalItems = 0;
+        $scope.currentPage = 1;
+        $scope.maxSize = 5;
+        $scope.pageSize = 10;
+
+        var idDelete = "";
+        $scope.isDisplay = true;
+        var isSearch = false;
+
+        $scope.dto = {
+            id             :"",
+            mathongke      : "",
+            dongialonnhat  : "",
+            dongianhonhat  : ""
+        }
+
+        init();
+
+        $scope.doSearch = function(currentPage, pageSize){
+        	isSearch = true;
+        	if(tbsDmQtacService.validateMa($scope.dto.mathongke)){
+        		$PopupMessage.Error("Mã thống kê không lớn hơn 20 ký tự");
+        		return;
+        	}
+        	if($scope.dto.dongialonnhat !== null && !tbsDmQtacService.validateEmpty($scope.dto.dongialonnhat)){
+        		if(tbsDmQtacService.validateTriGia($scope.dto.dongialonnhat)){
+            		$PopupMessage.Error("Đơn giá lớn nhất không lớn hơn 14 ký tự");
+            		return;
+            	}
+        		
+        		if(tbsDmQtacService.validateDecimal($scope.dto.dongialonnhat)){
+        			$PopupMessage.Error("Phần thập phân không lớn hơn 2 ký tự");
+        			return;
+        		}
+        	}
+        	if($scope.dto.dongianhonhat !== null && !tbsDmQtacService.validateEmpty($scope.dto.dongianhonhat)){
+        		if(tbsDmQtacService.validateTriGia($scope.dto.dongianhonhat)){
+            		$PopupMessage.Error("Đơn giá nhỏ nhất không lớn hơn 14 ký tự");
+            		return;
+            	}
+        		
+        		if(tbsDmQtacService.validateDecimal($scope.dto.dongianhonhat)){
+        			$PopupMessage.Error("Phần thập phân không lớn hơn 2 ký tự");
+        			return;
+        		}
+        	}
+             search(currentPage, pageSize);
+             isSearch = false;
+        }
+
+        $scope.pageChanged = function(currentPage){
+            search(currentPage, $scope.pageSize);
+        }
+
+        $scope.doAdd = function () {
+            if($scope.dto.id !== ""){
+                reloadForm();
+                $PopupMessage.Error("Không thể thực hiện được thao tác này.");
+                return;
+            }
+            if(!checkMaTK($scope.dto.mathongke, $scope.dto.dongialonnhat, $scope.dto.dongianhonhat)){
+            	return;
+            }
+//            checkDonGiaLn($scope.dto.dongialonnhat);
+//            checkDonGiaNn($scope.dto.dongianhonhat);
+            addData($scope.dto);
+        }
+
+        $scope.doUpdate = function () {
+            if($scope.dto.id === ""){
+                $PopupMessage.Error("Không thể thực hiện được thao tác này.");
+                return;
+            }
+            if(!checkMaTK($scope.dto.mathongke, $scope.dto.dongialonnhat, $scope.dto.dongianhonhat)){
+            	return;
+            }
+//            checkDonGiaLn($scope.dto.dongialonnhat);
+//            checkDonGiaNn($scope.dto.dongianhonhat);
+            upDateData($scope.dto);
+        }
+
+        $scope.doEditRow = function(id) {
+            // check exist.
+            copyData ($scope.listData ,id);
+        }
+
+        $scope.doDelete = function (id) {
+            idDelete = id;
+            $PopupMessage.Confirm('Ban có chắc muốn xóa bản ghi', deleteData, null);
+        }
+        
+        function checkMaTK(maTk, dongialonnhat, dongianhonhat) {
+        	if(tbsDmQtacService.validateEmpty(maTk)){
+        		$PopupMessage.Error("Hãy nhập mã thống kê");
+        		return false;
+        	}
+        	if(tbsDmQtacService.validateMa(maTk)){
+        		$PopupMessage.Error("Mã thống kê không lớn hơn 20 ký tự");
+        		return false;
+        	}
+        	
+        	if(tbsDmQtacService.validateEmpty(dongialonnhat)){
+        		$PopupMessage.Error("Hãy nhập đơn giá lớn nhất");
+        		return false;
+        	}
+        	if(tbsDmQtacService.validateTriGia(dongialonnhat)){
+        		$PopupMessage.Error("Đơn giá lớn nhất không lớn hơn 14 ký tự");
+        		return false;
+        	}
+        	
+        	if(tbsDmQtacService.validateDecimal(dongialonnhat)){
+    			$PopupMessage.Error("Phần thập phân không lớn hơn 2 ký tự");
+    			return false;
+    		}
+        	
+        	if(tbsDmQtacService.validateEmpty(dongianhonhat)){
+        		$PopupMessage.Error("Hãy nhập đơn giá nhỏ nhất");
+        		return false;
+        	}
+        	if(tbsDmQtacService.validateTriGia(dongianhonhat)){
+        		$PopupMessage.Error("Đơn giá nhỏ nhất không lớn hơn 14 ký tự");
+        		return false;
+        	}
+        	
+        	if(tbsDmQtacService.validateDecimal(dongianhonhat)){
+    			$PopupMessage.Error("Phần thập phân không lớn hơn 2 ký tự");
+    			return false;
+    		}
+        	
+        	return true;
+		}
+        
+//        function checkDonGiaLn(dongialonnhat) {
+//        	
+//		}
+//        
+//        function checkDonGiaNn(dongianhonhat) {
+//        	
+//		}
+
+        function getDataById(id) {
+            tbsQtacDongiaXuatkhauService.GettbsQtacDongiaXuatkhauById(id)
+                .then(
+                    function (deferred) {
+                        if(deferred !== null){
+                            copyData ($scope.listData ,id);
+                        }else {
+                            $PopupMessage.Error("Dữ liệu đã bị xóa bởi một người sử dụng khác!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Có lỗi trong quá trình xử lý thông tin!");
+                    }
+
+                );
+        }
+
+        function deleteData() {
+            tbsQtacDongiaXuatkhauService.DoDeletetbsQtacDongiaXuatkhau(idDelete)
+                .then(
+                    function (deferred) {
+                        if(deferred === 1){
+                            $PopupMessage.Success("Xóa bỏ thông tin thành công!");
+                            reloadForm();
+                            $scope.currentPage =  1;
+                            search($scope.currentPage, $scope.pageSize);
+                        } else {
+                            $PopupMessage.Error("Có lỗi trong quá trình xóa bỏ thông tin.!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Có lỗi trong quá trình xóa bỏ thông tin.!");
+                    }
+                );
+        }
+
+        function addData(data) {
+            tbsQtacDongiaXuatkhauService.DoAddtbsQtacDongiaXuatkhau(data)
+                .then(
+                    function (deferred) {
+                        if(deferred === 1){
+                            $PopupMessage.Success("Thêm mới thông tin thành công!");
+                            reloadForm();
+                            $scope.currentPage =  1;
+                            search($scope.currentPage, $scope.pageSize);
+                        }else {
+                            $PopupMessage.Error("Có lỗi trong quá trình thêm mới thông tin.!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Có lỗi trong quá trình thêm mới thông tin.!");
+                        console.error("Có lỗi trong quá trình thêm mới thông tin.!");
+                    }
+                );
+        }
+
+        function upDateData(data) {
+            tbsQtacDongiaXuatkhauService.DoUpdatetbsQtacDongiaXuatkhau(data)
+                .then(
+                    function (deferred) {
+                        if(deferred === 1){
+                            $PopupMessage.Success("Cập nhật thông tin thành công!");
+                            $scope.currentPage =  1;
+                            search($scope.currentPage, $scope.pageSize);
+                        }else {
+                            $PopupMessage.Error("Có lỗi trong quá trình cập nhật thông tin.!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Có lỗi trong quá trình cập nhật thông tin.!");
+                        console.error("Có lỗi trong quá trình cập nhật thông tin.!");
+                    }
+                );
+        }
+
+        function search(currentPage, pageSize) {
+            var formData = thietLapData($scope.dto.mathongke, $scope.dto.dongialonnhat, $scope.dto.dongianhonhat, currentPage, pageSize);
+            tbsQtacDongiaXuatkhauService.SearchtbsQtacDongiaXuatkhau(formData)
+                .then(
+                    function (deferred) {
+                        if (deferred.content.length > 0){
+                        	$scope.isDisplay = true;
+                        	$scope.listData = deferred.content;
+                            $scope.totalItems = deferred.totalItems;
+                            $scope.pageSize = deferred.pageSize;
+                            $scope.currentPage = deferred.currentPage;
+                        } else {
+                        	$scope.isDisplay = false;
+                            $PopupMessage.Error("Không có kết quả tìm kiếm!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Không có kết quả tìm kiếm!");
+                    }
+
+                );
+        }
+
+        function thietLapData(mathongke, dongialonnhat, dongianhonhat, currentPage, pageSize) {
+
+        	var formData = {};
+         	 
+            if(typeof currentPage === 'undefined' || currentPage ===''){
+            	formData.currentPage = 1;
+            }else {
+            	formData.currentPage = currentPage;
+            }
+            if(typeof pageSize === 'undefined'){
+            	 formData.pageSize = 10;
+            }else {
+            	  formData.pageSize = pageSize;
+            }
+			if (isSearch) {
+				formData.mathongke     = mathongke;
+				formData.dongialonnhat = dongialonnhat;
+				formData.dongianhonhat = dongianhonhat;
+			} else {
+				isSearch = false;
+				formData.mathongke     = "";
+				formData.dongialonnhat = "";
+				formData.dongianhonhat = "";
+			}
+
+            return formData;
+        }
+
+        function reloadForm() {
+            $scope.dto = {
+                id            : "",
+                mathongke     : "",
+                dongialonnhat : "",
+                dongianhonhat : ""
+            }
+        }
+        
+
+        function copyData (listData ,idCopy){
+            for (var i = 0; i < listData.length; i++){
+                if(listData[i].id === idCopy){
+                    $scope.dto = angular.copy(listData[i]);
+                    break;
+                }
+            }
+        }
+
+        function init() {
+        	search($scope.currentPage,$scope.pageSize);
+        }
+
+    }]);

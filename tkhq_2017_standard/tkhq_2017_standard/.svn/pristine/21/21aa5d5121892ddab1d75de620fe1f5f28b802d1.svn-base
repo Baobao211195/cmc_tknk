@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-06-15T16:06:09 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BCXKMHCYTPTVTTCHQ" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="73f3d610-a9b1-4aea-a565-2a7d68112e37">
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="trigia_lk" class="java.lang.Double">
+		<fieldDescription><![CDATA[trigia_lk]]></fieldDescription>
+	</field>
+	<field name="ten_ptvt" class="java.lang.String">
+		<fieldDescription><![CDATA[ten_ptvt]]></fieldDescription>
+	</field>
+	<field name="ten_dvt" class="java.lang.String">
+		<fieldDescription><![CDATA[ten_dvt]]></fieldDescription>
+	</field>
+	<field name="sapxep" class="java.lang.Integer">
+		<fieldDescription><![CDATA[sapxep]]></fieldDescription>
+	</field>
+	<field name="ten_hang" class="java.lang.String">
+		<fieldDescription><![CDATA[ten_hang]]></fieldDescription>
+	</field>
+	<field name="ky" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ky]]></fieldDescription>
+	</field>
+	<field name="luong_ky" class="java.lang.Double">
+		<fieldDescription><![CDATA[luong_ky]]></fieldDescription>
+	</field>
+	<field name="ma_ptvt" class="java.lang.String">
+		<fieldDescription><![CDATA[ma_ptvt]]></fieldDescription>
+	</field>
+	<field name="stt" class="java.lang.Integer">
+		<fieldDescription><![CDATA[stt]]></fieldDescription>
+	</field>
+	<field name="thang" class="java.lang.Integer">
+		<fieldDescription><![CDATA[thang]]></fieldDescription>
+	</field>
+	<field name="trigia_ky" class="java.lang.Double">
+		<fieldDescription><![CDATA[trigia_ky]]></fieldDescription>
+	</field>
+	<field name="nam" class="java.lang.Integer">
+		<fieldDescription><![CDATA[nam]]></fieldDescription>
+	</field>
+	<field name="ten_nhom" class="java.lang.String">
+		<fieldDescription><![CDATA[ten_nhom]]></fieldDescription>
+	</field>
+	<field name="luong_lk" class="java.lang.Double">
+		<fieldDescription><![CDATA[luong_lk]]></fieldDescription>
+	</field>
+	<variable name="v_Sum_luong_ky" class="java.lang.Double" resetType="Group" resetGroup="Mat_hang_Group" incrementType="Group" incrementGroup="Mat_hang_Group" calculation="Sum">
+		<variableExpression><![CDATA[$F{luong_ky}]]></variableExpression>
+	</variable>
+	<variable name="v_Sum_luong_lk" class="java.lang.Double" resetType="Group" resetGroup="Mat_hang_Group" incrementType="Group" incrementGroup="Mat_hang_Group" calculation="Sum">
+		<variableExpression><![CDATA[$F{luong_lk}]]></variableExpression>
+	</variable>
+	<variable name="v_Sum_trigia_ky" class="java.lang.Double" resetType="Group" resetGroup="Mat_hang_Group" incrementType="Group" incrementGroup="Mat_hang_Group" calculation="Sum">
+		<variableExpression><![CDATA[$F{trigia_ky}]]></variableExpression>
+	</variable>
+	<variable name="v_Sum_trigia_lk" class="java.lang.Double" resetType="Group" resetGroup="Mat_hang_Group" incrementType="Group" incrementGroup="Mat_hang_Group" calculation="Sum">
+		<variableExpression><![CDATA[$F{trigia_lk}]]></variableExpression>
+	</variable>
+	<group name="Mat_hang_Group">
+		<groupExpression><![CDATA[$F{ten_nhom}]]></groupExpression>
+		<groupFooter>
+			<band height="30">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00">
+					<reportElement stretchType="RelativeToTallestObject" x="250" y="0" width="75" height="30" uuid="a74a9c3c-12aa-412a-a33b-c9752feec9d5"/>
+					<box rightPadding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_Sum_luong_ky}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00">
+					<reportElement stretchType="RelativeToTallestObject" x="325" y="0" width="75" height="30" uuid="618de2ca-2060-4fbc-ab99-99c590da3123"/>
+					<box rightPadding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_Sum_trigia_ky}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00">
+					<reportElement stretchType="RelativeToTallestObject" x="400" y="0" width="75" height="30" uuid="b2df0d8b-2677-4467-8621-7fb6f3ab80e0"/>
+					<box rightPadding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_Sum_luong_lk}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00">
+					<reportElement stretchType="RelativeToTallestObject" x="475" y="0" width="75" height="30" uuid="6f6b1943-968d-40d7-83b9-7751e4bf821e"/>
+					<box rightPadding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_Sum_trigia_lk}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="195" y="0" width="55" height="30" uuid="2c411d4e-276a-491e-b1d0-cae2db81b042"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="-5" y="0" width="100" height="30" uuid="1dfb89b7-a430-4cc4-afc5-decb7ef38a53"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="95" y="0" width="100" height="30" uuid="4fe8b437-f5a4-40ce-8296-ec302593d182"/>
+					<box leftPadding="3">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Tổng cộng"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="150" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="16" width="100" height="30" uuid="6bc93d4e-e1d3-4c50-b2e2-cad2770a6f3a"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[BỘ TÀI CHÍNH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-3" y="36" width="110" height="20" uuid="171c8f2d-aa30-42d8-b3a7-4f5c899bd6bc"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TỔNG CỤC HẢI QUAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="17" width="160" height="20" uuid="5a6fa1e5-0c1c-402c-ac7c-5f4b0d3e4479"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cục CNTT & Thống kê Hải quan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="16" y="68" width="530" height="30" uuid="84ca11ac-8857-4324-9c27-65f6142258e6"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[XUẤT KHẨU MẶT HÀNG CHỦ YẾU THEO PHƯƠNG THỨC VẬN TẢI]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="204" y="92" width="153" height="30" uuid="3030c2fa-6f30-4051-9a15-d1c6bc80e7ab"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ky}==0.0?"Tháng " + $F{thang} + " năm " +$F{nam}:"Kỳ " + $F{ky} + " tháng " + $F{thang} + " năm " +$F{nam}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="60" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="-5" y="0" width="100" height="60" uuid="3c272864-0785-4ed5-9929-473c93759284"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mặt hàng chủ yếu]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="95" y="0" width="100" height="60" uuid="5abd5038-0a9b-4471-9aff-2605231fc6a1"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Phương thức vận tải]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="195" y="0" width="55" height="60" uuid="edb8879e-f16b-44fe-bc20-249304e51f26"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Đơn vị tính]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="0" width="150" height="30" uuid="24222c7c-dde2-4ff4-b4c4-72d4cc499495"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trong kỳ báo cáo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="0" width="150" height="30" uuid="1deb5128-c766-4ee5-9648-238a1933842c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lũy kế đến kỳ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="30" width="75" height="30" uuid="1e1d7b99-1cc2-44c6-a129-fae005e665ea">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lượng]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="325" y="30" width="75" height="30" uuid="26a04da5-6fb6-426c-a9a9-f5d86e16bb7d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trị giá thống kê USD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="475" y="30" width="75" height="30" uuid="303374f0-cafc-4617-b005-22e17d1e6be8">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trị giá thống kê USD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="30" width="75" height="30" uuid="9cd7e658-0457-440d-840f-a1c92b17f011">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lượng]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="95" y="0" width="100" height="30" uuid="4e703d37-f972-4599-a313-9574054fd20e"/>
+				<box leftPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ten_ptvt}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement stretchType="RelativeToTallestObject" x="195" y="0" width="55" height="30" uuid="7776da0b-3b93-485e-8000-ec96dd26b125"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ten_dvt}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement stretchType="RelativeToTallestObject" x="250" y="0" width="75" height="30" uuid="555bcf09-aaf3-41a3-af88-6f7e18ce9eb6"/>
+				<box rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{luong_ky}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement stretchType="RelativeToTallestObject" x="325" y="0" width="75" height="30" uuid="560ec855-62cd-4f11-afbf-9c855db1397a"/>
+				<box rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{trigia_ky}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement stretchType="RelativeToTallestObject" x="400" y="0" width="75" height="30" uuid="d29f97d4-747c-46aa-aa99-99a271f129bd"/>
+				<box rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{luong_lk}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement stretchType="RelativeToTallestObject" x="475" y="0" width="75" height="30" uuid="4a713f8b-65a0-4c0d-b4f1-5296a3293404"/>
+				<box rightPadding="3">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{trigia_lk}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="-5" y="0" width="100" height="30" uuid="8bb16ecc-8483-4195-9bf1-8851c4f790b6">
+					<printWhenExpression><![CDATA[$V{Mat_hang_Group_COUNT} == 1.0]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ten_nhom}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="-5" y="0" width="100" height="30" uuid="a05e4dc1-3396-4f2a-ad89-f1f0ce920ed4"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="15" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="511" y="0" width="46" height="15" uuid="192c490b-686b-4e54-bd57-542650e20496">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Trang " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

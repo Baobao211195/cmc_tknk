@@ -1,0 +1,35 @@
+package com.tkhq.cmc.security;
+
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+
+import com.tkhq.cmc.model.TbdSysUsers;
+
+public class CustomUserDetails extends User {
+
+	private TbdSysUsers user;
+
+	public CustomUserDetails(TbdSysUsers user,
+			Collection<? extends GrantedAuthority> authorities) {
+		super(user.getUsername(), user.getPassword(), authorities);
+		this.user = user;
+	}
+
+	public CustomUserDetails(TbdSysUsers user, boolean enabled,
+			boolean accountNonExpired, boolean credentialsNonExpired,
+			boolean accountNonLocked,
+			Collection<? extends GrantedAuthority> authorities) {
+		super(user.getUsername(), user.getPassword(), enabled,
+				accountNonExpired, credentialsNonExpired, accountNonLocked,
+				authorities);
+		this.user = user;
+	}
+
+	public TbdSysUsers getUser() {
+		return user;
+	}
+	
+
+}

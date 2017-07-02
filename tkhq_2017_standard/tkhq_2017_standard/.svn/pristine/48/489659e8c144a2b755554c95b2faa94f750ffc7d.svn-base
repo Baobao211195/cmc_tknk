@@ -1,0 +1,244 @@
+/**
+ * Controller of model TBS_BIEUTHUE
+ */
+
+'use strict';
+
+angular.module('myApp').controller('TbsDvtVnacccsController', TbsDvtVnacccsController);
+TbsDvtVnacccsController.$inject = ['$scope', 'TbsDvtVnaccsService', 'pagerService', '$uibModal', '$PopupMessage'];
+
+function TbsDvtVnacccsController($scope, TbsDvtVnaccsService, pagerService, $uibModal, $PopupMessage) {		
+	console.log('start TbsDvtVnacccsController');
+		var self = this;
+		self.lstDvtVnaccs = [];		
+        self.dvtVnaccsEntity = {
+        		maDvt: '',
+        		tenDvt: '',
+        		tenDvtv: '',
+        		tenDvtUni: '',        	        		
+        		isChecked: false,
+        		addOrUpdate: ''
+        };        
+        self.selectedList = []; //Danh sach row da chon        
+        self.checkAll = false;                      
+        
+        //Them moi row su dung popup start
+        self.editRow = editRow;                
+        self.showPopup = showPopup;
+        self.remove = remove;
+        self.animationsEnabled = true;        
+        self.search = search;
+        
+        self.totalItems = 0;
+        self.currentPage = 1;
+        self.maxSize = 5;
+        self.pageSize = 10;
+        search(self.currentPage, self.pageSize);
+        
+        $scope.pageChanged = function() {
+            console.log('Page changed to: ' + self.currentPage);
+            search(self.currentPage, self.pageSize);
+        };
+        
+        function delDvtVnaccs(chooseList) {
+        	console.log('start delDvtVnaccs');
+        	TbsDvtVnaccsService.delDvtVnaccs(chooseList)
+                .then(
+                		search(0, self.pageSize),
+                    function (errResponse) {
+                        console.error(errResponse);
+                    }
+                );
+        }
+                
+
+        function remove() {
+        	self.selectedList = [];        	
+        	var selectedId = "";        	
+        	for(var i = 0; i < self.lstDvtVnaccs.length; i++){
+        		console.log('isChecked:',self.lstDvtVnaccs[i].isChecked);
+        		if(self.lstDvtVnaccs[i].isChecked == true){
+        			selectedId = self.lstDvtVnaccs[i].maDvt;        			
+        			self.selectedList.push(selectedId);
+        		}
+        	}
+            console.log('Id to be deleted: ', self.selectedList);
+            if(self.selectedList.length == 0){
+            	angular.element(document.querySelector('.messageErrorArea')).val("Chưa chọn bản ghi nào để xóa");
+            	return;
+            }
+            $PopupMessage.Confirm('Ban co chac chan muon xoa ban ghi',DeleteObject,null);
+            //$PopupMessage.Confirm('Ban co chac chan muon xoa ban ghi',delBieuThue(self.selectedList),null);
+            
+//            delCuaKhauNN(self.selectedList);
+        }
+        
+        function DeleteObject()
+        {
+        	//alert('Delete thanh cong ');
+        	delDvtVnaccs(self.selectedList);
+        };
+        
+        function search(currentPage, pageSize){
+        	var param = {};
+        	param["maDvt"] = $scope.maDvt;
+        	param["tenDvt"] = $scope.tenDvt;
+        	param["tenDvtv"] = $scope.tenDvtv;
+        	param["tenDvtUni"] = $scope.tenDvtUni;        	
+        	param["currentPage"] = currentPage;
+        	param["pageSize"] = pageSize;
+        	
+        	console.log('search@param:',param);        	
+        	
+        	TbsDvtVnaccsService.searchDvtVnaccs(param)
+        		.then(function(respone){        			
+        			self.lstDvtVnaccs = respone.lstDvtVnaccs;
+        			self.totalItems = respone.totalCount;
+        			self.pageSize = parseInt(respone.pageSize);
+        			self.currentPage = parseInt(respone.currentPage);
+        			},
+        			function(errResponse){
+        				console.error(errResponse);
+        			}
+        		);        	
+        }
+        
+        //Them moi truc tiep row tren grid end
+
+        function reset() {
+        	self.dvtVnaccsEntity = {
+        			maDvt: '',
+            		tenDvt: '',
+            		tenDvtv: '',
+            		tenDvtUni: '',
+            		isChecked: false,
+            		addOrUpdate: ''
+            };
+            //$scope.myForm.$setPristine(); //reset Form
+        }
+        
+        //Them moi row su dung popup
+        $scope.addRow = function() {
+        	reset(); //Lam moi entity
+        	self.dvtVnaccsEntity.addOrUpdate = 'add';
+    		self.showPopup(self.lstDvtVnaccs, self.dvtVnaccsEntity);
+    	};
+    	
+    	function editRow(maDvt){
+    		console.log('Id to be edited', maDvt);
+            for (var i = 0; i < self.lstDvtVnaccs.length; i++) {
+                if (self.lstDvtVnaccs[i].maDvt === maDvt) {
+                    self.dvtVnaccsEntity = angular.copy(self.lstDvtVnaccs[i]);
+                    break;
+                }
+            }
+            self.dvtVnaccsEntity.addOrUpdate = 'update';
+            self.showPopup(self.lstDvtVnaccs, self.dvtVnaccsEntity);
+    	}    	
+    	
+    	function showPopup(grid, row){
+    		var modalInstance = $uibModal.open({
+    			animation: self.animationsEnabled,
+    			ariaLabelledBy: 'modal-title',
+    			ariaDescribedBy: 'modal-body',
+    			templateUrl: 'dvtVnaccsEdit',
+    			controller: 'dvtVnaccsModalCtrl',
+    			controllerAs: 'self',
+    			resolve: {
+    				grid : function() {
+						return grid;
+					},
+					row : function() {						
+						return row;
+					}
+    			}
+    		});
+    		
+    		modalInstance.result.then(function (data) {
+    				if(data == 'success'){
+    					self.currentPage = 1;
+    					search(self.currentPage, self.pageSize);
+    				}else{
+    					console.log('Co loi xay ra');
+    				}
+    		    }, function () {
+    		      //$log.info('modal-component dismissed at: ' + new Date());
+    		    });
+    	}    	
+
+}
+
+angular.module('myApp').controller('dvtVnaccsModalCtrl', dvtVnaccsModalCtrl);
+dvtVnaccsModalCtrl.$inject = ['$uibModalInstance', 'grid', 'row', 'TbsDvtVnaccsService', '$PopupMessage']
+function dvtVnaccsModalCtrl($uibModalInstance, grid, row, TbsDvtVnaccsService, $PopupMessage) {
+	var self = this;
+	self.lstDvtVnaccs = angular.copy(grid);
+	self.entity = angular.copy(row);
+	console.log('start save data!');
+	console.log(self.entity.addOrUpdate);
+	self.message = '';
+	  
+	self.saveData = saveData;
+
+	self.cancel = function () {
+	    $uibModalInstance.dismiss('cancel');
+	};
+	  
+	function saveData() {
+		if (self.entity.addOrUpdate == 'add') {
+			console.log('Saving New Row', self.entity);
+			crtDvtVnaccs(self.entity);
+        } else {
+        	console.log('Updated row with maCang ', self.entity.maDvt);
+        	updDvtVnaccs(self.entity, self.entity.maDvt);
+        }
+//		$uibModalInstance.close(self.message);
+		if(self.message == 'success')
+		{
+			$PopupMessage.Success('Cap nhat thanh cong');
+			//$PopupMessage.Warning('Ban chua nhap Ma bieu thue');
+			//$PopupMessage.Error('Cap nhat khong thanh cong');
+			$uibModalInstance.close(self.message);
+		}
+		else{			
+			return false;
+		}
+  	}
+	
+	function crtDvtVnaccs(entity) {
+		TbsDvtVnaccsService.crtDvtVnaccs(entity)
+            .then(
+        		//fetchAllBieuThues,
+            	//console.log('Insert thanh cong'),
+            	self.message = 'success',
+            	function (response) {
+                    console.log(response);
+                },
+                function (errResponse) {
+                    console.error('Error while creating data');
+                }
+            );
+    }
+	
+	function updDvtVnaccs(entity, maDvt) {
+		TbsDvtVnaccsService.updDvtVnaccs(entity, maDvt)
+            .then(            
+            	self.message = 'success',
+                function (errResponse) {
+                    console.error('Error while updating data');
+                }
+            );
+    }
+	
+//	function fetchAllBieuThues() {
+//		Tbs_CuaKhauNNService.fetchAllBieuThues()
+//        	.then(
+//    			function (deferred) {
+//    				self.lstCuaKhauNN = deferred;
+//                },
+//                function (errResponse) {
+//                    console.error('Error while fetching data');
+//                }
+//            );
+//    }
+}

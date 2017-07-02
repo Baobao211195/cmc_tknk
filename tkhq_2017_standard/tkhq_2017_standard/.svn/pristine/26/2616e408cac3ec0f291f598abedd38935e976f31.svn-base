@@ -1,0 +1,259 @@
+App.controller('HTCBBTTTCKController', ['$scope', 'HTCBBTTTCKService', 'pagerService', '$uibModal', '$PopupMessage', '$timeout', '$rootScope',
+		function($scope, HTCBBTTTCKService, pagerService, $uibModal, $PopupMessage, $timeout, $rootScope) {
+			$scope.lstTrangThai = [ {
+				Ma : 'SB',
+				Ten : 'Sơ bộ'
+			}, {
+				Ma : 'CT',
+				Ten : 'Chính thức'
+			}];
+			$scope.lstPhamViTK = [ {
+				Ma : 0,
+				Ten : 'Ngoài phạm vi thống kê'
+			}, {
+				Ma : 1,
+				Ten : 'Trong phạm vi thống kê'
+			}
+			, {
+				Ma : 2,
+				Ten : 'Tất cả'
+			}];
+			
+			$scope.lstResult = [];
+			$scope.nhx = 'X';
+			$scope.lstCucHQ = [];
+			$scope.lstChiCucHQ = [];
+			$scope.noiDung = '';
+			$scope.loai_bc= "15";
+			$scope.showReport = false;
+			$scope.srcReport = "";
+			$scope.showChart1 = false;
+			var RootApi = "http://localhost:8080/tkhq_2017_standard";
+			$scope.btnXemBC_Click = function() {
+				var maCucHQ = "";
+				var maChicucHQ = "";
+				var nhx = "";
+				var trangthai = "";
+				var cuakhau = "";
+				var phamvi = "";
+				var loaihinh = "";
+				var loaiBD = "ky";
+				if ($scope.cmbCucHQ != undefined && $scope.cmbCucHQ != null)
+					if ($scope.cmbCucHQ.ma != undefined && $scope.cmbCucHQ.ma != null)
+						maCucHQ = $scope.cmbCucHQ.ma;
+				if ($scope.cmbChiCucHQ != undefined && $scope.cmbChiCucHQ != null)
+					if ($scope.cmbChiCucHQ.ma != undefined && $scope.cmbChiCucHQ.ma != null)
+						maChicucHQ = $scope.cmbChiCucHQ.ma;
+				if ($scope.cmbTrangThai != undefined && $scope.cmbTrangThai != null)
+					if ($scope.cmbTrangThai.Ma != undefined && $scope.cmbTrangThai.Ma != null)
+						trangthai = $scope.cmbTrangThai.Ma;
+				if ($scope.nhx != undefined && $scope.nhx != null)
+					nhx = $scope.nhx;
+				if ($scope.cmbCuaKhau != undefined && $scope.cmbCuaKhau != null)
+					if ($scope.cmbCuaKhau.ma != undefined && $scope.cmbCuaKhau.ma != null)
+						cuakhau = $scope.cmbCuaKhau.ma;
+				if ($scope.cmbPhamViTK != undefined && $scope.cmbPhamViTK != null)
+					if ($scope.cmbPhamViTK.Ma != undefined && $scope.cmbPhamViTK.Ma != null)
+						phamvi = $scope.cmbPhamViTK.Ma;
+				if ($scope.cmbLHXNK != undefined && $scope.cmbLHXNK != null)
+					if ($scope.cmbLHXNK.ma != undefined && $scope.cmbLHXNK.ma != null)
+						loaihinh = $scope.cmbLHXNK.ma;
+				HTCBBTTTCKService.getData(maCucHQ, maChicucHQ, trangthai, nhx, cuakhau, phamvi, loaihinh)
+						.then(function(dataResponse) {
+							$scope.lstResult = dataResponse;
+								if ($scope.lstResult[0].data_ky.data.length % 2 == 1) {
+									var objky  = angular.copy( $scope.lstResult[0].data_ky.data[0]);
+									objky.ky = null;
+									objky.gia_tri = null;
+									for(var i = 0; i<$scope.lstResult.length; i++)
+									{
+										$scope.lstResult[i].data_ky.data.push(objky);
+									}
+								}
+							
+						}, function(error) {
+							console.log('formData retrieval failed. ' + error);
+						});
+			};
+			
+			$scope.doExport = function(){
+				var maCucHQ = "";
+				var maChicucHQ = "";
+				var nhx = "";
+				var trangthai = "";
+				var cuakhau = "";
+				var phamvi = "";
+				var loaihinh = "";
+				if ($scope.cmbCucHQ != undefined && $scope.cmbCucHQ != null)
+					if ($scope.cmbCucHQ.ma != undefined && $scope.cmbCucHQ.ma != null)
+						maCucHQ = $scope.cmbCucHQ.ma;
+				if ($scope.cmbChiCucHQ != undefined && $scope.cmbChiCucHQ != null)
+					if ($scope.cmbChiCucHQ.ma != undefined && $scope.cmbChiCucHQ.ma != null)
+						maChicucHQ = $scope.cmbChiCucHQ.ma;
+				if ($scope.cmbTrangThai != undefined && $scope.cmbTrangThai != null)
+					if ($scope.cmbTrangThai.Ma != undefined && $scope.cmbTrangThai.Ma != null)
+						trangthai = $scope.cmbTrangThai.Ma;
+				if ($scope.nhx != undefined && $scope.nhx != null)
+					nhx = $scope.nhx;
+				if ($scope.cmbCuaKhau != undefined && $scope.cmbCuaKhau != null)
+					if ($scope.cmbCuaKhau.ma != undefined && $scope.cmbCuaKhau.ma != null)
+						cuakhau = $scope.cmbCuaKhau.ma;
+				if ($scope.cmbPhamViTK != undefined && $scope.cmbPhamViTK != null)
+					if ($scope.cmbPhamViTK.Ma != undefined && $scope.cmbPhamViTK.Ma != null)
+						phamvi = $scope.cmbPhamViTK.Ma;
+				if ($scope.cmbLHXNK != undefined && $scope.cmbLHXNK != null)
+					if ($scope.cmbLHXNK.ma != undefined && $scope.cmbLHXNK.ma != null)
+						loaihinh = $scope.cmbLHXNK.ma;
+				
+				var param = {};
+				param["maCucHQ"] = maCucHQ;
+		    	param["maChiCucHQ"] = maChicucHQ;
+		    	param["trangthai"] = trangthai;
+		    	param["nhx"] = nhx;
+		    	param["cuakhau"] = cuakhau;
+		    	param["phamvi"] = phamvi;
+		    	param["loaihinh"] = loaihinh;
+		    	
+		    	HTCBBTTTCKService.doExport(param);
+			}
+
+			$rootScope.$on('childEmit', function(event, data) {
+				console.log(data);
+				loadDefualtForm();
+				self.nhx = data;
+			});
+			$scope.CucHQSelected = function (Item) {
+				HTCBBTTTCKService.getChiCucHQByCuc(Item.ma).then(function(deferred) {
+					$scope.lstChiCucHQ = deferred;
+					$scope.cmbChiCucHQ = $scope.lstChiCucHQ[0];
+				}, function(errResponse) {
+					console.error('Error while fetching data');
+				});
+			};
+			$scope.btnPhanHoi_Click = function () {
+				$rootScope.$emit('PhanHoiQuyTrinhXLDL', $scope.loai_bc);
+			};
+			$scope.hideReport = function () {
+				$scope.srcReport = "";
+				$scope.showReport = false;
+			};
+			
+			$scope.tab1_Selected = function () {
+				$scope.nhx = "X";
+				loadDefualtForm();
+				console.log($scope.nhx);
+			};
+			$scope.tab2_Selected = function () {
+				$scope.nhx = "N";
+				loadDefualtForm();
+				console.log($scope.nhx);
+			};
+			$scope.tab3_Selected = function () {
+				$scope.nhx = "XN";
+				loadDefualtForm();
+				console.log($scope.nhx);
+			};
+			
+			$scope.showChart = function() {  
+				$scope.showChart1 = true;
+	        };
+			
+			$scope.btnClose_Click = function()
+			{
+				$scope.showChart1 = false;
+//				window.location.href = "HTCBBTTTCK";
+			};
+			
+			$scope.btnIn_Click =  function () {
+				$scope.srcReport = "http://localhost:8080/tkhq_2017_standard/pbtk/Ts_TEST?maHQ=00&ky=1&thang=1&nam=2016&loai_BC=SB";
+				$scope.showReport = true;
+			};
+			$scope.btnXemBieuDo_Click =  function () {
+				var maCucHQ = "";
+				var maChicucHQ = "";
+				var nhx = "";
+				var trangthai = "";
+				var cuakhau = "";
+				var phamvi = "";
+				var loaihinh="";
+				var loaiBD = "ky";
+				if ($scope.cmbCucHQ != undefined && $scope.cmbCucHQ != null)
+					if ($scope.cmbCucHQ.ma != undefined && $scope.cmbCucHQ.ma != null)
+						maCucHQ = $scope.cmbCucHQ.ma;
+				if ($scope.cmbChiCucHQ != undefined && $scope.cmbChiCucHQ != null)
+					if ($scope.cmbChiCucHQ.ma != undefined && $scope.cmbChiCucHQ.ma != null)
+						maChicucHQ = $scope.cmbChiCucHQ.ma;
+				if ($scope.cmbTrangThai != undefined && $scope.cmbTrangThai != null)
+					if ($scope.cmbTrangThai.Ma != undefined && $scope.cmbTrangThai.Ma != null)
+						trangthai = $scope.cmbTrangThai.Ma;
+				if ($scope.nhx != undefined && $scope.nhx != null)
+					nhx = $scope.nhx;
+				if ($scope.cmbCuaKhau != undefined && $scope.cmbCuaKhau != null)
+					if ($scope.cmbCuaKhau.ma != undefined && $scope.cmbCuaKhau.ma != null)
+						cuakhau = $scope.cmbCuaKhau.ma;
+				if ($scope.cmbPhamViTK != undefined && $scope.cmbPhamViTK != null)
+					if ($scope.cmbPhamViTK.Ma != undefined && $scope.cmbPhamViTK.Ma != null)
+						phamvi = $scope.cmbPhamViTK.Ma;
+				if ($scope.cmbLHXNK != undefined && $scope.cmbLHXNK != null)
+					if ($scope.cmbLHXNK.ma != undefined && $scope.cmbLHXNK.ma != null)
+						loaihinh = $scope.cmbLHXNK.ma;
+				if ($scope.radLoaiBD != undefined && $scope.radLoaiBD != null)
+					loaiBD = $scope.radLoaiBD.value;
+				
+				if(loaiBD != undefined && loaiBD!=null){
+					var api = RootApi + "/BCHTCBBTTTCK/BieuDoTriGiaTK?maCucHQ="
+				+ maCucHQ + "&maChicucHQ=" + maChicucHQ
+				+ "&trangthai=" + trangthai + "&nhx=" + nhx + "&cuakhau=" + cuakhau 
+				+ "&phamvi=" + phamvi + "&loaihinh=" + loaihinh+ "&loaiBD=" + loaiBD;
+					$scope.srcBieuDo = api;
+				}
+				
+			};
+			
+
+			function loadDefualtForm() {
+				$scope.cmbTrangThai = $scope.lstTrangThai[0];
+				$scope.cmbPhamViTK = $scope.lstPhamViTK[0];
+				$scope.lstResult = {};
+				$scope.radLoaiBD = {value: 'ky'};
+				$scope.srcBieuDo = null;
+			}
+			function getCucChiCucHQ() {
+				HTCBBTTTCKService.getCucHQ().then(function(deferred) {
+					$scope.lstCucHQ = deferred;
+					$scope.cmbCucHQ = $scope.lstCucHQ[0];
+					
+				}, function(errResponse) {
+					console.error('Error while fetching data');
+				});
+				$timeout(function() {
+					$scope.CucHQSelected($scope.cmbCucHQ);
+				}, 200);
+			}
+			function getCuaKhau() {
+				HTCBBTTTCKService.getCuaKhau().then(function(deferred) {
+					$scope.lstCuaKhau = deferred;
+					$scope.cmbCuaKhau = $scope.lstCuaKhau[0];
+				}, function(errResponse) {
+					console.error('Error while fetching data');
+				});
+			}
+			function getLHXNK() {
+				HTCBBTTTCKService.getLHXNK($scope.nhx).then(function(deferred) {
+					$scope.lstLHXNK = deferred;
+					$scope.cmbLHXNK = $scope.lstLHXNK[0];
+				}, function(errResponse) {
+					console.error('Error while fetching data');
+				});
+			}
+			(function init() {
+				$timeout(function() {
+					getCucChiCucHQ();
+					getCuaKhau();
+					getLHXNK();
+					loadDefualtForm();
+					$rootScope.$emit('PhanHoiQuyTrinhXLDL', $scope.loai_bc);
+					console.log('System controller with timeout fired');
+				}, 500);
+			})();
+		} ]);

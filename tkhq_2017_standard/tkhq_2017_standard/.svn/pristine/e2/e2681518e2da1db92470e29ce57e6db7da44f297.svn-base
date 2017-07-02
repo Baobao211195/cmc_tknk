@@ -1,0 +1,48 @@
+package com.tkhq.global.dao;
+
+public class SLTheoCTTKRequestParams {
+	private String trangthai;	//SB, DC, CT, UOC
+	private String nhx;	//N, X, XNK
+	private String username;
+	private String maCucHQ;
+	private String maChiCucHQ;
+	public String getTrangthai() {
+		return trangthai;
+	}
+	public void setTrangthai(String trangthai) {
+		this.trangthai = trangthai;
+	}
+	public String getNhx() {
+		return nhx;
+	}
+	public void setNhx(String nhx) {
+		this.nhx = nhx;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getMaCucHQ() {
+		return maCucHQ;
+	}
+	public void setMaCucHQ(String maCucHQ) {
+		this.maCucHQ = maCucHQ;
+	}
+	public String getMaChiCucHQ() {
+		return maChiCucHQ;
+	}
+	public void setMaChiCucHQ(String maChiCucHQ) {
+		this.maChiCucHQ = maChiCucHQ;
+	}
+	public SLTheoCTTKRequestParams(String trangthai, String nhx, String username, String maCucHQ, String maChiCucHQ) {
+		super();
+		this.trangthai = trangthai;
+		this.nhx = nhx;
+		this.username = username;
+		this.maCucHQ = maCucHQ;
+		this.maChiCucHQ = maChiCucHQ;
+	}
+	public SLTheoCTTKRequestParams(){}
+}

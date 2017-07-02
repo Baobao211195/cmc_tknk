@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-04-26T16:09:27 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DNFDI_LuongTK" pageWidth="450" pageHeight="300" orientation="Landscape" columnWidth="410" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="999fc653-1f4d-472a-a470-10a6ba713f9f">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="ky" class="java.lang.String"/>
+	<field name="gia_tri" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="245" splitType="Stretch">
+			<lineChart>
+				<chart evaluationTime="Report">
+					<reportElement x="0" y="0" width="410" height="245" uuid="e2d45a71-98e4-4a40-8d4b-af634e3a084f"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Biểu đồ số lượng tờ khai"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{ky}]]></categoryExpression>
+						<valueExpression><![CDATA[Integer.parseInt($F{gia_tri})]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<linePlot>
+					<plot/>
+					<categoryAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</valueAxisFormat>
+				</linePlot>
+			</lineChart>
+		</band>
+	</title>
+</jasperReport>

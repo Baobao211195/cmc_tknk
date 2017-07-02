@@ -1,0 +1,473 @@
+package com.tkhq.cmc.controller.rest;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tkhq.cmc.common.Constants;
+import com.tkhq.cmc.dto.DuLieuFileCauTrucDto;
+import com.tkhq.cmc.dto.TbdNhapMoiFileDto;
+import com.tkhq.cmc.dto.Tbs_QuocGiaDto;
+import com.tkhq.cmc.dto.UploadFileCauTrucDto;
+import com.tkhq.cmc.services.UploadFileCauTrucService;
+import com.tkhq.cmc.utils.Utils;
+
+@RestController
+public class UploadFileCauTrucRestController {
+	
+	private static final Logger log = Logger.getLogger(UploadFileCauTrucRestController.class);
+	
+	//Save the uploaded file to this folder
+    private static final String UPLOADED_FOLDER = "C://FileCauTruc//";
+    
+    private static final String CHU_DE_DAU_THO = "1";
+    
+    private static final String TEN_CHU_DE_DAU_THO = "Dầu thô";
+    
+    private static final String CHU_DE_CHUYEN_PHAT_NHANH = "2";
+    
+    private static final String TEN_CHUYEN_PHAT_NHANH = "Chuyển phát nhanh";
+    
+    private static final String TEN_PT_XUAT_NHAP_CANH = "Phương tiện xuất nhập cảnh";
+    
+    private static final String EMPTY = "";
+    
+    private static final int LOI_DOC_FILE = 2;
+    
+	@Autowired
+	UploadFileCauTrucService uploadFileCauTrucService;
+
+	@RequestMapping(value = "/hienThiFileCauTruc", method = RequestMethod.GET)
+	public ResponseEntity<List<UploadFileCauTrucDto>> getListFileCauTruc(String chuDe, String typeNhapXuat ){
+		String tmpChuDe = settingFileTitle(chuDe);
+		List<UploadFileCauTrucDto> listFileDto = uploadFileCauTrucService.getListFileCauTruc(tmpChuDe, typeNhapXuat);
+		if(listFileDto == null) {
+			new ResponseEntity<List<UploadFileCauTrucDto>>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<List<UploadFileCauTrucDto>>(listFileDto, HttpStatus.OK);
+		
+	}
+	
+	@RequestMapping(value = "/deleteFileCauTruc", method = RequestMethod.GET)
+	public ResponseEntity<Integer> deleteFileCauTruc(int fileId){
+		int deleteFlg = 0;
+		boolean isDelete = false;
+		UploadFileCauTrucDto fileDto = uploadFileCauTrucService.getFileCauTrucById(fileId);
+		if(fileDto == null) {
+			deleteFlg = 2;
+			new ResponseEntity<Integer>(deleteFlg, HttpStatus.CONFLICT);
+		}
+		// logical delete.
+		deleteFlg = uploadFileCauTrucService.deleteFileCauTruc(fileId);
+		
+		// physical delete.
+		if(new File(fileDto.getFileUrl()).delete()){
+			isDelete = true;
+		}
+		
+		if(deleteFlg == 0 && !isDelete) {
+			new ResponseEntity<Integer>(deleteFlg, HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<Integer>(deleteFlg, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/uploadFileCauTruc", method = RequestMethod.POST)
+	public ResponseEntity<Integer> uploadFileCauTruc(@RequestParam("fileObject") String fileJson,
+													 @RequestParam("mota") String mota,
+													 @RequestParam("fileUpLoad") MultipartFile file) {
+		UploadFileCauTrucDto fileDto = null;
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			int insertThongTinFileFlg = 0;
+			int insertDuLieuFileFlg = 0;
+			fileDto = mapper.readValue(fileJson,UploadFileCauTrucDto.class);
+			if(fileDto != null){
+				String titleTmp = settingFileTitle(fileDto.getFileTitle());
+				fileDto.setFileTitle(titleTmp);
+			}
+			fileDto.setFileDescription(setingDescription(mota));
+			if(!file.isEmpty()){
+				String filePath = setFilePath(file);
+				// upload file.
+				uploadFile(file, filePath);
+				// Read file excel and insert data into database.
+				List<DuLieuFileCauTrucDto> listDto = readDuLieuFileCauTrucDto (fileDto, filePath);
+				if (listDto.size() < 0 ){
+					return new ResponseEntity<Integer>(LOI_DOC_FILE, HttpStatus.CONFLICT);
+				}
+				// insert file information into database.
+				UploadFileCauTrucDto insDto = settingDataToInsert(fileDto, file, filePath);
+				
+				// insert information file.
+				insertThongTinFileFlg = uploadFileCauTrucService.insertThongTinFileCauTruc(insDto);
+				// insert data
+				for(DuLieuFileCauTrucDto dto : listDto){
+					dto.setFileId(insertThongTinFileFlg);
+				}
+				insertDuLieuFileFlg = uploadFileCauTrucService.insertDulieuFileCauTruc(listDto);
+
+				if((insertThongTinFileFlg > 0) && (insertDuLieuFileFlg == 1)) {
+					return new ResponseEntity<Integer>(insertDuLieuFileFlg, HttpStatus.OK);
+				} else {
+					return new ResponseEntity<Integer>(HttpStatus.CONFLICT);
+				}
+			} else {
+				return new ResponseEntity<Integer>(insertThongTinFileFlg, HttpStatus.NOT_FOUND);
+			}
+		} catch (JsonParseException e) {
+			 log.error("Parse json error " + e.getMessage());
+		} catch (JsonMappingException e) {
+			 log.error("Json mapping error " + e.getMessage());
+		} catch (IOException e) {
+			log.error("IO exception :" + e.getMessage());
+		}
+		return new ResponseEntity<Integer>(HttpStatus.CONFLICT);
+	}
+	
+	@RequestMapping(value = "/hienThiNhapMoiFile", method = RequestMethod.GET)
+	public ResponseEntity<List<Object>> uploadFileNhapMoi(String chuDe, String typeNhapXuat) {
+		
+		List<Object> listData = new ArrayList<Object>();
+		List<Tbs_QuocGiaDto> listQuocGia = uploadFileCauTrucService.getlistCountry();
+		List<TbdNhapMoiFileDto> listFileDto = uploadFileCauTrucService.getListNhapMoiFileDto(chuDe, typeNhapXuat);
+		listData.add(listQuocGia);
+		listData.add(listFileDto);
+		if ("3".equals(chuDe)){
+			List<DuLieuFileCauTrucDto> listPT = uploadFileCauTrucService.getListPhuongTienXuatNhapCanh(chuDe, typeNhapXuat);
+			listData.add(listPT);
+		}
+
+		return new ResponseEntity<List<Object>>(listData, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/insertThongTinNhapMoi", method = RequestMethod.POST,produces= MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Integer> insertThongTinRaXoat(@RequestBody TbdNhapMoiFileDto paramDto) {
+		
+		int insertSuccess = 0;
+		try {
+			insertSuccess = uploadFileCauTrucService.insertThongTinNhapMoi(paramDto);
+			if (insertSuccess == 0) {
+				return new ResponseEntity<Integer>(insertSuccess, HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Integer>(insertSuccess, HttpStatus.OK);
+	}
+
+	private List<DuLieuFileCauTrucDto> readDuLieuFileCauTrucDto (UploadFileCauTrucDto fileDto, String filePath){
+		List<DuLieuFileCauTrucDto> listData = new ArrayList<DuLieuFileCauTrucDto>();
+		try {
+			
+			String nguoiLapbieu=EMPTY;
+			String nguoiXacNhan = EMPTY;
+			FileInputStream inputStream = new FileInputStream(new File(filePath));
+			Workbook workbook = getWorkbook(inputStream, filePath);
+			
+			Sheet sheet = workbook.getSheetAt(1);
+			
+			int rowNow = sheet.getRow(10).getRowNum();
+			DuLieuFileCauTrucDto dto = null;
+			
+			for (int i = rowNow; i < sheet.getLastRowNum(); i++){
+				if (sheet.getRow(i).getCell(0).getNumericCellValue() !=0 ){
+					dto = new DuLieuFileCauTrucDto();
+					int j = 0;
+					dto.setStt(getCellValueNumeric(sheet.getRow(i).getCell(j++)));
+					dto.setLoaiPhuongTien(getCellValueStr(sheet.getRow(i).getCell(j++)));
+					dto.setTongSoXuatCanh(getCellValueNumeric(sheet.getRow(i).getCell(j++)));
+					dto.setSoLuongXuatCanhTrongNuoc(getCellValueNumeric(sheet.getRow(i).getCell(j++)));
+					dto.setTongSoNhapCanh(getCellValueNumeric(sheet.getRow(i).getCell(j++)));
+					dto.setSoLuongNhapCanhTrongNuoc(getCellValueNumeric(sheet.getRow(i).getCell(j++)));
+					dto.setSoLuongXuatCanhTrongNuoc(getCellValueNumeric(sheet.getRow(i).getCell(j++)));
+					dto.setSoLuongNhapCanhNgoaiNuoc(getCellValueNumeric(sheet.getRow(i).getCell(j++)));
+					listData.add(dto);
+					if (j == 8){
+						continue;
+					}
+				}else {
+					int row = sheet.getRow(i).getRowNum() + 9;
+					nguoiLapbieu = getNguoitThamGia(sheet,row,0);
+					nguoiXacNhan = getNguoitThamGia(sheet,row,2);
+					break;
+				}
+				
+			}
+			for (DuLieuFileCauTrucDto data : listData ){
+				data.setDonViBaoCao(getDonViBaoCao(sheet));
+				data.setDonViNhanBaoCao(getDonViNhanBaoCao(sheet));
+				data.setLoaiChuDe(getTieuDeSheet(sheet));
+				data.setNguoiLapBieu(nguoiLapbieu);
+				data.setNguoiQuyetDinh(nguoiXacNhan);
+				data.setNgayBaoCao(getDateSheet(sheet));
+				data.setTypeNhapXuat(fileDto.getTypeNhapXuat());
+			}
+			return listData;
+		} catch (FileNotFoundException e) {
+			return new ArrayList<DuLieuFileCauTrucDto>();
+		}
+	}
+	
+	@RequestMapping(value = "/downLoadFileCauTruc", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE) 
+	public ResponseEntity<byte[]> downloadReportFile(int fileId, HttpServletResponse response) {
+
+		log.debug("REST request to download report file");
+		UploadFileCauTrucDto fileDto = uploadFileCauTrucService.getFileCauTrucById(fileId);
+
+		byte[] bFile = null;
+		if(fileDto == null) {
+			return new ResponseEntity<byte[]>(bFile, HttpStatus.CONFLICT);
+		}
+		File file = new File(fileDto.getFileUrl());
+
+		if (!file.exists()) { // handle FNF
+			return new ResponseEntity<byte[]>(bFile, HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+		 try {
+			 bFile = Files.readAllBytes(new File(fileDto.getFileUrl()).toPath());
+			 HttpHeaders headers = new HttpHeaders();
+			 headers.add("content-disposition", "attachment; filename=" + file.getName());
+			 
+			 return new ResponseEntity<byte[]>(bFile, headers, HttpStatus.OK);
+	    } catch (IOException e) {
+	        log.error("Failed to download file ", e);
+	        return new ResponseEntity<byte[]>(bFile, HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
+	private String getNguoitThamGia (Sheet sheet, int row, int cell){
+		return sheet.getRow(row).getCell(cell).getStringCellValue();
+	}
+	
+	private String getCellValueStr(Cell cell){
+		return cell.getStringCellValue() == null  ? EMPTY : cell.getStringCellValue();
+	}
+	
+	private double getCellValueNumeric(Cell cell){
+		return cell.getNumericCellValue() == 0  ? 0 : cell.getNumericCellValue();
+	}
+	
+	private String getDonViBaoCao (Sheet sheet){
+		Row row = sheet.getRow(1);
+		String donviBc = getFirstCell(row);
+		return donviBc == null ? EMPTY : donviBc.replace(DV_BC, "").trim();
+		
+	}
+	private static final String DV_BC = "Đơn vị báo cáo:";
+	
+	private static final String DV_NHAN_BC = "Đơn vị nhận báo cáo:";
+	
+	private String getDonViNhanBaoCao (Sheet sheet){
+		Row row = sheet.getRow(2);
+		String donviNhanBc = getFirstCell(row);
+		return donviNhanBc == null ? EMPTY : donviNhanBc.replace(DV_NHAN_BC, "").trim();
+	}
+	
+	private String getTieuDeSheet (Sheet sheet){
+		Row row = sheet.getRow(4);
+		String tieuDe = getFirstCell(row);
+		return tieuDe == null ? EMPTY : tieuDe;
+	}
+	
+	private String getDateSheet (Sheet sheet){
+		Row row = sheet.getRow(6);
+		String dateStr = row.getCell(5).getStringCellValue();
+		if (!dateStr.isEmpty()){
+			String [] strArr = dateStr.split(" ");
+			StringBuilder dateStrBd = new StringBuilder(); 
+			for (int i = 0; i < strArr.length; i++) {
+				if(strArr[i].matches("\\d+")){
+					dateStrBd.append(strArr[i]).append("/");
+				}
+			}
+			
+			return dateStrBd.substring(0, dateStrBd.length()-1).toString();
+		}else {
+			return EMPTY;
+		}
+		
+	}
+	
+	private String getFirstCell (Row row){
+		return row.getCell(0).getStringCellValue();
+	}
+	
+	/**
+	* @param inputStream
+	* @param excelFilePath
+	* @return WorkBook.
+	*/
+	private Workbook getWorkbook(FileInputStream inputStream, String excelFilePath) {
+		Workbook workbook = null;
+		try {
+			if (excelFilePath.endsWith("xlsx")) {
+				workbook = new XSSFWorkbook(inputStream);
+			} else if (excelFilePath.endsWith("xls")) {
+				workbook = new HSSFWorkbook(inputStream);
+			} else {
+				throw new IllegalArgumentException("The specified file is not Excel file");
+			}
+		} catch (IOException e) {
+			log.error("Failed to download file ", e);
+		}
+		return workbook;
+	}
+	
+	private UploadFileCauTrucDto settingDataToInsert (UploadFileCauTrucDto paramsDto, MultipartFile file, String filePath) {
+		UploadFileCauTrucDto insDto = new UploadFileCauTrucDto();
+
+		insDto.setFileTitle(paramsDto.getFileTitle());
+		insDto.setFileUrl(filePath);
+		insDto.setFileName(getFileName(file));
+		insDto.setTypeNhapXuat(paramsDto.getTypeNhapXuat());
+		insDto.setFileDescription(paramsDto.getFileDescription());
+		insDto.setFileSize(getFileSize(file));
+		insDto.setNguoiTaiLen(getUserLogin());
+
+		return insDto;
+	}
+
+	private void uploadFile(final MultipartFile uploadFile, String filePath) {
+
+		BufferedOutputStream outStream = null;
+		try {
+			File file = new File(filePath);
+			File parentDir = file.getParentFile();
+
+
+			if (!parentDir.exists()) {
+				parentDir.mkdirs();
+			}
+			outStream = new BufferedOutputStream(new FileOutputStream(file));
+			outStream.write(getFileSize(uploadFile));
+		} catch (FileNotFoundException e) {
+			log.info("File not found exception:" + e.getMessage());
+		} catch (IOException e) {
+			log.info("IOexception:" + e.getMessage());
+		} finally {
+			try {
+				if (outStream != null) {
+					outStream.close();
+				}
+			} catch (IOException e) {
+				log.info("IOexception when close stream:" + e.getMessage());
+			}
+		}
+	}
+	
+	/**
+	* @param file
+	* @return String
+	*/
+	private String setFilePath (MultipartFile file) {
+		return Paths.get(UPLOADED_FOLDER, getFileName(file)).toString();
+	}
+	
+	/**
+	* @param file
+	* @return
+	*/
+	private String getFileName (MultipartFile file){
+		return new StringBuilder().append(setingDescription(getBaseFileName(file)))
+				  .append(Constants.UNDERSCORES)
+				  .append(getUserLogin())
+				  .append(getSufferFileName())
+				  .append(getExtension(file))
+				  .toString();
+	}
+	
+	private String getBaseFileName(MultipartFile file) {
+		return FilenameUtils.getBaseName(file.getOriginalFilename());
+	}
+	
+	private String getExtension(MultipartFile file){
+		return Constants.DOT + FilenameUtils.getExtension(file.getOriginalFilename());
+	}
+	
+	private String getSufferFileName (){
+		DateFormat dateFormat = new SimpleDateFormat(Constants.DATE_FORMAT_5);
+		return Constants.UNDERSCORES + dateFormat.format(new Date());
+	}
+	
+	/**
+	* @param file
+	* @return
+	*/
+	private byte[] getFileSize (MultipartFile file){
+		try {
+			return file.getBytes();
+		} catch (IOException e) {
+			log.info(e.getMessage());
+			return new byte[0];
+			
+		}
+	}
+
+	/**
+	* @return name of user login.
+	*/
+	private String getUserLogin(){
+		return SecurityContextHolder.getContext().getAuthentication().getName();
+	}
+	
+	private String settingFileTitle(String title){
+		if (Utils.equals(title, CHU_DE_DAU_THO)){
+			return TEN_CHU_DE_DAU_THO;
+		} 
+		if(Utils.equals(title, CHU_DE_CHUYEN_PHAT_NHANH)){
+			return TEN_CHUYEN_PHAT_NHANH;
+		} else {
+			return TEN_PT_XUAT_NHAP_CANH;
+		}
+	}
+	
+	private String setingDescription(String mota){
+		if (mota != null){
+			String motaTmp = mota.trim();  
+			byte[] bytes = motaTmp.getBytes(StandardCharsets.ISO_8859_1);
+			return new String(bytes, StandardCharsets.UTF_8);
+		} else {
+			return EMPTY;
+		}
+	}
+
+}

@@ -1,0 +1,75 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<script src="<c:url value='/static/js/service/tbs_tinhTPService.js' />"></script>
+<script src="<c:url value='/static/js/controller/tbs_tinhTPController.js' />"></script>
+
+<div ng-controller="Tbs_TinhTPController as ctrl">
+	<h3 class="panel-heading">Danh mục Tỉnh/TP</h3>
+	<div class="box-search">
+		<fieldset class="form-group">
+		<legend>Thông tin tìm kiếm</legend>
+		<form class="form-search">
+			<div class="col-md-6 mab10">
+				<label class ="col-sm-3 pa0">Mã Tỉnh/TP:</label>
+				<div class="col-sm-5 pa0">
+					<input type="text" class="form-control" id="maTinhTP" ng-model="maTinhTP"/>
+				</div>
+			</div>
+			<div class="col-md-6 mab10">
+				<label class ="col-sm-3 pa0">Tên Tỉnh/TP:</label>
+				<div class="col-sm-5 pa0">
+					<input type="text" class="form-control" id="tenTinhTP" ng-model="tenTinhTP"/>
+				</div>
+			</div>		
+			<div class="col-md-12">
+				<button type="submit" id="btnSearch" ng-click="ctrl.search(1, ctrl.pageSize)"
+					class="btn btn-warning">Tìm kiếm</button>
+				<button type="button" id="addRow" class="btn btn-primary"
+					ng-click="ctrl.addRow()">Thêm mới</button>
+				<button type="button" id="btnDel" class="btn btn-danger" 
+					ng-click="ctrl.remove()">Xóa</button>
+			</div>
+		</form>
+		</fieldset>
+	</div>
+	<div class="col-md-12">
+			<div class ="col-sm-2 paging-record">Tổng số bản ghi: {{ctrl.totalItems}}</div>
+			<div class ="col-sm-6">
+				<ul uib-pagination total-items="ctrl.totalItems" ng-model="ctrl.currentPage" max-size="ctrl.maxSize" 
+					ng-change="pageChanged()" class="pagination-sm" boundary-link-numbers="true" rotate="false"></ul>
+			</div>
+	</div>
+	<table id="tblTinhTP" class="table table-bordered table-striped table-responsive">
+		<%-- <colgroup>
+			<col width="11%" />
+			<col width="21%" />
+			<col width="25%" />
+			<col width="25%" />
+			<col width="15%" />
+		</colgroup> --%>
+		<thead>
+			<tr>
+				<th><input type="checkbox" ng-model="ctrl.checkAll"></th>
+				<th>STT</th>
+				<th>Mã Tỉnh/TP</th>
+				<th>Tên Tỉnh/TP</th>			
+				<th>Thao tác</th>
+			</tr>
+		</thead>
+		<tbody align="center">
+			<tr ng-repeat="row in ctrl.lstTinhTP">
+				<td><input type="checkbox" ng-checked="ctrl.checkAll" ng-model="row.isChecked"></td>
+				<td><input type="hidden" value="{{row.maTinhTP}}" /><span>{{(ctrl.currentPage - 1) * ctrl.pageSize + ($index + 1)}}</span></td>
+				<td ng-bind="row.maTinhTP"></td>
+				<td ng-bind="row.tenTinhTP"></td>
+				<td>
+					<button type="button"
+						ng-click="ctrl.editRow(row.maTinhTP)"
+						class="btn btn-warning">Cập nhật</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

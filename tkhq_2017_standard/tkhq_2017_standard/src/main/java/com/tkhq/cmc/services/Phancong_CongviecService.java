@@ -1,0 +1,40 @@
+package com.tkhq.cmc.services;
+
+import java.util.List;
+
+import com.tkhq.cmc.dto.TbdSysPhancongCvDTO;
+import com.tkhq.cmc.dto.TbdSysUserPhancongCvDTO;
+import com.tkhq.cmc.model.TbdSysPhancongCv;
+import com.tkhq.cmc.model.TbsPhancongCongviec;
+
+public interface Phancong_CongviecService {
+
+	void createCongviec(TbsPhancongCongviec entity);
+
+	void deleteCongviec(long status);
+
+	void updateCongViec(TbsPhancongCongviec entity);
+
+	List<TbsPhancongCongviec> getAllCongviec();
+
+	Integer createPhancong(TbdSysPhancongCvDTO entity);
+
+	void deletePhancong(long status);
+
+	TbdSysPhancongCv updatePhancong(TbdSysPhancongCvDTO entity);
+	
+//	Integer createPhancong(TbsSysPhancongCvDTO entity);
+
+	List<TbdSysPhancongCvDTO> getAllPhancong();
+	
+	List<TbdSysPhancongCv> getByMacv(String maCv);
+	
+	List<TbdSysPhancongCvDTO> search(String type,String maCv);
+	
+	void deleteList(String s);
+	
+	public List<TbdSysUserPhancongCvDTO> getListUserOfTongCuc ();
+	
+	public TbdSysPhancongCvDTO getPhanCongByStt (int stt, String typNhapxuat);
+
+}

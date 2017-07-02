@@ -1,0 +1,15 @@
+@CHARSET "ISO-8859-1";
+.fileContainer {
+	margin-top: 7px;
+	margin-bottom: 7px;
+}
+.col-md-4.file-input {
+    margin-left: -13px;
+}
+.btn.btn-file {
+    border: 1px solid darkgrey;
+}
+.col-md-6.lable-file {
+	margin-top: 13px;
+	font-weight: 100;
+}

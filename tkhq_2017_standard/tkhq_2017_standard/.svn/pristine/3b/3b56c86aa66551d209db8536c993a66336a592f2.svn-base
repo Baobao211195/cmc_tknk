@@ -1,0 +1,82 @@
+package com.tkhq.cmc.common;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+
+public class CExcel {
+	public static Map<String, CellStyle> createStyles(Workbook wb){
+		Map<String, CellStyle> styles = new HashMap<String, CellStyle>();
+        CellStyle style;
+        
+        // Header style
+        Font headerFont = wb.createFont();
+        headerFont.setFontHeightInPoints((short)11);
+        headerFont.setColor(IndexedColors.BLACK.getIndex());
+        headerFont.setFontName("Times New Roman");
+        
+        style = wb.createCellStyle();
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        style.setFillForegroundColor(IndexedColors.ROYAL_BLUE.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        style.setBorderRight(BorderStyle.THIN);
+        style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderTop(BorderStyle.THIN);
+        style.setTopBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+        style.setFont(headerFont);
+        style.setWrapText(true);
+        styles.put("header", style);
+        
+        Font cellFont = wb.createFont();
+        cellFont.setFontHeightInPoints((short)10);
+        cellFont.setColor(IndexedColors.BLACK.getIndex());
+        cellFont.setFontName("Times New Roman");
+        
+        // Cell data style
+        style = wb.createCellStyle();
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        style.setFont(cellFont);
+        style.setWrapText(true);
+        style.setBorderRight(BorderStyle.THIN);
+        style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderTop(BorderStyle.THIN);
+        style.setTopBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+        style.setWrapText(true);
+        styles.put("cell_str_center", style);
+        
+        style = wb.createCellStyle();
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        style.setFont(cellFont);
+        style.setWrapText(true);
+        style.setBorderRight(BorderStyle.THIN);
+        style.setRightBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderTop(BorderStyle.THIN);
+        style.setTopBorderColor(IndexedColors.BLACK.getIndex());
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+        style.setWrapText(true);
+        styles.put("cell_str", style);
+        
+        return styles;
+	}
+}

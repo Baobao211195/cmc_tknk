@@ -1,0 +1,189 @@
+App.controller('ThayDoiDoTHQTNVController', ThayDoiDoTHQTNVController);
+ThayDoiDoTHQTNVController.$inject = [ '$scope', 'ThayDoiDoTHQTNVService',
+		'pagerService', '$uibModal', '$PopupMessage', '$timeout', '$rootScope' ];
+
+function ThayDoiDoTHQTNVController($scope, ThayDoiDoTHQTNVService,
+		pagerService, $uibModal, $PopupMessage, $timeout, $rootScope) {
+	console.log('start ThayDoiDoTHQTNVController');
+	var self = this;
+	
+	
+	self.lstCuaKhauNN = [];
+	self.lstCucHQ = [];
+	self.lstChiCucHQ = [];
+	self.lstNghiepVu = [];
+	self.lstResult = [];
+	self.showReport = false;
+	self.srcReport = "";
+
+	self.nhx = 'X';
+	self.loaiBang = '';
+	self.lstLoaiKy = [ {
+		MaLoaiKy : 'NG',
+		TenLoaiKy : 'Từ ngày… Đến ngày'
+	}, {
+		MaLoaiKy : 'KY',
+		TenLoaiKy : 'Kỳ'
+	}, {
+		MaLoaiKy : 'TH',
+		TenLoaiKy : 'Tháng'
+	} ];
+	self.lstKy = [ 1, 2 ];
+	self.lstThang = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ];
+	self.lstNam = [];
+
+	self.totalItems = 0;
+	self.currentPage = 1;
+	self.maxSize = 5;
+	self.pageSize = 10;
+
+	// Them moi row su dung popup start
+	self.TaiDuLieu = TaiDuLieu;
+	self.KetXuat = KetXuat;
+	self.animationsEnabled = true;
+	self.CucHQSelect = CucHQSelect;
+	self.cmbLoaiKySelect = cmbLoaiKySelect;
+	self.In = In;
+	self.Close = Close;
+	self.hideReport = hideReport;
+	self.tabSelected1 = tabSelected1;
+	self.tabSelected2 = tabSelected2;
+
+	GetCucHQ();
+	$timeout(function Init() {
+		clearlstData();
+		$scope.cmbLoaiKy = self.lstLoaiKy[0];
+		initNam();
+		self.hideKy = true;
+		self.hideThang = true;
+		self.hideNam = true;
+		$scope.txtTuNgay = new Date();
+		$scope.txtDenNgay = new Date();
+		self.loaiBang = 'tbTongThe';
+		$scope.cmbKy = self.lstKy[0];
+		$scope.cmbThang = self.lstThang[0];
+		$scope.cmbNam = self.lstNam[0];
+	}, 200);
+
+	function clearlstData() {
+		self.lstResult = null;
+	}
+	function initNam(){
+		for(var i = (new Date()).getFullYear(); i >= 1990; i-- ){
+			self.lstNam.push(i);
+		}
+	}
+	function CucHQSelect(Item) {
+		ThayDoiDoTHQTNVService.GetChiCucHQByCuc(Item.ma).then(
+				function(deferred) {
+					self.lstChiCucHQ = deferred;
+					$scope.ChiCucHQ = self.lstChiCucHQ[0];
+				}, function(errResponse) {
+					console.error('Error while fetching data');
+				});
+	}
+	function GetCucHQ() {
+		ThayDoiDoTHQTNVService.GetCucHQ().then(function(deferred) {
+			self.lstCucHQ = deferred;
+			$scope.CucHQ = self.lstCucHQ[0];
+		}, function(errResponse) {
+			console.error('Error while fetching data');
+		});
+		$timeout(function() {
+			ThayDoiDoTHQTNVService.GetChiCucHQByCuc($scope.CucHQ.ma).then(
+					function(deferred) {
+						self.lstChiCucHQ = deferred;
+						$scope.ChiCucHQ = self.lstChiCucHQ[0];
+					}, function(errResponse) {
+						console.error('Error while fetching data');
+					})
+		}, 200);
+	}
+	function cmbLoaiKySelect(maLoaiKy) {
+
+		self.hideKy = false;
+		self.hideThang = false;
+		self.hideNam = false;
+		self.hideTuNgay = false;
+		self.hideDenNgay = false;
+		if (maLoaiKy == 'NG') // Từ ngày… Đến ngày
+		{
+			self.hideKy = true;
+			self.hideThang = true;
+			self.hideNam = true;
+		} else if (maLoaiKy == 'KY') // Kỳ
+		{
+			self.hideTuNgay = true;
+			self.hideDenNgay = true;
+		} else// Tháng
+		{
+			self.hideTuNgay = true;
+			self.hideDenNgay = true;
+			self.hideKy = true;
+		}
+	}
+	function tabSelected1() {
+		self.nhx = "X";
+		clearlstData();
+		console.log(self.nhx);
+	}
+	function tabSelected2() {
+		self.nhx = "N";
+		clearlstData();
+		console.log(self.nhx);
+	}
+
+	function TaiDuLieu() {
+		clearlstData();
+		ThayDoiDoTHQTNVService.TaiDuLieu($scope.CucHQ.ma, $scope.ChiCucHQ.ma,
+				self.nhx, $scope.cmbLoaiKy.MaLoaiKy, $scope.ChiCucHQ.txtTuNgay,
+				$scope.ChiCucHQ.txtDenNgay, $scope.cmbKy, $scope.cmbThang,
+				$scope.cmbNam, self.currentPage, self.pageSize).then(
+				function(deferred) {
+					self.lstResult = deferred;
+				}, function(errResponse) {
+					console.error('Error while fetching data');
+				});
+
+	}
+	function hideReport() {
+		self.srcReport = "";
+		self.showReport = false;
+	}
+	function KetXuat() {
+
+	}
+	function In() {
+		self.srcReport = "http://localhost:8080/tkhq_2017_standard/pbtk/Ts_TEST?maHQ=00&ky=1&thang=1&nam=2016&loai_BC=SB";
+		self.showReport = true;
+	}
+	function Close() {
+
+	}
+	function TaiDuLieuByPagging(page, offset) {
+		clearlstData();
+		ThayDoiDoTHQTNVService.TaiDuLieu($scope.CucHQ.ma, $scope.ChiCucHQ.ma,
+				self.nhx, $scope.cmbLoaiKy.MaLoaiKy, $scope.ChiCucHQ.txtTuNgay,
+				$scope.ChiCucHQ.txtDenNgay, $scope.cmbKy, $scope.cmbThang,
+				$scope.cmbNam, page, offset).then(function(deferred) {
+			self.lstResult = deferred;
+		}, function(errResponse) {
+			console.error('Error while fetching data');
+		});
+
+	}
+	$scope.pageChanged = function() {
+		console.log('Page changed to: ' + self.currentPage);
+		clearlstData();
+		ThayDoiDoTHQTNVService.TaiDuLieu($scope.CucHQ.ma, $scope.ChiCucHQ.ma,
+				self.nhx, $scope.cmbLoaiKy.MaLoaiKy, $scope.ChiCucHQ.txtTuNgay,
+				$scope.ChiCucHQ.txtDenNgay, $scope.cmbLoaiKy, $scope.cmbThang,
+				$scope.cmbNam, self.currentPage, self.pageSize).then(
+				function(deferred) {
+					self.lstResult = deferred;
+				}, function(errResponse) {
+					console.error('Error while fetching data');
+				});
+
+	}
+};

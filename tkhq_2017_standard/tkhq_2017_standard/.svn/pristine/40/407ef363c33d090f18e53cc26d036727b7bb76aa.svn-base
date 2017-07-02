@@ -1,0 +1,57 @@
+package com.tkhq.cmc.services;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tkhq.cmc.dao.HTRaXoatSanPhamTKDAO;
+import com.tkhq.cmc.dto.HTRaXoatSanPhamTKDTO;
+
+
+@Service
+@Transactional
+public class HTRaXoatSanPhamTKServiceImpl implements HTRaXoatSanPhamTKService{
+	
+	@Autowired
+	HTRaXoatSanPhamTKDAO hTRaXoatSanPhamTKDAO;
+
+	public List<HTRaXoatSanPhamTKDTO> getListDanhMucBaoCao(String typeNhapXuat) {
+		return hTRaXoatSanPhamTKDAO.getListDanhMucBaoCao(typeNhapXuat);
+	}
+
+	public List<HTRaXoatSanPhamTKDTO> getListCongChucQuanLy(String typeNhapXuat) {
+		return hTRaXoatSanPhamTKDAO.getListCongChucQuanLy(typeNhapXuat);
+	}
+
+	public List<HTRaXoatSanPhamTKDTO> getListThongTinXuLy(String typeNhapXuat) {
+		return hTRaXoatSanPhamTKDAO.getListThongTinXuLy(typeNhapXuat);
+	}
+
+	public int insertThongTinXuLy(HTRaXoatSanPhamTKDTO hTRaXoatSanPhamTKDTO) throws Exception {
+		return hTRaXoatSanPhamTKDAO.insertThongTinXuLy(hTRaXoatSanPhamTKDTO);
+	}
+
+	public HTRaXoatSanPhamTKDTO getThongTinXuLyByMaBaoCao(String maBaoCao, String typeNhapXuat) {
+		return hTRaXoatSanPhamTKDAO.getThongTinXuLyByMaBaoCao(maBaoCao, typeNhapXuat);
+	}
+
+	public int updateThongTinXuLy(String maBaoCao, String lyDo, String tenCongChucQuanLy) throws Exception {
+		return hTRaXoatSanPhamTKDAO.updateThongTinXuLy(maBaoCao, lyDo, tenCongChucQuanLy);
+	}
+
+	public List<HTRaXoatSanPhamTKDTO> getThongTinXuLy(String nhx) {
+		return hTRaXoatSanPhamTKDAO.getThongTinXuLy(nhx);
+	}
+
+	public int doApproval(String approval, String maBC, String ky,
+			String thang, String nam, String nhx, String trangthai, String lydoPD) {
+		return hTRaXoatSanPhamTKDAO.doApproval(approval, maBC, ky, thang, nam, nhx, trangthai, lydoPD);
+	}
+	
+	@Override
+	public HTRaXoatSanPhamTKDTO getDanhMucBaoCaoByMaBC(String typeNhapXuat, String maBc) {
+		return hTRaXoatSanPhamTKDAO.getDanhMucBaoCaoByMaBC(typeNhapXuat, maBc);
+	}	
+}

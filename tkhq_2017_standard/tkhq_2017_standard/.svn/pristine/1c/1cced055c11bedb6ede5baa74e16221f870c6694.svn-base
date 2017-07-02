@@ -1,0 +1,11 @@
+package com.tkhq.cmc.dao;
+
+import java.math.BigDecimal;
+
+import com.tkhq.cmc.model.TbsQtacVantaiHangnhapVn;
+
+public interface TbsQtacVantaiHangnhapVnDao {
+	void insert(TbsQtacVantaiHangnhapVn entity);
+	void update(TbsQtacVantaiHangnhapVn entity);
+	void delete(BigDecimal id);
+}

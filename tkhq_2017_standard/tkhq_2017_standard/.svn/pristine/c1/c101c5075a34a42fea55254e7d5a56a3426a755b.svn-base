@@ -1,0 +1,249 @@
+<%@page language="java" pageEncoding="UTF-8"
+	contentType="text/html; charset=UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<script type="text/javascript"
+	src="<c:url value='/static/js/ddsmoothmenu.js' />"></script>
+
+<link rel="stylesheet" type="text/css"
+	href="<c:url value='/static/css/ddsmoothmenu.css' />">
+<link rel="stylesheet" type="text/css"
+	href="<c:url value='/static/css/ddsmoothmenu-v.css' />">
+<script type="text/javascript">
+	ddsmoothmenu.init({
+		mainmenuid : "smoothmenu1", //menu DIV id
+		orientation : 'h', //Horizontal or vertical menu: Set to "h" or "v"
+		classname : 'ddsmoothmenu', //class added to menu's outer DIV
+		//customtheme: ["#1c5a80", "#18374a"],
+		contentsource : "markup" //"markup" or ["container_id", "path_to_menu_file"]
+	})
+	function redirectPage(page) {
+		window.location.href = "${pageContext.request.contextPath}" + "/"
+				+ page;
+	};
+	
+	function downloadfile(url){
+		window.location.assign("${pageContext.request.contextPath}" +"/"+ url);
+	};
+</script>
+<style>
+.menu-2 li {
+	position: fixed !important;
+}
+/*  .menu-1 li {
+	min-width: 310px;
+}
+
+
+
+.menu-3 li {
+	min-width: 400px;
+}
+
+.menu-4 li {
+	min-width: 505px;
+} */ 
+</style>
+<aside style="margin-bottom: 1px;">
+	<!-- sidebar: style can be found in sidebar.less -->
+	<section class="">
+		<div id="smoothmenu1" class="ddsmoothmenu">
+			<ul>
+				<li><a href="#" style="text-align: center">1. Quản trị hệ
+						thống</a>
+					<ul>
+						<li><a href="#" onclick="redirectPage('danhsachNhomNSD')">1.
+								Danh sách nhóm</a></li>
+						<li><a href="#" onclick="redirectPage('danhsachNSD')">2.
+								Danh sách người dùng</a></li>
+						<li><a href="#"
+							onclick="redirectPage('pheDuyetKhaiThacDuLieu')">3. Phê duyệt
+								khai thác dữ liệu</a></li>
+						<li><a href="#"
+							onclick="redirectPage('quanLyToChucCaNhanTK')">4. Quản lý tổ
+								chức cá nhân làm công tác thống kê</a></li>
+						<li><a href="#" onclick="redirectPage('qlUserSDTK')">5.
+								Quản lý cá nhân tổ chức sử dụng sản phẩm thống kê</a></li>
+						<li><a href="#" onclick="redirectPage('phanquyenNSD')">6.
+								Phân quyền người dùng</a></li>
+						<li><a href="#" onclick="redirectPage('quanLyNhatKyHT')">7.
+								Quản lý nhật ký hệ thống</a></li>
+						<li><a href="#" onclick="redirectPage('lockUsers')">8.
+								Xóa và cảnh báo người sử dụng treo</a></li>
+						<li><a href="#" onclick="redirectPage('dm_tonghop')">9.
+								Quản lý bảng, danh mục thống kê tiêu chuẩn</a></li>
+						<li><a href="#" onclick="redirectPage('thietlapthamso')">10.
+								Quản lý thiết lập tham số</a></li>
+						<li><a href="#" onclick="redirectPage('phanCong')">11.
+								Phân công công việc</a></li>
+					</ul></li>
+				<li><a href="#" style="text-align: center">2. Thu thập dữ
+						liệu</a>
+					<ul>
+						<li><a href="#"
+							onclick="redirectPage('uploadFileCauTrucXuatKhau')">1. Nhập
+								(import) file dữ liệu xuất khẩu đầu vào có cấu trúc </a></li>
+						<li><a href="#"
+							onclick="redirectPage('uploadFileCauTrucNhapKhau')">2. Nhập
+								(import) file dữ liệu nhập khẩu đầu vào có cấu trúc</a></li>
+						<li><a href="#"
+							onclick="redirectPage('uploadFilePhiCauTrucXuatKhau')">3.
+								Nhập (import) file phi/không có cấu trúc có các thông tin liên
+								quan đến hàng hóa xuất khẩu</a></li>
+						<li><a href="#"
+							onclick="redirectPage('uploadFilePhiCauTrucNhapKhau')">4.
+								Nhập (import) file phi/không có cấu trúc có các thông tin liên
+								quan đến hàng hóa nhập khẩu</a></li>
+					</ul></li>
+				<li><a href="#" style="text-align: center">3. Phân tích dữ
+						liệu tổng hợp</a>
+					<ul>
+						<li><a href="#">1. Phân tích thay đổi của dữ liệu</a>
+							<ul>
+								<li><a href="#" onclick="redirectPage('thayDoiDoNVHQ')">1.
+										Thay đổi do nghiệp vụ hải quan</a></li>
+								<li><a href="#"
+									onclick="redirectPage('thayDoiBoSungToKhaiHeThong')">2.Thay đổi do bổ sung tờ khai từ các hệ thống </a></li>
+								<li><a href="#" onclick="redirectPage('XemThayDoi')">3.
+										Thay đổi do bổ sung thông tin nhập và cập nhật </a></li>
+								<li><a href="#" onclick="redirectPage('thayDoiDoTHQTNV')">4.Thay đổi do thực hiện các quy trình, nghiệp vụ, bước nghiệp vụ thống kê   </a></li>
+							</ul></li>
+						<li><a href="thayDoiBoSungToKhaiHeThong">2. Phân tích dữ
+								liệu sử dụng bảng biểu   -</a>
+							<ul>
+								<li><a href="#"
+									onclick="redirectPage('dienBienSoLieuChiTieuTK')">1. Diễn
+										biến số liệu theo chỉ tiêu TK tổng hợp theo thời gian</a></li>
+								<li><a href="#"
+									onclick="redirectPage('canhBaoDienbienSLTK')">2. Diễn biến
+										số lượng tờ khai theo Cục, Chi cục hải quan</a></li>
+								<li><a href="#" onclick="redirectPage('HTCBTGTXNK')">3.
+										Diễn biến tổng trị giá XNK</a></li>
+								<li><a href="#" onclick="redirectPage('dienbienHHXNK')">4.
+										Diễn biến về lượng, đơn giá, trị giá mặt hàng</a></li>
+								<li><a href="#"
+									onclick="redirectPage('canhBaoTriGiaMHPTHS')">5. Diễn biến
+										về trị giá mặt hàng theo phân tổ HS 02, 04</a></li>
+								<li><a href="#" onclick="redirectPage('HTCBBTGTMHSITC')">6.
+										Diễn biến về trị giá mặt hàng theo phân tổ SITC</a></li>
+								<li><a href="#"
+									onclick="redirectPage('dienBienXuTheChiSo')">7. Diễn biến
+										số liệu theo định gốc, liên hoàn</a></li>
+								<li><a href="#" onclick="redirectPage('canhBaoTriGiaTT')">8.
+										Diễn biến về trị giá theo thị trường, khối kinh tế</a></li>
+								<li><a href="#" onclick="redirectPage('HTCBBTDBXTL')">9.
+										Diễn biến về lượng, đơn giá, trị giá mặt hàng của thị trường
+										XNK</a></li>
+								<li><a href="#"
+									onclick="redirectPage('dienBienSLDoanhNghiepFDI')">10. Diễn
+										biến về lượng, đơn giá, trị giá mặt hàng của các DN FDI</a></li>
+								<li><a href="#"
+									onclick="redirectPage('canhBaoTriGiaXNKTTP')">11. Diễn biến
+										về trị giá XNK của tỉnh, thành phố</a></li>
+								<li><a href="#" onclick="redirectPage('HTCBBTTGXNKHQ')">12.
+										Diễn biến về trị giá XNK của cục HQ, chi cục HQ</a></li>
+								<li><a href="#" onclick="redirectPage('dienBienXNKVanTai')">13.
+										Diễn biến về trị giá XNK theo phương thức vận tải</a></li>
+								<li><a href="#" onclick="redirectPage('canhBaoSoTKTTG')">14.
+										Diễn biến số tờ khai, trị giá theo ngày, tuần, quý, tháng, năm</a></li>
+								<li><a href="#" onclick="redirectPage('HTCBBTTTCK')">15.
+										Diễn biến theo các tiêu chí khác theo chỉ tiêu thống kê</a></li>
+							</ul></li>
+						<li><a href="bcpt/XemThayDoi">3. Phân tích dữ liệu sử
+								dụng biểu đồ</a>
+							<ul>
+								<li><a href="#"
+									onclick="redirectPage('dienBienSoLieuChiTieuTK_chart')">1.
+										Diễn biến số liệu theo chỉ tiêu TK tổng hợp theo thời gian</a></li>
+								<li><a href="#"
+									onclick="redirectPage('canhBao_SLToKhaiXNK_chart')">2. Diễn
+										biến số lượng tờ khai theo Cục, Chi cục hải quan</a></li>
+								<li><a href="#" onclick="redirectPage('HTCBTGTXNK_chart')">3.
+										Diễn biến tổng trị giá XNK</a></li>
+								<li><a href="#"
+									onclick="redirectPage('dienBienHangHoaXNK_chart')">4. Diễn
+										biến về lượng, đơn giá, trị giá mặt hàng</a></li>
+								<li><a href="#"
+									onclick="redirectPage('canhBaoTriGiaMHPTHSBD')">5. Diễn
+										biến về trị giá mặt hàng theo phân tổ HS 02, 04</a></li>
+								<li><a href="#"
+									onclick="redirectPage('HTCBBTGTMHSITCBieuDo')">6. Diễn biến
+										về trị giá mặt hàng theo phân tổ SITC</a></li>
+								<li><a href="#"
+									onclick="redirectPage('dienBienXuTheChiSo_chart')">7. Diễn
+										biến số liệu theo định gốc, liên hoàn</a></li>
+								<li><a href="#" onclick="redirectPage('canhBaoTriGiaTTBD')">8.
+										Diễn biến về trị giá theo thị trường, khối kinh tế</a></li>
+								<li><a href="#" onclick="redirectPage('HTCBBTDBXTLBieuDo')">9.
+										Diễn biến về lượng, đơn giá, trị giá mặt hàng của thị trường
+										XNK</a></li>
+								<li><a href="#"
+									onclick="redirectPage('dienBienSLDoanhNghiepFDI_chart')">10.
+										Diễn biến về lượng, đơn giá, trị giá mặt hàng của các DN FDI</a></li>
+								<li><a href="#"
+									onclick="redirectPage('canhBaoTriGiaXNKTTPBD')">11. Diễn
+										biến về trị giá XNK của tỉnh, thành phố</a></li>
+								<li><a href="#"
+									onclick="redirectPage('HTCBBTTGXNKHQBieuDo')">12. Diễn biến
+										về trị giá XNK của cục HQ, chi cục HQ</a></li>
+								<li><a href="#"
+									onclick="redirectPage('dienBienXNKVanTai_chart')">13. Diễn
+										biến về trị giá XNK theo phương thức vận tải</a></li>
+								<li><a href="#" onclick="redirectPage('canhBaoSoTKTTGBD')">14.
+										Diễn biến số tờ khai, trị giá theo ngày, tuần, quý, tháng, năm</a></li>
+								<li><a href="#" onclick="redirectPage('HTCBBTTTCKBieuDo')">15.
+										Diễn biến theo các tiêu chí khác theo chỉ tiêu thống kê</a></li>
+							</ul></li>
+						<li><a href="#">4. Hiển thị Dashboard</a></li>
+						<li><a href="#">5. Rà soát sản phầm thống kê đầu ra</a>
+							<ul>
+								<li><a href="#" onclick="redirectPage('rasoatqd15')">1.
+										Rà soát quyết định 15</a></li>
+								<li><a href="#" onclick="redirectPage('rasoatbaocaokhac')">2.
+										Rà soát các báo cáo khác</a></li>
+								<li><a href="#"
+									onclick="redirectPage('hoanThanhRaXoatSanPhamTK')">3. Hoàn
+										thành rà soát</a></li>
+							</ul></li>
+					</ul></li>
+				<li><a href="#" style="text-align: center">4. Phổ biến thông
+						tin thống kê</a>
+					<ul >
+						<li><a href="#" onclick="redirectPage('lichCBTTTK')">1.
+								Lịch công bố thông tin thống kê </a></li>
+						<li><a href="#" onclick="redirectPage('QLLDTPB')">2.
+								Quản lý của lãnh đạo trước khi phổ biến </a></li>
+						<li><a href="#">3. Phổ biến trong nước</a>
+							<ul>
+								<li><a href="#"
+									onclick="redirectPage('phobienbangbieuQD15')">1. Phổ biến
+										bảng, biểu số liệu theo quy định trong Quyết định 15/2014 </a></li>
+								<li><a href="#"
+									onclick="redirectPage('phobienbangbieuBTC')">2. Phổ biến
+										bảng, biểu số liệu theo yêu cầu Bộ Tài chính</a></li>
+								<li><a href="#" onclick="redirectPage('phobienbangbieuTC')">3. Phổ
+										biến bảng, biểu số liệu theo yêu cầu Tổng cục Hải quan</a></li>
+								<li><a href="#"
+									onclick="redirectPage('phobienbangbieuCQK')">4. Phổ biến
+										bảng biểu, số liệu của các bộ, ngành, cơ quan, tổ chức khác</a></li>
+								<li><a href="#" onclick="redirectPage('phobienbangbieuSP')">5. Phổ
+										biến song phương, khu vực và quốc tế</a></li>
+								<li><a href="#"
+									onclick="redirectPage('phobienbangbieuCHQ')">6. Phổ biến số
+										liệu đến các Cục Hải quan</a></li>
+							</ul></li>
+					</ul></li>
+					
+					<li><a href="#" style="text-align: center">5. Hỗ trợ người sử dụng</a>
+					<ul>
+						<li><a href="#" onclick="downloadfile('hotrohethong')">1.
+								Hướng dẫn NSD hệ thống </a></li>
+						<li><a href="#" onclick="downloadfile('hotrosanpham')">2.
+								Hướng dẫn NSD sản phẩm thống kê </a></li>
+					</ul></li>
+			</ul>
+			<br style="clear: left" />
+		</div>
+	</section>
+</aside>
+
+

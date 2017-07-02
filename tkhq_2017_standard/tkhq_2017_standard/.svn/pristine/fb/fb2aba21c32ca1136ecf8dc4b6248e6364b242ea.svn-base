@@ -1,0 +1,80 @@
+'use strict';
+
+angular.module('myApp').controller('PhanCong_Controller', PhanCong_Controller);
+PhanCong_Controller.$inject = [ '$scope', 'Phancong_Service', 'pagerService',
+		'$uibModal', '$PopupMessage', '$rootScope', 'contextPath' ];
+function PhanCong_Controller($scope, Phancong_Service, pagerService, $uibModal,
+		$PopupMessage, $rootScope, contextPath) {
+
+	console.log('start phancongController');
+	var self = this;
+	var lstPhanCong = [];
+	var lstCongViec = [];
+	self.entity = {
+		maCv : '',
+		tenCv : '',
+		tuNgay : '',
+		denNgay : '',
+		denNgay : '',
+		matHang : '',
+		maThke : '',
+		nhx : '',
+		userIdPa1 : '',
+		userNamePa1 : '',
+		userNamePa2 : '',
+		userIdPa3 : '',
+		userNamePa3 : '',
+		ghiChu : '',
+		maHq : 0
+	};
+	self.getPhanCong = getPhanCong;
+	self.getCongviec=getCongviec;
+	getPhanCong();
+	getCongviec();
+//	findByMaCV();
+	function getPhanCong() {
+		var array = [];
+		Phancong_Service.GetPhanCong().then(function(response) {
+			var array = angular.fromJson(response);
+			self.lstPhancong = array;
+			
+
+			// lstPhanCong =response;
+		});
+	}
+
+	function getCongviec() {
+		var array = [];
+		Phancong_Service.GetCongViec().then(function(response) {
+			var array = angular.fromJson(response);
+			self.lstCongViec = array;
+
+		});
+	}
+	$scope.findByMaCV = function(){
+	/*= function() {*/
+	/*function findByMaCV(){*/
+//		var array = [];
+//		
+		var type,maCv = "";
+		Phancong_Service.GetPhanCongByMaCv(maCv,type).then(function(response) {
+			
+			var array = angular.fromJson(response);
+			self.lstPhanCong = array;
+		});
+	}
+	function search(type, maCv) {
+	}
+
+	function editrow(id, entity) {
+	}
+
+	/*$scope.findByMaCV = function() {
+		var maCv = $scope.congviec.maCv;
+		var type = '';
+		Phancong_Service.GetPhanCongByMaCv(maCv,type).then(function(response) {
+			var array = angular.fromJson(response);
+			self.lstPhanCong = array;
+		});
+	}*/
+}

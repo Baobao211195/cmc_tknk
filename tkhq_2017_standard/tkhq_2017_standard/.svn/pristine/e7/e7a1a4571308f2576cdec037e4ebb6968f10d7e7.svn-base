@@ -1,0 +1,105 @@
+package com.tkhq.cmc.dao;
+
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
+import com.tkhq.cmc.common.Constants;
+import com.tkhq.cmc.dto.TbsQtacDnTrigiaNhapkhauDTO;
+import com.tkhq.cmc.model.TbsQtacDnTrigiaNhapkhau;
+import com.tkhq.cmc.utils.Utils;
+@Repository
+public class TbsQtacDnTrigiaNhapkhauDaoImpl extends BaseDAO<Long, TbsQtacDnTrigiaNhapkhau> implements TbsQtacDnTrigiaNhapkhauDao{
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public TbsQtacDnTrigiaNhapkhau findById(Long id) {
+		Criteria cr =  this.createCriteria();
+		cr.add(Restrictions.eq("id", id));
+		List<TbsQtacDnTrigiaNhapkhau> results = cr.list();
+		if(results != null){
+			return (TbsQtacDnTrigiaNhapkhau)results.get(0);
+		}
+		return null;
+	}
+	
+	@Override
+	@SuppressWarnings({ "unchecked"})
+	public List<TbsQtacDnTrigiaNhapkhau> findAll() {
+		Criteria cr =  this.getSession().createCriteria(TbsQtacDnTrigiaNhapkhau.class);
+		cr.setMaxResults(Constants.PAGE_SIZE_10);
+		List<TbsQtacDnTrigiaNhapkhau> results = (List<TbsQtacDnTrigiaNhapkhau>)cr.list();
+		return (results.size() > 0) ? results : null;
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<TbsQtacDnTrigiaNhapkhau> searchData(String masodn, String trigianhapkhau, int minRow, int maxRow) {
+		Criteria cr =  this.createCriteria();
+		if(!Utils.isEmpty(masodn) && !"".equals(masodn)){
+			cr.add(Restrictions.ilike("masodn", masodn + Constants.PERCENT_CHARACTER));
+		}
+		if(!Utils.isEmpty(trigianhapkhau) && !"".equals(trigianhapkhau)){
+			cr.add(Restrictions.eq("trigianhapkhau", trigianhapkhau));
+		}
+		
+		cr.setFirstResult(minRow);
+		cr.setMaxResults(maxRow);
+		List<TbsQtacDnTrigiaNhapkhau> results = (List<TbsQtacDnTrigiaNhapkhau>)cr.list();
+		return (results.size() > 0) ? results : null;
+	}
+	
+	@Override
+	public void insert(TbsQtacDnTrigiaNhapkhau entity) {
+		try{
+			this.persist(entity);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}	
+		
+	}
+
+	@Override
+	public void update(TbsQtacDnTrigiaNhapkhauDTO entityDto) {
+		TbsQtacDnTrigiaNhapkhau dtos = new TbsQtacDnTrigiaNhapkhau();
+		dtos.setId(entityDto.getId());
+		dtos.setMasodn(entityDto.getMasodn());
+		dtos.setTrigianhapkhau(Long.valueOf(entityDto.getTrigianhapkhau()));
+		try{
+			this.update(dtos);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}	
+		
+	}
+
+	@Override
+	public void delete(long id) {
+		TbsQtacDnTrigiaNhapkhau entity = new TbsQtacDnTrigiaNhapkhau();
+		entity.setId(id);
+		try{
+			this.delete(entity);
+		}catch(Exception ex){
+		}
+		
+	}
+
+	@Override
+	public long countTotal(String masodn, String trigianhapkhau) {
+		Criteria cr =  this.createCriteria();
+		if(!Utils.isEmpty(masodn) && !"".equals(masodn)){
+			cr.add(Restrictions.ilike("masodn", masodn + Constants.PERCENT_CHARACTER));
+		}
+		if(!Utils.isEmpty(trigianhapkhau) && !"".equals(trigianhapkhau)){
+			cr.add(Restrictions.eq("trigianhapkhau", trigianhapkhau));
+		}
+		cr.setProjection(Projections.rowCount());
+		long count = (Long)cr.uniqueResult();
+		
+		return count;
+	}
+
+}

@@ -1,0 +1,116 @@
+package com.tkhq.cmc.dao;
+
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
+import com.tkhq.cmc.common.Constants;
+import com.tkhq.cmc.dto.TbsQtacDongiaXuatkhauDTO;
+import com.tkhq.cmc.model.TbsQtacDongiaXuatkhau;
+import com.tkhq.cmc.utils.Utils;
+
+@Repository
+public class TbsQtacDongiaXuatkhauDaoImpl extends BaseDAO<Long, TbsQtacDongiaXuatkhau> implements TbsQtacDongiaXuatkhauDao{
+	@Override
+	public void insert(TbsQtacDongiaXuatkhau entity) {
+		try{
+			this.persist(entity);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}	
+		
+	}
+
+	@Override
+	public void update(TbsQtacDongiaXuatkhauDTO entityDto) {
+		TbsQtacDongiaXuatkhau dtos = new TbsQtacDongiaXuatkhau();
+		dtos.setId(entityDto.getId());
+		dtos.setMathongke(entityDto.getMathongke());
+		dtos.setDongialonnhat(entityDto.getDongialonnhat());
+		dtos.setDongianhonhat(entityDto.getDongianhonhat());
+		try{
+			this.update(dtos);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}	
+		
+	}
+
+	@Override
+	public void delete(long id) {
+		TbsQtacDongiaXuatkhau entity = new TbsQtacDongiaXuatkhau();
+		entity.setId(id);
+		try{
+			this.delete(entity);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public TbsQtacDongiaXuatkhau findById(Long id) {
+		Criteria cr =  this.createCriteria();
+		cr.add(Restrictions.eq("id", id));
+		List<TbsQtacDongiaXuatkhau> results = cr.list();
+		if(results != null){
+			return (TbsQtacDongiaXuatkhau)results.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	@SuppressWarnings({ "unchecked"})
+	public List<TbsQtacDongiaXuatkhau> findAll() {
+		Criteria cr =  this.getSession().createCriteria(TbsQtacDongiaXuatkhau.class);
+		cr.setMaxResults(Constants.PAGE_SIZE_10);
+		List<TbsQtacDongiaXuatkhau> results = (List<TbsQtacDongiaXuatkhau>)cr.list();
+		return (results.size() > 0) ? results : null;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<TbsQtacDongiaXuatkhau> searchData(String mathongke, String dongialonnhat, String dongianhonhat,
+			int minRow, int maxRow) {
+		Criteria cr =  this.createCriteria();
+		if(!Utils.isEmpty(mathongke) && !"".equals(mathongke)){
+			cr.add(Restrictions.eq("mathongke", mathongke));
+		}
+		if(!Utils.isEmpty(dongialonnhat) && !"".equals(dongialonnhat)){
+			cr.add(Restrictions.eq("dongialonnhat", dongialonnhat));
+		}
+		
+		if(!Utils.isEmpty(dongianhonhat) && !"".equals(dongianhonhat)){
+			cr.add(Restrictions.eq("dongianhonhat", dongianhonhat));
+		}
+		
+		cr.setFirstResult(minRow);
+		cr.setMaxResults(maxRow);
+		List<TbsQtacDongiaXuatkhau> results = (List<TbsQtacDongiaXuatkhau>)cr.list();
+		return (results.size() > 0) ? results : null;
+	}
+
+	@Override
+	public long countTotal(String mathongke, String dongialonnhat, String dongianhonhat) {
+		Criteria cr =  this.createCriteria();
+		if(!Utils.isEmpty(mathongke) && !"".equals(mathongke)){
+			cr.add(Restrictions.eq("mathongke", mathongke));
+		}
+		if(!Utils.isEmpty(dongialonnhat) && !"".equals(dongialonnhat)){
+			cr.add(Restrictions.eq("dongialonnhat", dongialonnhat));
+		}
+		
+		if(!Utils.isEmpty(dongianhonhat) && !"".equals(dongianhonhat)){
+			cr.add(Restrictions.eq("dongianhonhat", dongianhonhat));
+		}
+		cr.setProjection(Projections.rowCount());
+		long count = (Long)cr.uniqueResult();
+		
+		return count;
+	}
+
+}

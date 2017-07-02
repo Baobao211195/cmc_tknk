@@ -1,0 +1,203 @@
+<%@page language="java" pageEncoding="UTF-8"
+	contentType="text/html; charset=UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<script type="text/javascript">
+	var _isIE = /*@cc_on!@*/false || !!document.documentMode;	
+</script>
+<section class="content">
+	<div class="modal-body">
+	<span id="checkIE" ></span>
+		<table style="width: 100%">
+			<tr>
+				<td class="col-md-4"><label class="col-md-4">Tên biểu:</label>
+					<div class="col-md-8">
+						<select class="form-control "
+							ng-options="tenbieu as tenbieu.ten for tenbieu in controller.tenbieu "
+							ng-model="tenbieu" ng-change="controller.SelectBieu(tenbieu)">
+						</select>
+					</div></td>
+				
+				<td class="col-md-4" ng-hide="controller.hideLoaiBC"><label
+					class="col-md-4">Loại Báo Cáo:</label>
+					<div class="col-md-8">
+						<select class="form-control "
+							ng-options="TrangThai as TrangThai.ten for TrangThai in controller.lstTrangThai "
+							ng-model="TrangThai"></select>
+					</div></td>
+				<td class="col-md-4" ng-hide="controller.hideTinh"><label
+					class="col-md-4">Tên thành phố:</label>
+					<div class="col-md-8">
+						<select class="form-control "
+							ng-options="tinh as tinh.ten for tinh in controller.lstTinh "
+							ng-model="Tinh"></select>
+					</div></td>
+				<td></td>
+
+			</tr>
+			<tr>
+				<td ng-hide="controller.hideKy" class="col-md-4"><label
+					class="col-md-4">Kỳ:</label>
+					<div class="col-md-8">
+						<select class="form-control "
+							ng-options="ky as ky.ten for ky in controller.ky " ng-model="ky">
+						</select>
+					</div></td>
+				<td ng-hide="controller.hideMonth" class="col-md-4"><label
+					class="col-md-4">Tháng:</label>
+					<div class="col-md-8">
+						<select class="form-control "
+							ng-options="month as month.ten for month in controller.Months "
+							ng-model="month"></select>
+					</div></td>
+				<td ng-hide="controller.hideQuy" class="col-md-4"><label
+					class="col-md-4">Qúy:</label>
+					<div class="col-md-8">
+						<select class="form-control "
+							ng-options="quy as quy.ten for quy in controller.Quy "
+							ng-model="Quy"></select>
+					</div></td>
+				<td ng-hide="controller.hideYear" class="col-md-4"><label
+					class="col-md-4">Năm:</label>
+					<div class="col-md-8">
+						<select class="form-control "
+							ng-options="Year as Year.ten for Year in controller.Years "
+							ng-model="Year"></select>
+					</div></td>
+				<td ng-hide="controller.hideFromDate"
+					class="col-sm-4 col-lg-4 col-md-4 col-xs-4"><label
+					class="col-sm-4 col-lg-4 col-md-4 col-xs-4">Từ ngày:</label>
+					<div
+						class="form-group has-feedback col-sm-8 col-lg-8 col-md-8 col-xs-8"
+						style="margin-bottom: 0px">
+						<input type="text" name="fromDate" class="form-control"
+							uib-datepicker-popup="dd/MM/yyyy" ng-model="fromDate"
+							is-open="popup1.opened" ng-click="open1()"
+							datepicker-options="dateOptions" close-text="Close" required />
+						<i class="fa fa-calendar form-control-feedback" ng-click="open1()"></i>
+
+
+					</div></td>
+				<td ng-hide="controller.hideToDate"
+					class="col-sm-4 col-lg-4 col-md-4 col-xs-4"><label
+					class="col-sm-4 col-lg-4 col-md-4 col-xs-4">Đến ngày:</label>
+					<div
+						class="form-group has-feedback col-sm-8 col-lg-8 col-md-8 col-xs-8"
+						style="margin-bottom: 0px">
+						<input type="text" name="toDate" class="form-control"
+							uib-datepicker-popup="dd/MM/yyyy" ng-model="toDate"
+							is-open="popup2.opened" ng-click="open2()"
+							datepicker-options="dateOptions" close-text="Close" required /><i
+							class="fa fa-calendar form-control-feedback" ng-click="open2()"></i>
+					</div></td>
+				<td id="monthSelect" ng-hide="controller.hideFromMonth"
+					class="col-md-4"><label class="col-md-4">Từ tháng</label>
+					<div class="col-md-8">
+						<input type="text" name="fromMonth" class="form-control"
+							uib-datepicker-popup="MM/yyyy" ng-model="fromMonth"
+							is-open="popup3.opened" ng-click="open3()"
+							datepicker-options="{minMode: 'month'}" datepicker-mode="'month'"
+							close-text="Close" /> <i
+							class="fa fa-calendar form-control-feedback" ng-click="open3()"></i>
+					</div></td>
+				<td id="yearSelect" ng-hide="controller.hideFromYear"
+					class="col-md-4"><label class="col-md-4 pa0">Từ năm</label>
+					<div class="col-md-8 pa0">
+						<input type="text" name="year" class="form-control"
+							uib-datepicker-popup="yyyy" ng-model="fromyear"
+							is-open="popup5.opened" datepicker-options="{minMode: 'year'}"
+							ng-click="open5()" datepicker-mode="'year'" close-text="Close" />
+						<i class="fa fa-calendar form-control-feedback" ng-click="open5()"></i>
+					</div></td>
+				<td ng-hide="controller.hideFromMonth" class="col-md-4"><label
+					class="col-md-4">Đến tháng</label>
+					<div class="col-md-8">
+						<input type="text" name="toMonth" class="form-control"
+							uib-datepicker-popup="MM/yyyy" ng-model="toMonth"
+							is-open="popup4.opened" ng-click="open4()"
+							datepicker-options="{minMode: 'month'}" datepicker-mode="'month'"
+							close-text="Close" /> <i
+							class="fa fa-calendar form-control-feedback" ng-click="open4()"></i>
+					</div></td>
+
+				<td id="yearSelect" ng-hide="controller.hideToYear" class="col-md-4">
+					<label class="col-md-4 pa0">Đến năm</label>
+					<div class="col-md-8 pa0">
+						<input type="text" name="year" class="form-control"
+							uib-datepicker-popup="yyyy" ng-model="toyear"
+							is-open="popup6.opened" ng-click="open6()"
+							datepicker-options="{minMode: 'year'}" datepicker-mode="'year'"
+							close-text="Close" /> <i
+							class="fa fa-calendar form-control-feedback" ng-click="open6()"></i>
+					</div>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="col-sm-4 col-lg-4 col-md-3 col-xs-4"
+					ng-hide="controller.hideCuc"><label
+					class="col-sm-4 col-lg-4 col-md-4 col-xs-4">Cục hải quan:</label>
+					<div class="col-sm-8 col-lg-8 col-md-8 col-xs-8">
+						<select class="form-control "
+							ng-options="item as item.ten for item in controller.lstCucHQ"
+							ng-model="CucHQ" ng-change="controller.getChiCuc()"></select>
+					</div></td>
+				<td class="col-sm-4 col-lg-4 col-md-4 col-xs-4"
+					ng-hide="controller.hideChiCuc"><label
+					class="col-sm-4 col-lg-4 col-md-4 col-xs-4">Chi cục hải
+						quan:</label>
+					<div class="col-sm-8 col-lg-8 col-md-8 col-xs-8">
+						<select class="form-control "
+							ng-options="item as item.ten for item in controller.lstChiCucHQ"
+							ng-model="ChiCucHQ" ng-change=""></select>
+					</div></td>
+
+				<td></td>
+				<td class="col-sm-4 col-lg-4 col-md-4 col-xs-4"
+					ng-hide="controller.hideHS"><label
+					class="col-sm-4 col-lg-4 col-md-4 col-xs-4">Mã HS:</label>
+					<div class="col-sm-8 col-lg-8 col-md-8 col-xs-8">
+						<input type="text" ng-model="MaHS" class="form-control" />
+					</div></td>
+
+				<td></td>
+			</tr>
+			<tr>
+				<td class="col-sm-4 col-lg-4 col-md-4 col-xs-4"
+					ng-hide="controller.hideTTruong"><label
+					class="col-sm-4 col-lg-4 col-md-4 col-xs-4">Thị trường:</label>
+					<div class="col-sm-8 col-lg-8 col-md-8 col-xs-8">
+						<select class="form-control "
+							ng-options="thitruong as thitruong.ten for thitruong in controller.lstTTruong"
+							ng-model="ThiTruong" ng-change=""></select>
+					</div></td>
+				</td>
+				<td class="col-sm-4 col-lg-4 col-md-4 col-xs-4"
+					ng-hide="controller.hideNLH"><label
+					class="col-sm-4 col-lg-4 col-md-4 col-xs-4">Loại hình:</label>
+					<div class="col-sm-8 col-lg-8 col-md-8 col-xs-8">
+						<select class="form-control "
+							ng-options="loaihinh as loaihinh.ten for loaihinh in controller.lstLoaiHinh"
+							ng-model="LoaiHinh" ng-change=""></select>
+					</div></td>
+				</td>
+				<td class="col-sm-4 col-lg-4 col-md-4 col-xs-4"
+					ng-hide="controller.hideTKe"><label
+					class="col-sm-4 col-lg-4 col-md-4 col-xs-4">Thống kê:</label>
+					<div class="col-sm-8 col-lg-8 col-md-8 col-xs-8">
+						<select class="form-control "
+							ng-options="thongke as thongke.tenHang for thongke in controller.lstThongKe"
+							ng-model="ThongKe" ng-change=""></select>
+					</div></td>
+
+			</tr>
+
+		</table>
+	</div>
+	<br />
+	<div align="center">
+		<button class="btn btn-primary" ng-click="controller.showPopup()">Kết
+			xuất</button>
+		<button class="btn btn-primary" ng-click="controller.showPopupNotKetXuat()">In kiểm tra</button>
+	</div>
+</section>

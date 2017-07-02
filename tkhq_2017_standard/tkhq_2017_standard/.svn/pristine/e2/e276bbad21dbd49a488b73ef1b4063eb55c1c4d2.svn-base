@@ -1,0 +1,47 @@
+package com.tkhq.cmc.dto;
+
+import com.tkhq.cmc.common.PagerInfo;
+
+public class TbsQtacCuakhauDbVnDto extends PagerInfo{
+	
+	private Long id;
+    
+    private String macuakhau;
+    
+    private String manuocden;
+    
+    private String macuakhauden;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getMacuakhau() {
+		return macuakhau;
+	}
+
+	public void setMacuakhau(String macuakhau) {
+		this.macuakhau = macuakhau;
+	}
+
+	public String getManuocden() {
+		return manuocden;
+	}
+
+	public void setManuocden(String manuocden) {
+		this.manuocden = manuocden;
+	}
+
+	public String getMacuakhauden() {
+		return macuakhauden;
+	}
+
+	public void setMacuakhauden(String macuakhauden) {
+		this.macuakhauden = macuakhauden;
+	}
+
+}

@@ -1,0 +1,172 @@
+package com.tkhq.cmc.controller.rest;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
+
+
+/*import net.sf.jasperreports.engine.JRException;
+ import net.sf.jasperreports.engine.JasperCompileManager;
+ import net.sf.jasperreports.engine.JasperExportManager;
+ import net.sf.jasperreports.engine.JasperFillManager;
+ import net.sf.jasperreports.engine.JasperPrint;
+ import net.sf.jasperreports.engine.JasperReport;*/
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+/*import org.springframework.http.HttpStatus;*/
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.tkhq.cmc.common.Constants.ExportType;
+import com.tkhq.cmc.common.JasperExport;
+import com.tkhq.cmc.dto.BDHTCBBTGTMHSITCDTO;
+import com.tkhq.cmc.dto.ThayDoiDoNVHQTongThe;
+import com.tkhq.cmc.dto.ThayDoiDoNVHQ_BSToKhai;
+import com.tkhq.cmc.dto.ThayDoiDoNVHQ_HuyXoa;
+import com.tkhq.cmc.dto.ThayDoiDoNVHQ_SDBS;
+import com.tkhq.cmc.utils.Utils;
+
+@RestController
+@RequestMapping(value = "bcThayDoiDoNVHQ")
+public class bcThayDoiDoNVHQRestController {
+
+	@Autowired
+	ServletContext context;
+	String ROOT_API = "http://10.224.65.169:8080/tkhq_2017_standard/bcpt";
+
+	@RequestMapping(value = "/TongThe", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> TongThe(String maCucHQ, String maChicucHQ,
+			String nhx, String maNghiepvu, String loai_ky, int ky, String tu_ngay,
+			String den_ngay, int thang, int nam, String loaiBC)
+			throws IOException {
+
+		String myURL = ROOT_API + "/ThayDoiDoNVHQ/TongThe?maCucHQ=" + maCucHQ
+				+ "&maChicucHQ=" + maChicucHQ + "&nhx=" + nhx + "&maNghiepvu=" + maNghiepvu + "&loai_ky="
+				+ loai_ky + "&tu_ngay=" + tu_ngay + "&den_ngay=" + den_ngay
+				+ "&ky=" + ky + "&thang=" + thang + "&nam=" + nam;
+
+		List<ThayDoiDoNVHQTongThe> listdata = (List<ThayDoiDoNVHQTongThe>) Utils
+				.getDataStringFromApiReturnList(myURL,
+						ThayDoiDoNVHQTongThe.class);
+
+		JRBeanCollectionDataSource listData1 = new JRBeanCollectionDataSource(
+				listdata);
+		Map<String, Object> param = new HashMap<String, Object>();
+
+		if ("EXCEL".equals(loaiBC.trim().toUpperCase())) {
+			return JasperExport.ExportReport("BCThayDoiDoNVHQTongThe",
+					listData1, param, ExportType.EXCEL);
+		} else if ("PDF".equals(loaiBC.trim().toUpperCase())) {
+			return JasperExport.ExportReport("BCThayDoiDoNVHQTongThe",
+					listData1, param, ExportType.PDFINLINE);
+		} else
+			return JasperExport.ExportReport("BCThayDoiDoNVHQTongThe",
+					listData1, param, ExportType.HTML);
+
+	}
+
+	@RequestMapping(value = "/BSToKhai", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> BSToKhai(String maCucHQ, String maChicucHQ,
+			String nhx, String maNghiepvu, String loai_ky, int ky, String tu_ngay,
+			String den_ngay, int thang, int nam, String loaiBC)
+			throws IOException {
+		String myURL = ROOT_API + "/ThayDoiDoNVHQ/BSToKhai?maCucHQ=" + maCucHQ
+				+ "&maChicucHQ=" + maChicucHQ + "&nhx=" + nhx + "&maNghiepvu=" + maNghiepvu + "&loai_ky="
+				+ loai_ky + "&tu_ngay=" + tu_ngay + "&den_ngay=" + den_ngay
+				+ "&ky=" + ky + "&thang=" + thang + "&nam=" + nam;
+		List<ThayDoiDoNVHQ_BSToKhai> listdata = (List<ThayDoiDoNVHQ_BSToKhai>) Utils
+				.getDataStringFromApiReturnList(myURL,
+						ThayDoiDoNVHQ_BSToKhai.class);
+
+		JRBeanCollectionDataSource listData1 = new JRBeanCollectionDataSource(
+				listdata);
+		Map<String, Object> param = new HashMap<String, Object>();
+
+		if ("EXCEL".equals(loaiBC.trim().toUpperCase())) {
+			return JasperExport.ExportReport("BCThayDoiDoNVHQ_BSToKhai",
+					listData1, param, ExportType.EXCEL);
+		} else if ("PDF".equals(loaiBC.trim().toUpperCase())) {
+			return JasperExport.ExportReport("BCThayDoiDoNVHQ_BSToKhai",
+					listData1, param, ExportType.PDFINLINE);
+		} else
+			return JasperExport.ExportReport("BCThayDoiDoNVHQ_BSToKhai",
+					listData1, param, ExportType.HTML);
+
+	}
+
+	@RequestMapping(value = "/HuyXoa", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> HuyXoa(String maCucHQ, String maChicucHQ,
+			String nhx, String maNghiepvu, String loai_ky, int ky, String tu_ngay,
+			String den_ngay, int thang, int nam, String loaiBC)
+			throws IOException {
+
+		String myURL = ROOT_API + "/ThayDoiDoNVHQ/HuyXoa?maCucHQ=" + maCucHQ
+				+ "&maChicucHQ=" + maChicucHQ + "&nhx=" + nhx + "&maNghiepvu=" + maNghiepvu + "&loai_ky="
+				+ loai_ky + "&tu_ngay=" + tu_ngay + "&den_ngay=" + den_ngay
+				+ "&ky=" + ky + "&thang=" + thang + "&nam=" + nam;
+
+		List<ThayDoiDoNVHQ_HuyXoa> listdata = (List<ThayDoiDoNVHQ_HuyXoa>) Utils
+				.getDataStringFromApiReturnList(myURL,
+						ThayDoiDoNVHQ_HuyXoa.class);
+
+		JRBeanCollectionDataSource listData1 = new JRBeanCollectionDataSource(
+				listdata);
+		Map<String, Object> param = new HashMap<String, Object>();
+		if ("EXCEL".equals(loaiBC.trim().toUpperCase())) {
+			return JasperExport.ExportReport("BCThayDoiDoNVHQ_HuyXoa",
+					listData1, param, ExportType.EXCEL);
+		} else if ("PDF".equals(loaiBC.trim().toUpperCase())) {
+			return JasperExport.ExportReport("BCThayDoiDoNVHQ_HuyXoa",
+					listData1, param, ExportType.PDFINLINE);
+		} else
+			return JasperExport.ExportReport("BCThayDoiDoNVHQ_HuyXoa",
+					listData1, param, ExportType.HTML);
+
+	}
+	
+	@RequestMapping(value = "/SDBS", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> SDBS(String maCucHQ, String maChicucHQ,
+			String nhx, String maNghiepvu, String loai_ky, int ky, String tu_ngay,
+			String den_ngay, int thang, int nam, String loaiBC)
+			throws IOException {
+		String myURL = ROOT_API + "/ThayDoiDoNVHQ/SDBS?maCucHQ=" + maCucHQ
+				+ "&maChicucHQ=" + maChicucHQ + "&nhx=" + nhx + "&maNghiepvu=" + maNghiepvu + "&loai_ky="
+				+ loai_ky + "&tu_ngay=" + tu_ngay + "&den_ngay=" + den_ngay
+				+ "&ky=" + ky + "&thang=" + thang + "&nam=" + nam;
+		List<ThayDoiDoNVHQ_SDBS> listdata = (List<ThayDoiDoNVHQ_SDBS>) Utils
+				.getDataStringFromApiReturnList(myURL,
+						ThayDoiDoNVHQ_SDBS.class);
+
+		JRBeanCollectionDataSource listData1 = new JRBeanCollectionDataSource(
+				listdata);
+		Map<String, Object> param = new HashMap<String, Object>();
+
+		if ("EXCEL".equals(loaiBC.trim().toUpperCase())) {
+			return JasperExport.ExportReport("BCThayDoiDoNVHQ_SDBS",
+					listData1, param, ExportType.EXCEL);
+		} else if ("PDF".equals(loaiBC.trim().toUpperCase())) {
+			return JasperExport.ExportReport("BCThayDoiDoNVHQ_SDBS",
+					listData1, param, ExportType.PDFINLINE);
+		} else
+			return JasperExport.ExportReport("BCThayDoiDoNVHQ_SDBS",
+					listData1, param, ExportType.HTML);
+
+	}
+
+}

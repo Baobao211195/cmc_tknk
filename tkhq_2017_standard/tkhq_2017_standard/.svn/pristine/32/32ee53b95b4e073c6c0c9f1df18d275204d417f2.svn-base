@@ -1,0 +1,125 @@
+/**
+ * Thay đổi do bổ sung thông tin nhập và cập nhật
+ */
+
+'use strict';
+
+angular.module('myApp').controller('ThaydoiBSTTController', ThaydoiBSTTController);
+ThaydoiBSTTController.$inject = ['$rootScope','$scope', 'ThaydoiBSTTService', '$PopupMessage'];
+
+function ThaydoiBSTTController($rootScope, $scope, ThaydoiBSTTService, $PopupMessage) {
+	var self = this;
+	
+	//$scope.tabActiveIndex = 0;
+	
+	$scope.lstCucHQ = [];
+	$scope.lstChiCucHQ = [];
+	$scope.lstMatHang = [];
+	$scope.lstLoaiKy = [
+        {id: "NG", name: "Từ ngày...Đến ngày"},
+        {id: "KY", name: "Kỳ"},
+        {id: "TH", name: "Tháng"}
+    ];
+	$scope.lstTTBS = [];
+	
+	self.cucHQSelected = null;
+	self.chiCucHQSelected = null;
+	self.matHangSelected = null;
+	
+	$scope.loaiHinh = 'X';
+	
+	//initComponent();
+	
+	function initComponent(){
+		//Reset value
+		self.cucHQSelected = null;
+		self.chiCucHQSelected = null;
+		self.matHangSelected = null;
+		$scope.lstCucHQ = [];
+		$scope.lstChiCucHQ = [];
+		$scope.lstMatHang = [];
+		
+		ThaydoiBSTTService.getLstCucHQ()
+			.then(
+				function (deferred) {
+					$scope.lstCucHQ = deferred;
+                },
+                function (errResponse) {
+                    console.error(errResponse);
+                }
+			);
+		ThaydoiBSTTService.getLstMatHang($scope.loaiHinh)
+			.then(
+				function (deferred) {
+					$scope.lstMatHang = deferred;
+                },
+                function (errResponse) {
+                    console.error(errResponse);
+                }	
+			);
+	}
+	
+	$scope.changeCucHQ = function(){
+		console.log("Selected item: " + self.cucHQSelected);
+		ThaydoiBSTTService.getLstChiCucHQ(self.cucHQSelected)
+			.then(
+				function (deferred) {
+					$scope.lstChiCucHQ = deferred;
+                },
+                function (errResponse) {
+                    console.error(errResponse);
+                }
+			);
+	};
+	
+	$scope.changeTab = function(index){
+		console.log("Tab selected: " + index);
+		if(index == 0){
+			$scope.loaiHinh = 'X';
+			initComponent();
+		}
+		else if(index == 1){
+			$scope.loaiHinh = 'N';
+			initComponent();
+		}else{
+			console.error("No tab index found!");
+		}
+	};
+	
+	$scope.search = function(){
+    	var param = {};
+    	param["maCucHQ"] = self.cucHQSelected;
+    	param["maChiCucHQ"] = self.chiCucHQSelected;
+    	param["nhx"] = $scope.loaiHinh;
+    	param["ma_hang"] = self.matHangSelected;
+    	
+    	$rootScope.showLoading = true;
+    	
+    	ThaydoiBSTTService.getThaydoiBSTT(param)
+    		.then(function(response){
+    				console.log("Respone received: " +  response);
+    				$scope.lstTTBS = response;
+    				
+    				$rootScope.showLoading = false;
+    			},
+    			function(errResponse){
+    				console.error(errResponse);
+    				if(errResponse == 404){
+    					$scope.lstTTBS = [];
+    				}
+    				$rootScope.showLoading = false;
+    			}
+    		);
+	};
+	
+	$scope.doExport = function(){	
+		var param = {};
+		param["maCucHQ"] = self.cucHQSelected;
+    	param["maChiCucHQ"] = self.chiCucHQSelected;
+    	param["nhx"] = $scope.loaiHinh;
+    	param["ma_hang"] = self.matHangSelected;
+		
+		ThaydoiBSTTService.doExport(param);
+	};
+	
+}

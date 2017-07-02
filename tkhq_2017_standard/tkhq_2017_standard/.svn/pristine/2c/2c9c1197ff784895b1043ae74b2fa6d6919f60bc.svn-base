@@ -1,0 +1,94 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<script src="<c:url value='/static/js/service/tbs_bieuthueService.js' />"></script>
+<script src="<c:url value='/static/js/controller/tbs_bieuthueController.js' />"></script>
+
+<div ng-controller="Tbs_BieuThueController as bieuthueCtrl">
+	<h3>Danh mục Biểu thuế</h3>
+	<div class="box-search">
+		<fieldset class="form-group">
+		<legend>Thông tin tìm kiếm</legend>
+		<form class="form-search">
+			<div class="col-md-6 mab10">
+				<label class ="col-sm-3 pa0">Mã biểu thuế:</label>
+				<div class="col-sm-8 pa0">
+					<input type="text" class="form-control" id="maBieuThue" ng-model="maBieuThue"/>
+				</div>
+			</div>
+			<div class="col-md-6 mab10">
+				<label class ="col-sm-3 pa0">Tên biểu thuế:</label>
+				<div class="col-sm-8 pa0">
+					<input type="text" class="form-control" id="tenBieuThue" ng-model="tenBieuThue"/>
+				</div>
+			</div>
+			<div class="col-md-6 mab10">
+				<label class ="col-sm-3 pa0">Mã hàng hóa:</label>
+				<div class="col-sm-8 pa0">
+					<input type="text" class="form-control" id="maHS" ng-model="maHS"/>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<button type="submit" id="btnSearch" ng-click="bieuthueCtrl.search(1, bieuthueCtrl.pageSize)"
+					class="btn btn-warning"></i>Tìm kiếm</button>
+				<button type="button" id="addRow" class="btn btn-primary"
+					ng-click="addRow()">Thêm mới</button>
+				<button type="button" id="btnDel" class="btn btn-danger" 
+					ng-click="bieuthueCtrl.remove()">Xóa</button>
+			</div>
+		</form>
+		</fieldset>
+	</div>
+	<div class="col-md-12">
+		<div class ="col-sm-2 paging-record">Tổng số bản ghi: {{bieuthueCtrl.totalItems}}</div>
+		<div class ="col-sm-6">
+			<ul uib-pagination total-items="bieuthueCtrl.totalItems" ng-model="bieuthueCtrl.currentPage" max-size="bieuthueCtrl.maxSize" 
+				ng-change="pageChanged()" class="pagination-sm" boundary-link-numbers="true" rotate="false"></ul>
+		</div>
+	</div>
+	<table id="tblBieuThue" class="table table-bordered table-striped table-responsive">
+		<%-- <colgroup>
+			<col width="6%" />
+			<col width="10%" />
+			<col width="15%" />
+			<col width="10%" />
+			<col width="12%" />
+			<col width="12%" />
+			<col width="12%" />
+			<col width="15%" />
+			<col width="10%" />
+		</colgroup> --%>
+		<thead>
+			<tr>
+				<th><input type="checkbox" ng-model="bieuthueCtrl.checkAll"></th>
+				<th>STT</th>
+				<th>Mã biểu thuế</th>
+				<th>Tên biểu thuế</th>
+				<th>Thuế suất</th>
+				<th>Kiểu biểu thuế</th>
+				<th>Mã hàng hóa</th>
+				<th>Ngày hiệu lực</th>
+				<th>Ngày hết hiệu lực</th>
+				<th>Thao tác</th>
+			</tr>
+		</thead>
+		<tbody align="center">
+			<tr ng-repeat="row in bieuthueCtrl.lstBieuThue">
+				<td><input type="checkbox" ng-checked="bieuthueCtrl.checkAll" ng-model="row.isChecked"></td>
+				<td><input type="hidden" value="{{row.bieuThueId}}" /><span>{{(bieuthueCtrl.currentPage - 1) * bieuthueCtrl.pageSize + ($index + 1)}}</span></td>
+				<td ng-bind="row.maBieuThue"></td>
+				<td ng-bind="row.tenBieuThue"></td>
+				<td ng-bind="row.thueSuat"></td>
+				<td ng-bind="row.kieuBieuThue"></td>
+				<td ng-bind="row.maHS"></td>
+				<td ng-bind="row.ngayHL"></td>
+				<td ng-bind="row.ngayHHL"></td>
+				<td>
+					<button type="button"
+						ng-click="bieuthueCtrl.editRow(row.bieuThueId)"
+						class="btn btn-warning">Sửa</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

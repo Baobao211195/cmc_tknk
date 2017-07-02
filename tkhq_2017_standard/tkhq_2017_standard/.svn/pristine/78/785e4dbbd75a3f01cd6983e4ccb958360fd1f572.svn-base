@@ -1,0 +1,109 @@
+App.factory('HTCBBTDBXTLService', [ '$http', '$q', 'contextPath', function($http, $q, contextPath) {
+
+	var rootApi = "http://10.224.65.169:8080/tkhq_2017_standard/bcpt";
+	return {
+		getCucHQ: function () {
+			var deferred = $q.defer();
+			$http.get(rootApi + "/GetCustom")
+            .then(
+                function (response) {
+                    deferred.resolve(response.data);
+                },
+                function(errResponse){
+                    console.error('Có lỗi xảy ra');
+                    deferred.reject(errResponse);
+                }
+            );
+                
+            return deferred.promise;
+        },
+        getChiCucHQByCuc: function (maCuc) {
+			var deferred = $q.defer();
+			$http.get(rootApi  +'/GetSubCustom?maCucHQ='+ maCuc)
+            .then(
+                function (response) {
+                    deferred.resolve(response.data);
+                },
+                function(errResponse){
+                    console.error('Có lỗi xảy ra');
+                    deferred.reject(errResponse);
+                }
+            );
+                
+            return deferred.promise;
+        },
+        getThitruong: function () {
+        	var deferred = $q.defer();
+			$http.get(rootApi + "/GetThitruong")
+            .then(
+                function (response) {
+                    deferred.resolve(response.data);
+                },
+                function(errResponse){
+                    console.error('Có lỗi xảy ra');
+                    deferred.reject(errResponse);
+                }
+            );
+                
+            return deferred.promise;
+        },
+        getMathang: function (nhx) {
+        	var deferred = $q.defer();
+			$http.get(rootApi + "/DSMatHangChuYeuBIEU7?nhx=" + nhx)
+            .then(
+                function (response) {
+                    deferred.resolve(response.data);
+                },
+                function(errResponse){
+                    console.error('Có lỗi xảy ra');
+                    deferred.reject(errResponse);
+                }
+            );
+                
+            return deferred.promise;
+        },
+        getData: function (maCucHQ, maChicucHQ,trangthai,nhx, thitruong, mathang) {
+			var deferred = $q.defer();
+			var api = rootApi + "/SoLieuTheoChiTieuThongKe09?maCucHQ="+ maCucHQ + "&maChicucHQ=" + maChicucHQ + "&trangthai="
+			+ trangthai + "&nhx=" + nhx + "&thitruong=" + thitruong + "&mathang=" + mathang;
+            $http.get(api)
+            .then(
+                function (response) {
+                    deferred.resolve(response.data);
+                },
+                function(errResponse){
+                    console.error('Có lỗi xảy ra');
+                    deferred.reject(errResponse);
+                }
+            );
+                
+            return deferred.promise;
+        },
+        
+        doExport: function(param){
+        	$http({
+        		headers: {
+        			'Content-Type': 'application/json;charset=utf-8',
+        			'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        		},
+        		method: 'POST',
+        		url: contextPath + '/BCHTCBBTDBXTL/doExport',
+        		data: JSON.stringify(param),
+        		responseType: 'arraybuffer'
+        	})
+        	.then(
+    			function (response) {
+        		var fileName = "Cảnh báo bất thường của diễn biến và xu thế lượng, đơn giá, trị giá mặt hàng-thị trường XNK_" 
+        			+ (new Date()).getTime() + ".xls";
+        		
+        	    var blob = new Blob([response.data], {
+        	        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        	    });
+        	    saveAs(blob, fileName);
+    		},
+    		function(errResponse){
+    			console.log("Can't download file with error: " + errResponse);
+    		});
+        }
+	}
+} ]);

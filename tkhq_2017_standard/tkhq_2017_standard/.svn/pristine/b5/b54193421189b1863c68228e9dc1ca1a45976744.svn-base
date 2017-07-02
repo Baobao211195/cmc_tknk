@@ -1,0 +1,105 @@
+package com.tkhq.cmc.dao;
+
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
+import com.tkhq.cmc.common.Constants;
+import com.tkhq.cmc.dto.TbsQtacXuatNhapDTO;
+import com.tkhq.cmc.model.TbsQtacVantaiHangnhapVn;
+import com.tkhq.cmc.utils.Utils;
+
+@Repository
+public class TbsQtacVantaiHangnhapVnDaoImpl extends BaseDAO<String, TbsQtacVantaiHangnhapVn> implements TbsQtacVantaiHangnhapVnDao{
+
+	@Override
+	public void insert(TbsQtacVantaiHangnhapVn entity) {
+		try{
+			this.persist(entity);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}	
+		
+	}
+
+	@Override
+	public void update(TbsQtacXuatNhapDTO entityDto) {
+		TbsQtacVantaiHangnhapVn dtos = new TbsQtacVantaiHangnhapVn();
+		dtos.setId(entityDto.getId());
+		dtos.setMaphuongthucvanchuyen(entityDto.getMaphuongthucvanchuyen());
+		dtos.setMacuakhauvn(entityDto.getMacuakhauvn());
+		try{
+			this.update(dtos);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}	
+		
+	}
+
+	@Override
+	public void delete(long id) {
+		TbsQtacVantaiHangnhapVn entity = new TbsQtacVantaiHangnhapVn();
+		entity.setId(id);
+		try{
+			this.delete(entity);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public TbsQtacVantaiHangnhapVn findById(Long id) {
+		Criteria cr =  this.createCriteria();
+		cr.add(Restrictions.eq("id", id));
+		List<TbsQtacVantaiHangnhapVn> results = cr.list();
+		if(results != null){
+			return (TbsQtacVantaiHangnhapVn)results.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	@SuppressWarnings({ "unchecked"})
+	public List<TbsQtacVantaiHangnhapVn> findAll() {
+		Criteria cr =  this.getSession().createCriteria(TbsQtacVantaiHangnhapVn.class);
+		cr.setMaxResults(Constants.PAGE_SIZE_10);
+		List<TbsQtacVantaiHangnhapVn> results = (List<TbsQtacVantaiHangnhapVn>)cr.list();
+		return (results.size() > 0) ? results : null;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<TbsQtacVantaiHangnhapVn> searchData(String maphuongthucvanchuyen, String macuakhauvn, int minRow, int maxRow) {
+		Criteria cr =  this.createCriteria();
+		if(!Utils.isEmpty(maphuongthucvanchuyen) && !"".equals(maphuongthucvanchuyen)){
+			cr.add(Restrictions.ilike("maphuongthucvanchuyen", maphuongthucvanchuyen + Constants.PERCENT_CHARACTER));
+		}
+		if(!Utils.isEmpty(macuakhauvn) && !"".equals(macuakhauvn)){
+			cr.add(Restrictions.ilike("macuakhauvn", macuakhauvn + Constants.PERCENT_CHARACTER));
+		}
+		cr.setFirstResult(minRow);
+		cr.setMaxResults(maxRow);
+		List<TbsQtacVantaiHangnhapVn> results = (List<TbsQtacVantaiHangnhapVn>)cr.list();
+		return (results.size() > 0) ? results : null;
+	}
+
+	@Override
+	public long countTotal(String maphuongthucvanchuyen, String macuakhauvn) {
+		Criteria cr =  this.createCriteria();
+		if(!Utils.isEmpty(maphuongthucvanchuyen) && !"".equals(maphuongthucvanchuyen)){
+			cr.add(Restrictions.ilike("maphuongthucvanchuyen", maphuongthucvanchuyen + Constants.PERCENT_CHARACTER));
+		}
+		if(!Utils.isEmpty(macuakhauvn) && !"".equals(macuakhauvn)){
+			cr.add(Restrictions.ilike("macuakhauvn", macuakhauvn + Constants.PERCENT_CHARACTER));
+		}
+		cr.setProjection(Projections.rowCount());
+		long count = (Long)cr.uniqueResult();
+		
+		return count;
+	}
+}

@@ -1,0 +1,208 @@
+App.controller('HTCBBTTGXNKHQController', [
+		'$scope',
+		'HTCBBTTGXNKHQService',
+		'pagerService',
+		'$uibModal',
+		'$PopupMessage',
+		'$timeout',
+		'$rootScope',
+		function($scope, HTCBBTTGXNKHQService, pagerService, $uibModal,
+				$PopupMessage, $timeout, $rootScope) {
+			$scope.lstTrangThai = [ {
+				Ma : 'SB',
+				Ten : 'Sơ bộ'
+			}, {
+				Ma : 'DC',
+				Ten : 'Điều chỉnh'
+			}, {
+				Ma : 'CT',
+				Ten : 'Chính thức'
+			}];
+			$scope.loai_bc = "12";
+			$scope.lstResult = [];
+			$scope.nhx = 'X';
+			$scope.lstCucHQ = [];
+			$scope.lstChiCucHQ = [];
+			$scope.lstPhan = [];
+			$scope.showReport = false;
+			$scope.srcReport = "";
+
+			$scope.btnXemBC_Click = function() {
+				var maCucHQ = "";
+				var maChicucHQ = "";
+				var nhx = "";
+				var trangthai = "";
+				if ($scope.cmbCucHQ != undefined && $scope.cmbCucHQ != null)
+					if ($scope.cmbCucHQ.ma != undefined && $scope.cmbCucHQ.ma != null)
+						maCucHQ = $scope.cmbCucHQ.ma;
+				if ($scope.cmbChiCucHQ != undefined && $scope.cmbChiCucHQ != null)
+					if ($scope.cmbChiCucHQ.ma != undefined && $scope.cmbChiCucHQ.ma != null)
+						maChicucHQ = $scope.cmbChiCucHQ.ma;
+				if ($scope.lstTrangThai != undefined && $scope.lstTrangThai != null)
+					if ($scope.cmbTrangThai.Ma != undefined && $scope.cmbTrangThai.Ma != null)
+						trangthai = $scope.cmbTrangThai.Ma;
+				if ($scope.nhx != undefined && $scope.nhx != null)
+					nhx = $scope.nhx;
+				HTCBBTTGXNKHQService.getData(maCucHQ, maChicucHQ, trangthai,nhx)
+						.then(function(dataResponse) {
+							$scope.lstResult = dataResponse;
+								if ($scope.lstResult[0].group_data[0].data_ky.data.length % 2 == 1) {
+									var objky  = angular.copy( $scope.lstResult[0].group_data[0].data_ky.data[0]);
+									objky.ky = null;
+									objky.gia_tri = null;
+									for(var i = 0; i<$scope.lstResult.length; i++)
+									{
+										$scope.lstResult[i].group_data[0].data_ky.data.push(objky);
+									}
+								}
+							
+						}, function(error) {
+							console.log('formData retrieval failed. ' + error);
+						});
+			};
+			
+			$scope.doExport = function(){
+				var maCucHQ = "";
+				var maChicucHQ = "";
+				var nhx = "";
+				var trangthai = "";
+				if ($scope.cmbCucHQ != undefined && $scope.cmbCucHQ != null)
+					if ($scope.cmbCucHQ.ma != undefined && $scope.cmbCucHQ.ma != null)
+						maCucHQ = $scope.cmbCucHQ.ma;
+				if ($scope.cmbChiCucHQ != undefined && $scope.cmbChiCucHQ != null)
+					if ($scope.cmbChiCucHQ.ma != undefined && $scope.cmbChiCucHQ.ma != null)
+						maChicucHQ = $scope.cmbChiCucHQ.ma;
+				if ($scope.lstTrangThai != undefined && $scope.lstTrangThai != null)
+					if ($scope.cmbTrangThai.Ma != undefined && $scope.cmbTrangThai.Ma != null)
+						trangthai = $scope.cmbTrangThai.Ma;
+				if ($scope.nhx != undefined && $scope.nhx != null)
+					nhx = $scope.nhx;
+				
+				var param = {};
+				param["maCucHQ"] = maCucHQ;
+		    	param["maChiCucHQ"] = maChicucHQ;
+		    	param["trangthai"] = trangthai;
+		    	param["nhx"] = nhx;
+		    	
+		    	HTCBBTTGXNKHQService.doExport(param);
+			}
+
+			$rootScope.$on('childEmit', function(event, data) {
+				console.log(data);
+				loadDefualtForm();
+				self.nhx = data;
+			});
+			$scope.CucHQSelected = function (Item) {
+				HTCBBTTGXNKHQService.getChiCucHQByCuc(Item.ma).then(function(deferred) {
+					$scope.lstChiCucHQ = deferred;
+					$scope.cmbChiCucHQ = $scope.lstChiCucHQ[0];
+				}, function(errResponse) {
+					console.error('Error while fetching data');
+				});
+			};
+			$scope.btnPhanHoi_Click = function () {
+				$rootScope.$emit('PhanHoiQuyTrinhXLDL', $scope.loai_bc);
+			};
+			$scope.tab1_Selected = function () {
+				$scope.nhx = "X";
+				loadDefualtForm();
+				console.log($scope.nhx);
+			};
+			$scope.tab2_Selected = function () {
+				$scope.nhx = "N";
+				loadDefualtForm();
+				console.log($scope.nhx);
+			};
+			$scope.tab3_Selected = function () {
+				$scope.nhx = "XN";
+				loadDefualtForm();
+				console.log($scope.nhx);
+			};
+			
+			$scope.btnIn_Click =  function () {
+				$scope.srcReport = "http://localhost:8080/tkhq_2017_standard/pbtk/Ts_TEST?maHQ=00&ky=1&thang=1&nam=2016&loai_BC=SB";
+				$scope.showReport = true;
+			};
+			$scope.hideReport =  function () {
+				$scope.srcReport = "";
+				$scope.showReport = false;
+			};
+			$scope.btnXemBieuDo_Click = function() {
+				var maCucHQ = "";
+				var maChicucHQ = "";
+				var nhx = "";
+				var trangthai = "";
+				var loaiBD = "ky";
+				if ($scope.cmbCucHQ != undefined
+						&& $scope.cmbCucHQ != null)
+					if ($scope.cmbCucHQ.ma != undefined
+							&& $scope.cmbCucHQ.ma != null)
+						maCucHQ = $scope.cmbCucHQ.ma;
+				if ($scope.cmbChiCucHQ != undefined
+						&& $scope.cmbChiCucHQ != null)
+					if ($scope.cmbChiCucHQ.ma != undefined
+							&& $scope.cmbChiCucHQ.ma != null)
+						maChicucHQ = $scope.cmbChiCucHQ.ma;
+				if ($scope.cmbTrangThai != undefined
+						&& $scope.cmbTrangThai != null)
+					if ($scope.cmbTrangThai.Ma != undefined
+							&& $scope.cmbTrangThai.Ma != null)
+						trangthai = $scope.cmbTrangThai.Ma;
+				if ($scope.nhx != undefined
+						&& $scope.nhx != null)
+					nhx = $scope.nhx;
+				if ($scope.radLoaiBD != undefined
+						&& $scope.radLoaiBD != null)
+					loaiBD = $scope.radLoaiBD.value;
+				if (loaiBD != undefined && loaiBD != null) {
+					var rootApi = "http://localhost:8080/tkhq_2017_standard/BCHTCBTGTXNK";
+					var apiLuongTK = rootApi
+							+ "/BieuDoTriGiaTK?maCucHQ="
+							+ maCucHQ + "&maChicucHQ="
+							+ maChicucHQ + "&trangthai="
+							+ trangthai + "&nhx=" + nhx
+							+ "&loaiBD=" + loaiBD;
+					$scope.srcBieuDo = apiLuongTK;
+				}
+			};
+			
+			$scope.btnClose_Click = function()
+			{
+				window.location.href = "HTCBBTTGXNKHQ";
+			};
+			
+
+			function loadDefualtForm() {
+				$scope.cmbTrangThai = $scope.lstTrangThai[0];
+				$scope.lstResult = {};
+				$scope.srcBieuDo = "";
+			}
+			function getCucChiCucHQ() {
+				HTCBBTTGXNKHQService.getCucHQ().then(function(deferred) {
+					$scope.lstCucHQ = deferred;
+					$scope.cmbCucHQ = $scope.lstCucHQ[0];
+				}, function(errResponse) {
+					console.error('Error while fetching data');
+				});
+				$timeout(function() {
+					$scope.CucHQSelected($scope.cmbCucHQ);
+				}, 200);
+			}
+			function getPhan() {
+				HTCBBTTGXNKHQService.getPhan().then(function(deferred) {
+					$scope.lstPhan = deferred;
+					
+				}, function(errResponse) {
+					console.error('Error while fetching data');
+				});
+			}
+			(function init() {
+				$timeout(function() {
+					getCucChiCucHQ();
+					getPhan();
+					loadDefualtForm();
+					$rootScope.$emit('PhanHoiQuyTrinhXLDL', $scope.loai_bc);
+					console.log('System controller with timeout fired');
+				}, 500);
+			})();
+		} ]);

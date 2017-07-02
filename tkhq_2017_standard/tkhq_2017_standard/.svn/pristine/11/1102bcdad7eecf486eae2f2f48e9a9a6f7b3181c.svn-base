@@ -1,0 +1,60 @@
+package com.tkhq.cmc.common;
+
+public class Constants {
+	/*
+     * Resource Bundles
+     */
+	public static final String BUNDLE_MESSAGE = "Message";
+	
+	public static final String STORE = "test";
+	
+	/*
+	 * Pagination
+	 */
+	public static final int ZEZO = 1;
+	public static final int  MAX_PAGE = 5;
+	
+	public static final int CURRENT_PAGE = 1;
+	
+	public static final int PAGE_SIZE_10 = 10;
+	
+	public static final int PAGE_SIZE_30 = 30;
+	
+	public static final int PAGE_SIZE_50 = 50;
+	
+	public static final int PAGE_SIZE_100 = 100;
+	
+	public static final String NOW_PAGE = "nowPage";
+	
+	/**
+	 * Date String format type dd/MM/yyyy
+	 * */
+	public static final String DATE_FORMAT_1 = "dd/MM/yyyy";
+	
+	public static final String DATE_FORMAT_2 = "yyyy-MM-dd";
+	
+	public static final String DATE_FORMAT_3 = "yyyy/MM/dd";
+	
+	public static final String DATE_FORMAT_4 = "yyyy/MM/dd HH:mm:ss";
+	
+	public static final String DATE_FORMAT_5 = "yyyy-MM-dd'T'HH-mm-ss";
+	
+	public static final String DATE_FORMAT_6 = "ddMMyyyy";
+	
+	public static final int SUCCESS = 1;
+	
+	public static final int FAILED = 0;
+	
+	public static final String EMPTY = "";
+	
+	public static final String UNDERSCORES = "_";
+	
+	public static final String DOT = ".";
+	
+	public static final String PERCENT_CHARACTER = "%";
+	
+	public enum ExportType{
+		PDFINLINE,HTML,FILE,EXCEL,PDFATTACH,CHART
+	}
+}
+

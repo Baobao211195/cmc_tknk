@@ -1,0 +1,23 @@
+package com.tkhq.cmc.mapper;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.modelmapper.ModelMapper;
+
+public class ObjectMapper {
+	
+	public static <T> T mapToEntity(Object source, Class<T> destinationType){
+		ModelMapper mapper = new ModelMapper();
+		return mapper.map(source, destinationType);
+	}
+	
+	public static <T> List<T> mapToListEntity(List<Object> source,Class<T> destinationType){ 
+		ModelMapper mapper = new ModelMapper();
+		List<T> result = new ArrayList<T>();
+		for (Object object : source) {
+			result.add(mapper.map(object, destinationType));
+		}
+		return result;
+	}
+}

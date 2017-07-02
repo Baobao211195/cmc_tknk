@@ -1,0 +1,37 @@
+package com.tkhq.cmc.services;
+
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.tkhq.cmc.dao.Tbs_dmBaoCaoDAO;
+import com.tkhq.cmc.model.Tbs_dmbaocao;
+
+@Service("tbs_dmBaoCaoService")
+@Transactional
+public class Tbs_dmBaoCaoServiceImpl implements Tbs_dmBaoCaoService {
+
+	@Autowired
+	Tbs_dmBaoCaoDAO tbs_dmBaoCaoDAO;
+	
+	public List<Tbs_dmbaocao> getDmBcByLoaiBC(Integer ma_loaibc) {
+		
+		return tbs_dmBaoCaoDAO.getDmBCByLoaiBC(ma_loaibc);
+	}
+
+	public List<Tbs_dmbaocao> getDmBCPhoBienTT(String nhx, Integer[] ma_loaibc) {
+		return tbs_dmBaoCaoDAO.getDmBCPhoBienTT(nhx, ma_loaibc);
+	}
+
+	public List<Tbs_dmbaocao> getAllBC() {
+		return tbs_dmBaoCaoDAO.getAllBC();
+	}
+
+	public List<Tbs_dmbaocao> getBCByLoaiKy(String loaiKyBC) {
+		return tbs_dmBaoCaoDAO.getBCByLoaiKy(loaiKyBC);
+	}
+
+}

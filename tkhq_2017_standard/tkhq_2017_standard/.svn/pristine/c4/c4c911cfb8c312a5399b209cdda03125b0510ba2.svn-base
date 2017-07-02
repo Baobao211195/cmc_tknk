@@ -1,0 +1,111 @@
+package com.tkhq.cmc.dto;
+
+public class Tbd_Sys_ResourceDTO {
+	private Integer resourceId;
+	private String tenTochuc;
+	private String tenCanhan;
+	private String email;
+	private String mobile;
+	private String mota;
+	private String chitieuTK;
+	private String khainiem;
+	private String cancu;
+	private String tansuat;
+	private String dexuatDL;
+	private String userQL;
+	private String userName;
+	private String mucdo;
+	private String ghichu;
+	
+	public Integer getResourceId() {
+		return resourceId;
+	}
+	public void setResourceId(Integer resourceId) {
+		this.resourceId = resourceId;
+	}
+	public String getTenTochuc() {
+		return tenTochuc;
+	}
+	public void setTenTochuc(String tenTochuc) {
+		this.tenTochuc = tenTochuc;
+	}
+	public String getTenCanhan() {
+		return tenCanhan;
+	}
+	public void setTenCanhan(String tenCanhan) {
+		this.tenCanhan = tenCanhan;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getMobile() {
+		return mobile;
+	}
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+	public String getMota() {
+		return mota;
+	}
+	public void setMota(String mota) {
+		this.mota = mota;
+	}
+	public String getChitieuTK() {
+		return chitieuTK;
+	}
+	public void setChitieuTK(String chitieuTK) {
+		this.chitieuTK = chitieuTK;
+	}
+	public String getKhainiem() {
+		return khainiem;
+	}
+	public void setKhainiem(String khainiem) {
+		this.khainiem = khainiem;
+	}
+	public String getCancu() {
+		return cancu;
+	}
+	public void setCancu(String cancu) {
+		this.cancu = cancu;
+	}
+	public String getTansuat() {
+		return tansuat;
+	}
+	public void setTansuat(String tansuat) {
+		this.tansuat = tansuat;
+	}
+	public String getDexuatDL() {
+		return dexuatDL;
+	}
+	public void setDexuatDL(String dexuatDL) {
+		this.dexuatDL = dexuatDL;
+	}
+	public String getUserQL() {
+		return userQL;
+	}
+	public void setUserQL(String userQL) {
+		this.userQL = userQL;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getGhichu() {
+		return ghichu;
+	}
+	public void setGhichu(String ghichu) {
+		this.ghichu = ghichu;
+	}
+	public String getMucdo() {
+		return mucdo;
+	}
+	public void setMucdo(String mucdo) {
+		this.mucdo = mucdo;
+	}
+
+}

@@ -1,0 +1,67 @@
+messages.add = ThÃªm m\u1EDBi
+messages.delete = XÃ³a
+messages.update = C\u1EADp nh\u1EADt
+messages.conflict = B\u1EA3n ghi \u0111Ã£ t\u1ED3n t\u1EA1i khÃ´ng th\u1EC3 thÃªm m\u1EDBi
+
+#vanlh subname
+luongtk=l\u01B0\u1EE3ng th\u1ED1ng k\u00EA
+dongiatk=\u0111\u01A1n gi\u00E1 th\u1ED1ng k\u00EA
+dvt=\u0111\u01A1n v\u1ECB t\u00EDnh
+trigiatk=tr\u1ECB gi\u00E1 th\u1ED1ng k\u00EA
+soluongtk=s\u1ED1 l\u01B0\u1EE3ng t\u1EDD khai
+sodonghang=s\u1ED1 d\u00F2ng h\u00E0ng
+tonggiatri=t\u1ED5ng gi\u00E1 tr\u1ECB
+nuocnk=N\u01B0\u1EDBc nh\u1EADp kh\u1EA9u
+nuocxk=N\u01B0\u1EDBc xu\u1EA5t kh\u1EA9u
+
+#vanlh Export excel
+ky=K\u1EF3
+thang=Th\u00E1ng
+chitieu=Ch\u1EC9 ti\u00EAu
+thoigian=Th\u1EDDi gian
+sskytruoc=So s\u00E1nh v\u1EDBi k\u1EF3 tr\u01B0\u1EDBc
+sscungkynamtruoc=So s\u00E1nh v\u1EDBi c\u00F9ng k\u1EF3 n\u0103m tr\u01B0\u1EDBc
+solieunamhienthoi=S\u1ED1 li\u1EC7u n\u0103m hi\u1EC7n th\u1EDDi
+dubaonamtiep_trend=D\u1EF1 b\u00E1o n\u0103m ti\u1EBFp theo - H\u00E0m Trend
+kygoc=K\u1EF3 g\u1ED1c(2012)
+thang01=Th\u00E1ng
+thang02=th\u00E1ng
+quy=qu\u00FD
+quy01=Qu\u00FD
+nam=N\u0103m
+sovoi=so v\u1EDBi
+
+#vanlh header thaydoibosungtokhaihethong
+mo_ta=M\u00F4 t\u1EA3 h\u00E0ng h\u00F3a
+ma_hang=M\u00E3 h\u00E0ng
+ma_tk=M\u00E3 th\u1ED1ng k\u00EA
+is_nghingo=Nghi ng\u1EDD
+is_tk=Is_tk
+dvt_tk=\u0110VT TK
+don_gia_usd=\u0110\u01A1n gi\u00E1 (USD)
+don_gia_vnd=\u0110\u01A1n gi\u00E1 (VND)
+luong=L\u01B0\u1EE3ng
+luong_tk=L\u01B0\u1EE3ng th\u1ED1ng k\u00EA
+tri_gia_usd=Tr\u1ECB gi\u00E1 (USD)
+tri_gia_vnd=Tr\u1ECB gi\u00E1 (VND)
+tri_gia_tk_usd=Tr\u1ECB gi\u00E1 th\u1ED1ng k\u00EA (USD)
+tri_gia_tk_vnd=Tr\u1ECB gi\u00E1 th\u1ED1ng k\u00EA (VND)
+ma_dv=M\u00E3 \u0111\u01A1n v\u1ECB
+ma_hq=M\u00E3 h\u1EA3i quan
+ma_lh=M\u00E3 lo\u1EA1i h\u00ECnh
+so_tk=S\u1ED1 t\u1EDD khai
+nuoc_xx=N\u01B0\u1EDBc XX
+ma_nt=M\u00E3 nguy\u00EAn t\u1EC7
+ngay_dk=Ng\u00E0y \u0111\u0103ng k\u00FD
+cang_nn=C\u1EA3ng n\u01B0\u1EDBc ngo\u00E0i
+ma_cuakhau_nk=M\u00E3 c\u1EEDa kh\u1EA9u nh\u1EADp
+ten_cuakhau_nk=T\u00EAn c\u1EEDa kh\u1EA9u nh\u1EADp
+ma_cuakhau_xk=M\u00E3 c\u1EEDa kh\u1EA9u xu\u1EA5t
+ten_cuakhau_xk=T\u00EAn c\u1EEDa kh\u1EA9u xu\u1EA5t
+
+####BCPT
+BCPT.SLTheoCTTK01.CHITIEU=Tr\u1ECB giá m\u1EB7t hàng
+BCPT.SLTheoCTTK14.NGAY_HEADER=T\u1ED5ng
+BCPT.SubnameSLTK=S\u1ED1 l\u01B0\u1EE3ng t\u1EDD khai
+BCPT.SubnameTG=Tr\u1ECB giá th\u1ED1ng kê
+BCPT.subnameDVT1000USD=(\u0110\u01A1n v\u1ECB: 1000USD)

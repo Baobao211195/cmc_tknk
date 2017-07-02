@@ -1,0 +1,109 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<script src="<c:url value='/static/js/service/tbsCapnhatTygiaService.js' />"></script>
+<script src="<c:url value='/static/js/controller/tbsCapnhatTygiaController.js' />"></script>
+
+<div class="generic-container"
+	ng-controller="TbsCapnhatTygiaController as tygiaCtrl">
+	<div class="panel panel-success">
+		<h3 class="panel-heading">Danh mục tỷ giá</h3>
+	</div>
+	<div class="container">
+		<fieldset class="form-group form-wrapper">
+			<legend class="form-wrapper">Thông tin tìm kiếm</legend>
+			<form class="form-search">
+				<table style="width: 100%">
+					<tr>
+						<td><label class="col-sm-3">Mã ngoại tệ:</label>
+							<div class="col-sm-3">
+								<input type="text" id="maNt" ng-model="maNt" />
+							</div></td>
+						<td><label class="col-sm-3">Ngày:</label>
+							<div class="col-sm-3">
+								<input type="text" id="ngay" ng-model="ngay" />
+							</div></td>
+					</tr>
+					<tr>
+						<td>
+												
+						</td>
+					</tr>
+								
+				</table>
+				</br>
+				<div class="form-group row form-btn-align" align="center">
+					<button type="submit" id="btnSearch"
+						ng-click="tygiaCtrl.search(1, tygiaCtrl.pageSize)" class="btn btn-success">
+						<i class="glyphicon glyphicon-search icon-white"></i>Tìm kiếm
+					</button>
+					<button type="button" id="addRow" class="btn btn-success"
+						ng-click="addRow()">
+						<i class="glyphicon glyphicon-plus icon-white"></i>Thêm mới
+					</button>					
+					<button type="button" id="btnDel" class="btn btn-danger"
+						ng-click="tygiaCtrl.remove()">
+						<i class="glyphicon glyphicon-remove icon-white"></i>Xóa
+					</button>
+				</div>
+			</form>
+		</fieldset>
+	</div>
+	<div class="row">
+			<div>Total: {{tygiaCtrl.totalItems}}</div>
+			<div>
+	<pagination total-items="tygiaCtrl.totalItems" ng-change="pageChanged()" ng-model="tygiaCtrl.currentPage" 
+	max-size="tygiaCtrl.maxSize" class="pagination" boundary-links="true" rotate="false"></pagination>
+	</div>
+		</div>
+		
+		<!-- <div style="width:400px; overflow-x: scroll;"> -->
+	<table id="tblTygia" class="table table-bordered">
+		<%-- <colgroup>
+			<col width="6%" />
+			<col width="17%" />
+			<col width="27%" />
+			<col width="22%" />
+			<col width="25%" />			
+		</colgroup> --%>
+		<thead>
+			<tr>
+				<th><input type="checkbox" ng-model="tygiaCtrl.checkAll"></th>
+				<!--<th>STT</th> -->
+				<th>Mã ngoại tệ</th>
+				<th>Ngày</th>
+				<th colspan={{tygiaCtrl.testColum}}>Tỷ giá VND</th>
+				<th>Tỷ giá USD</th>				
+				<th>Thao tác</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="row in tygiaCtrl.listTygia">
+				<td><input type="checkbox" ng-checked="tygiaCtrl.checkAll"
+					ng-model="row.isChecked"></td>
+				<!--<td><input type="hidden" value="{{row.tygiaId}}" />
+				<span>{{(tygiaCtrl.currentPage - 1) * tygiaCtrl.pageSize + ($index + 1)}}</span></td>		-->		
+				<td ng-bind="row.maNt"></td>
+				<td ng-bind="row.ngay"></td>
+				<td ng-bind="row.tygiaVnd"></td>
+				<td ng-bind="row.tygiaUsd"></td>				
+				<td>
+					<button type="button" ng-click="tygiaCtrl.editRow(row.tygiaId)"
+						class="btn btn-success custom-width">Edit</button>
+				</td>
+				<td><input type="hidden" value="{{row.tygiaId}}" />
+			</tr>
+		</tbody>
+	</table>
+	<!-- </div> -->
+	<div>
+			<div></div>
+			<div>
+	<pagination total-items="tygiaCtrl.totalItems" ng-change="pageChanged()" ng-model="tygiaCtrl.currentPage" max-size="tygiaCtrl.maxSize" class="pagination" boundary-links="true" rotate="false"></pagination>
+	</div>
+		</div>	
+	<script type="text/ng-template" id="tygiaEdit.html">
+	
+	</script>
+</div>

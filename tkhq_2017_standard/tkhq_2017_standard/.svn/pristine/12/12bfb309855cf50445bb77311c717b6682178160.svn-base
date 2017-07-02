@@ -1,0 +1,9 @@
+package com.tkhq.cmc.dao;
+
+import com.tkhq.cmc.model.TbsQtacDongiaXuatkhau;
+
+public interface TbsQtacDongiaXuatkhauDao {
+	void insert(TbsQtacDongiaXuatkhau entity);
+	void update(TbsQtacDongiaXuatkhau entity);
+	void delete(long id);
+}

@@ -1,0 +1,85 @@
+package com.tkhq.cmc.controller.rest;
+
+import java.util.Hashtable;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tkhq.cmc.dto.HTRaXoatSanPhamTKDTO;
+import com.tkhq.cmc.model.Tbs_dmbaocao;
+import com.tkhq.cmc.services.HTRaXoatSanPhamTKService;
+import com.tkhq.cmc.services.Tbs_dmBaoCaoService;
+
+@RestController
+@RequestMapping(value="/QLLDTPB")
+public class QLLDTPhoBienRestController {
+	
+//	@Autowired
+//	Tbs_dmBaoCaoService tbsDmBaoCaoService;
+	
+	@Autowired
+	HTRaXoatSanPhamTKService hTRaXoatSanPhamTKService;
+	
+//	@RequestMapping(value="/getLstBieuBC", method = RequestMethod.GET)
+//	public ResponseEntity<List<Tbs_dmbaocao>> getLstBieuBC(String nhx){
+//		Integer[] ma_loaibc = {1, 6};
+//		List<Tbs_dmbaocao> list = tbsDmBaoCaoService.getDmBCPhoBienTT(nhx, ma_loaibc);
+//		
+//		if(list == null){
+//			return new ResponseEntity<List<Tbs_dmbaocao>>(HttpStatus.NOT_FOUND);
+//		}
+//		
+//		return new ResponseEntity<List<Tbs_dmbaocao>>(list, HttpStatus.OK);
+//	}
+	
+	@RequestMapping(value="/getProcessInfo", method = RequestMethod.POST)
+	public ResponseEntity<List<HTRaXoatSanPhamTKDTO>> getProcessInfo(@RequestBody Hashtable<String, String> param){
+		String loaiBC = param.get("loaiBC");
+		String trangthai = param.get("trangthai");
+		String ky;
+		if(param.get("ky").isEmpty()){
+			ky = null;
+		}
+		else{
+			ky = param.get("ky");
+		}
+		String thang = param.get("thang");
+		String nam = param.get("nam");
+		String nhx = param.get("nhx");
+		
+		List<HTRaXoatSanPhamTKDTO> lstTTXL = hTRaXoatSanPhamTKService.getThongTinXuLy(loaiBC, trangthai, ky, thang, nam, nhx);
+		
+		return new ResponseEntity<List<HTRaXoatSanPhamTKDTO>>(lstTTXL, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/doApproval", method = RequestMethod.POST)
+	public ResponseEntity<String> doApproval(@RequestBody Hashtable<String, String> param){
+		String approval = param.get("approval");
+		String loaiBC = param.get("loaiBC");
+		String ky;
+		if(param.get("ky").isEmpty()){
+			ky = null;
+		}
+		else{
+			ky = param.get("ky");
+		}
+		String thang = param.get("thang");
+		String nam = param.get("nam");
+		String lydoPD = param.get("lydoPD");
+		
+		int returns = hTRaXoatSanPhamTKService.doApproval(approval, loaiBC, ky, thang, nam, lydoPD);
+		
+		if(returns == 1){
+			return new ResponseEntity<String>(HttpStatus.OK);
+		}
+		else{
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+}

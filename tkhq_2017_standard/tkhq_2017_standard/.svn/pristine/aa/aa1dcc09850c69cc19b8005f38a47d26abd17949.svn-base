@@ -1,0 +1,13 @@
+package com.tkhq.cmc.services;
+
+import java.util.List;
+
+import com.tkhq.cmc.dto.BCSLVNBELARUTDTO;
+import com.tkhq.cmc.dto.BCSLVNUCRAINADTO;
+import com.tkhq.cmc.dto.BCSLVN_LAODTO;
+
+public interface PHANHE_PBTKSPService {
+	public List<BCSLVNUCRAINADTO> Ts_BCSLVN_UCRAINA(int ky,int nam);
+	public List<BCSLVNBELARUTDTO> Ts_BCSLVN_BELARUT(int ky,int nam,String nhx);
+	public List<BCSLVN_LAODTO> ts_BCSLVN_LAO(int ky, int nam);
+}

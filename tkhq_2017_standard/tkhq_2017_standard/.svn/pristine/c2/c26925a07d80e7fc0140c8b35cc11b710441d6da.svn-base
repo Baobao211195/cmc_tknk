@@ -1,0 +1,48 @@
+package com.tkhq.cmc.dto;
+
+import java.math.BigInteger;
+
+import com.tkhq.cmc.common.PagerInfo;
+
+public class TbsQtacDongiaXuatkhauDTO extends PagerInfo {
+
+	private Long id;
+	
+	private String mathongke;
+	
+	private BigInteger dongialonnhat;
+	
+	private BigInteger dongianhonhat;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getMathongke() {
+		return mathongke;
+	}
+
+	public void setMathongke(String mathongke) {
+		this.mathongke = mathongke;
+	}
+
+	public BigInteger getDongialonnhat() {
+		return dongialonnhat;
+	}
+
+	public void setDongialonnhat(BigInteger dongialonnhat) {
+		this.dongialonnhat = dongialonnhat;
+	}
+
+	public BigInteger getDongianhonhat() {
+		return dongianhonhat;
+	}
+
+	public void setDongianhonhat(BigInteger dongianhonhat) {
+		this.dongianhonhat = dongianhonhat;
+	}
+}

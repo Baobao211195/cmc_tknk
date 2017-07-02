@@ -1,0 +1,100 @@
+package com.tkhq.global.controler.rest;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tkhq.global.dao.BaoCaoDuLieuThayDoiDao;
+import com.tkhq.global.dao.BuocNVTKPrintParams;
+import com.tkhq.global.dao.TongThePrintParams;
+import com.tkhq.global.dao.XemToKhaiThayDoiParams;
+import com.tkhq.global.model.bcdulieuthaydoi.*;
+
+@RestController
+@RequestMapping(value="bcpt", method = RequestMethod.GET)
+public class BaoCaoDuLieuThayDoiController {
+	
+	@Autowired
+	private BaoCaoDuLieuThayDoiDao repository;
+	//= new BaoCaoDuLieuThayDoiDaoMock();
+	
+	@RequestMapping(value="ThayDoiDoNVHQ/TongThe")
+	public ResponseEntity<List<ThayDoiDoNVHQTongTheResponse>> getThayDoiTongThe(ThayDoiDoNVHQRequest requestParams){
+		List<ThayDoiDoNVHQTongTheResponse> list = repository.getThayDoiTongThe(requestParams);
+		if(list == null)
+			return new ResponseEntity<List<ThayDoiDoNVHQTongTheResponse>>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<List<ThayDoiDoNVHQTongTheResponse>>(list, HttpStatus.OK); 
+	}
+	
+	@RequestMapping(value="ThayDoiDoNVHQ/BSToKhai")
+	public ResponseEntity<List<ThayDoiDoNVHQBSToKhaiResponse>> getThayDoiDoBSToKhai(ThayDoiDoNVHQRequest requestParams){
+		List<ThayDoiDoNVHQBSToKhaiResponse> list = repository.getThayDoiDoBSToKhai(requestParams);
+		if(list == null)
+			return new ResponseEntity<List<ThayDoiDoNVHQBSToKhaiResponse>>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<List<ThayDoiDoNVHQBSToKhaiResponse>>(list, HttpStatus.OK); 
+	}	
+	
+	@RequestMapping(value="ThayDoiDoNVHQ/HuyXoa")
+	public ResponseEntity<List<ThayDoiDoNVHQNhomHuyXoaResponse>> getThayDoiDoHuyXoa(ThayDoiDoNVHQRequest requestParams){
+		List<ThayDoiDoNVHQNhomHuyXoaResponse> list = repository.getThayDoiDoHuyXoa(requestParams);
+		if(list == null)
+			return new ResponseEntity<List<ThayDoiDoNVHQNhomHuyXoaResponse>>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<List<ThayDoiDoNVHQNhomHuyXoaResponse>>(list, HttpStatus.OK); 
+	}
+	
+	@RequestMapping(value="ThayDoiDoNVHQ/SDBS")
+	public ResponseEntity<List<ThayDoiDoNVHQNhomSDBSResponse>> getThayDoiDoSDBS(ThayDoiDoNVHQRequest requestParams){
+		List<ThayDoiDoNVHQNhomSDBSResponse> list = repository.getThayDoiDoSDBS(requestParams);
+		if(list == null)
+			return new ResponseEntity<List<ThayDoiDoNVHQNhomSDBSResponse>>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<List<ThayDoiDoNVHQNhomSDBSResponse>>(list, HttpStatus.OK); 
+	}
+	
+	@RequestMapping(value="ThayDoiDoNVHQ/TongThePrint")
+	public ResponseEntity<List<List<PrintTongTheGroupItem>>> getPrintTongThe(TongThePrintParams requestParams){
+		List<List<PrintTongTheGroupItem>> list = repository.getPrintTongThe(requestParams);
+		if(list == null)
+			return new ResponseEntity<List<List<PrintTongTheGroupItem>>>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<List<List<PrintTongTheGroupItem>>>(list, HttpStatus.OK); 
+	}
+	
+	@RequestMapping(value="ThayDoiDoNVHQ/BuocNVTKPrint")
+	public ResponseEntity<List<List<PrintBuocNVTKGroupItem>>> getPrintBuocNVTKValue(
+			BuocNVTKPrintParams requestParams){
+		List<List<PrintBuocNVTKGroupItem>> list = repository.getPrintBuocNVTKValue(requestParams);
+		if(list == null)
+			return new ResponseEntity<List<List<PrintBuocNVTKGroupItem>>>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<List<List<PrintBuocNVTKGroupItem>>>(list, HttpStatus.OK); 
+	}
+	
+	@RequestMapping(value="XemThayDoi/BuocNVTHKE")
+	public ResponseEntity<List<XemThayDoiDoBuocNVThKe>> getThayDoiDoBuocNVTHKEDetails(XemToKhaiThayDoiParams params){
+		List<XemThayDoiDoBuocNVThKe> list = repository.xemChitietThayDoi_BuocNVTHKE(params);
+		if(list == null)
+			return new ResponseEntity<List<XemThayDoiDoBuocNVThKe>>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<List<XemThayDoiDoBuocNVThKe>>(list, HttpStatus.OK); 
+	}
+	
+	@RequestMapping(value="XemThayDoi/DoBSTK")
+	public ResponseEntity<List<XemThayDoiDoBSToKhai>> xemChitietThayDoi_BSToKhai(XemToKhaiThayDoiParams params){
+		List<XemThayDoiDoBSToKhai> list = repository.xemChitietThayDoi_BSToKhai(params);
+		//System.out.println("#########################xemChitietThayDoi_BSToKhai@params:"+params.getMaChicucHQ());
+		if(list == null)
+			return new ResponseEntity<List<XemThayDoiDoBSToKhai>>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<List<XemThayDoiDoBSToKhai>>(list, HttpStatus.OK); 
+	}
+	
+	@RequestMapping(value="XemThayDoi/DoSDBSThongTin")
+	public ResponseEntity<List<XemThayDoiDoSDBS>> xemChitietThayDoi_SDBS(XemToKhaiThayDoiParams params){
+		List<XemThayDoiDoSDBS> list = repository.xemChitietThayDoi_SDBS(params);
+		if(list == null)
+			return new ResponseEntity<List<XemThayDoiDoSDBS>>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<List<XemThayDoiDoSDBS>>(list, HttpStatus.OK); 
+	}	
+	
+}

@@ -1,0 +1,9 @@
+package com.tkhq.cmc.dao;
+
+import com.tkhq.cmc.model.TbsQtacCuakhauDbVn;
+
+public interface TbsQtacCuakhauDbVnDao {
+	void insert(TbsQtacCuakhauDbVn entity);
+	void update(TbsQtacCuakhauDbVn entity);
+	void delete(long id);
+}

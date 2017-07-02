@@ -1,0 +1,51 @@
+package com.tkhq.cmc.services;
+
+import java.sql.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tkhq.cmc.dao.TbsSysParametersDAO;
+import com.tkhq.cmc.model.TbdSysparameters;
+
+@Service("TbdSysParamter")
+@Transactional
+public class TbdSysParametersServiceImpl implements TbdSysParametersService {
+
+	@Autowired
+	TbsSysParametersDAO dao;
+
+	@Override
+	public List<TbdSysparameters> getAll() {
+		return dao.getAll();
+	}
+
+	@Override
+	public List<TbdSysparameters> Search(String ten_param, String giatri,
+			String nguoi_capnhap, String ngay_capnhap) {
+		return dao.Search(ten_param, giatri, nguoi_capnhap, ngay_capnhap);
+	}
+
+	@Override
+	public void InsertParameters(TbdSysparameters paramters) throws Exception {
+		dao.InsertParameters(paramters);
+	}
+
+	@Override
+	public void DeleteParameters(int ma) {
+		dao.DeleteParameters(ma);
+	}
+
+	@Override
+	public void UpdateParameters(TbdSysparameters paramters) {
+		dao.UpdateParameters(paramters);
+	}
+
+	@Override
+	public TbdSysparameters findParamById(int ma) {
+		
+		return dao.findParamById(ma);
+	}
+}

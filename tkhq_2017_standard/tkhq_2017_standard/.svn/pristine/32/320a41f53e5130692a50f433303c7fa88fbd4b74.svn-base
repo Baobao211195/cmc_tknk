@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-05-09T09:20:22 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BCXNKTLHDN" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c6d3ed57-babf-44e5-809a-bc56e7204035">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="trigia_xk" class="java.lang.Double">
+		<fieldDescription><![CDATA[trigia_xk]]></fieldDescription>
+	</field>
+	<field name="ma_cuc" class="java.lang.String">
+		<fieldDescription><![CDATA[ma_cuc]]></fieldDescription>
+	</field>
+	<field name="ten_nhom_lhdn" class="java.lang.String">
+		<fieldDescription><![CDATA[ten_nhom_lhdn]]></fieldDescription>
+	</field>
+	<field name="thang" class="java.lang.Integer">
+		<fieldDescription><![CDATA[thang]]></fieldDescription>
+	</field>
+	<field name="trigia_nk" class="java.lang.Double">
+		<fieldDescription><![CDATA[trigia_nk]]></fieldDescription>
+	</field>
+	<field name="ten_cuc" class="java.lang.String">
+		<fieldDescription><![CDATA[ten_cuc]]></fieldDescription>
+	</field>
+	<field name="ma_hq" class="java.lang.String">
+		<fieldDescription><![CDATA[ma_hq]]></fieldDescription>
+	</field>
+	<field name="nam" class="java.lang.Integer">
+		<fieldDescription><![CDATA[nam]]></fieldDescription>
+	</field>
+	<field name="ma_nhom_lhdn" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ma_nhom_lhdn]]></fieldDescription>
+	</field>
+	<field name="ten_hq" class="java.lang.String">
+		<fieldDescription><![CDATA[ten_hq]]></fieldDescription>
+	</field>
+	<variable name="Sum_TGXK" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{trigia_xk}]]></variableExpression>
+		<initialValueExpression><![CDATA[$F{trigia_xk}]]></initialValueExpression>
+	</variable>
+	<variable name="Sum_TGNK" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{trigia_nk}]]></variableExpression>
+		<initialValueExpression><![CDATA[$F{trigia_nk}]]></initialValueExpression>
+	</variable>
+	<group name="MA_HQ_Group">
+		<groupExpression><![CDATA[$F{ma_hq}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="129" splitType="Stretch">
+			<textField>
+				<reportElement x="203" y="83" width="153" height="25" uuid="2aafd6c5-c6cb-46b5-b5d4-6c02a4167ce2">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Tháng " + $F{thang} + " năm " +$F{nam}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="71" y="54" width="419" height="30" uuid="68f4f729-e5e0-4570-80f4-474cd06ae7a1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[XUẤT NHẬP KHẨU THEO LOẠI HÌNH DOANH NGHIỆP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="42" y="12" width="115" height="19" uuid="6fbf236a-81b8-4639-b891-40e13c0bf8ed"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TỔNG CỤC HẢI QUAN]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="-9" y="30" width="220" height="20" uuid="7c04cc9b-60cb-4711-a5bf-a862c3595cce"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ten_cuc}.toUpperCase()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="10" y="0" width="160" height="30" uuid="43afdb0f-b5fd-47f4-b313-1e7c15e66edc"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Loại hình doanh nghiệp]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="170" y="0" width="190" height="30" uuid="2ce8fa35-02e1-4892-af77-fb122d4a5e62"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trị giá thống kê xuất khẩu (USD)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="0" width="190" height="30" uuid="a19818f0-a8e0-459a-8637-ce935de4d2da"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trị giá thống kê nhập khẩu (USD)]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="10" y="0" width="160" height="30" uuid="c207a1e5-a6c5-4bb1-9ebb-53ba432b9c79"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ten_nhom_lhdn}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="170" y="0" width="190" height="30" uuid="51b4cdd4-6bee-4f6c-9051-2e3b4427e057"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{trigia_xk} + "  "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="360" y="0" width="190" height="30" uuid="c6d1d92a-8f34-4ee5-afbe-3c7e9f525537"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{trigia_nk} + "  "]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="15" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="504" y="0" width="46" height="15" uuid="788b18a4-f60e-4faf-8a6a-fc161e16e984">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Trang " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="170" y="0" width="190" height="20" uuid="64500a7d-ae12-417e-b5de-9f8f39bedf13"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_TGXK}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="0" width="160" height="20" uuid="69fd8a1b-ad22-44d2-9b80-a38fd3aeb9aa"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Tổng cộng"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="360" y="0" width="190" height="20" uuid="8f6a4eff-74e4-457e-a859-efc3f8154917"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_TGNK}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

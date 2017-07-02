@@ -1,0 +1,98 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<div class="box-search">
+	<div class="container-fluid" style="overflow-x: auto;">
+		<table style="width: 100%">
+			<tr>
+				<td class="col-md-6 col-xs-6 col-lg-6 col-sm-6"><label
+					class="col-md-4 col-lg-4 col-sm-4 col-xs-4">Trạng thái*</label>
+					<div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
+						<select name="TTSelect" class="form-control" ng-model="ctrl.TTSelected">
+							<option value="">---Chọn---</option>
+							<option value="SB">Sơ bộ</option>
+							<option value="DC">Điều chỉnh</option>
+							<option value="CT">Chính thức</option>
+						</select>
+					</div>
+				</td>
+				<td class="col-md-6 col-xs-6 col-lg-6 col-sm-6"><label
+					class="col-md-4 col-lg-4 col-sm-4 col-xs-4">Tỉnh/Thành phố*</label>
+					<div class="col-md-6 col-xs-6 col-lg-6 col-sm-6">
+						<select name="tinhTPSelect" class="form-control" ng-model="ctrl.tinhTPSelected">
+							<option value="">---Chọn---</option>
+							<option ng-repeat="option in lstTinhTP" value="{{option.ma}}">{{option.ten}}</option>
+						</select>
+					</div></td>
+			</tr>
+		</table>
+		<br />
+		<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12" align="center" style="margin: 5px">
+			<button type="submit" id="btnSearchXK" ng-click="search()" class="btn btn-primary">
+				Xem Báo cáo
+			</button>
+		</div>
+	</div>
+</div>
+
+<div class="table-scroll" ng-show="showDataTable">
+	<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12" style="text-align: right;">
+		<span>Đơn vị tính: Nghìn USD</span>
+	</div>
+	<table id="tblWarnTGXNK63TinhTPXK" class="table table-bordered table-text">
+		<thead>
+			<tr>
+				<th>Chỉ tiêu</th>
+				<th>Kỳ</th>
+				<th colspan="{{lstWarnTGXNKTinhTP[0].data_ky.data.length}}">Thời gian</th>
+				<th>So sánh với kỳ trước</th>
+				<th>So sánh với cùng kỳ năm trước</th>
+			</tr>
+		</thead>
+		<tbody ng-repeat="groupData in lstWarnTGXNKTinhTP" class="pa0">
+			<tr>
+				<td ng-bind="groupData.sub_name" rowspan="2" style="text-align: left;"></td>
+				<td>Kỳ</td>
+				<td ng-repeat="dataKy in groupData.data_ky.data" class="{{dataKy.background}}">
+					<span ng-bind="dataKy.ky"></span>
+					<br />
+					<span ng-bind="dataKy.gia_tri"></span>
+				</td>
+				<td ng-bind="groupData.data_ky.ss_ky_truoc"></td>
+				<td ng-bind="groupData.data_ky.ss_ky_nam_truoc"></td>
+			</tr>
+			<tr>
+				<td>Tháng</td>
+				<td ng-repeat="dataThang in groupData.data_thang.data" class="{{dataThang.background}}" colspan="2">
+					<span ng-bind="dataThang.thang"></span>
+					<br />
+					<span ng-bind="dataThang.gia_tri"></span>
+				</td>
+				<td ng-bind="groupData.data_thang.ss_thang_truoc"></td>
+				<td ng-bind="groupData.data_thang.ss_thang_nam_truoc"></td>
+			</tr>
+			<tr>
+				<td style="text-align: left;">AVG</td>
+				<td ng-bind="groupData.avg" colspan="{{lstWarnTGXNKTinhTP[0].data_ky.data.length + 1}}"
+					style="background-color: green;"></td>
+				<td colspan="2">&nbsp;</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<br />
+<div class="col-md-12" align="center" ng-show="showDataTable">
+	<button type="button" id="btnReportXK" ng-click="showFeedback()" data-toggle="modal"
+		data-target="#myModal" class="btn btn-primary" style="width: 100px;">
+		Phản hồi
+	</button>
+	<button type="button" id="btnExportXK" ng-click="doExport()" class="btn btn-primary"
+		style="width: 100px;">Kết xuất
+	</button>
+	<button type="button" id="btnPrintXK" ng-click="doPrint()" class="btn btn-primary"
+		style="width: 100px;">In
+	</button>
+</div>
+<div class="col-md-12" align="left" ng-show="showDataTable">
+	<a id="btnChartXK" ng-click="showChartInfo()" ng-disabled="btnDisable" href=""
+		style="text-decoration: underline; font-size: 14px; font-weight: 700;">Biểu đồ</a>
+</div>

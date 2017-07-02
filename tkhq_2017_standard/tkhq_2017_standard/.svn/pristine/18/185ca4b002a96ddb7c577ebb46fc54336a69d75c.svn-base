@@ -1,0 +1,125 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<style type="text/css">
+.row {
+	padding: 5px;
+}
+</style>
+<div class="" style="background-color: #ecf0f5;">
+	<section class="content-header">
+		<h3 class="title">Thêm mới/Cập nhật Tổ chức, cá nhân sử dụng sản
+			phẩm thống kê</h3>
+	</section>
+	<section class="content">
+		<div class="modal-body">
+			<form name="UserForm">
+				<div class="row">
+					<label class="col-sm-4">Tổ chức sử dụng</label>
+					<div class="col-sm-8">
+						<input class="form-control" type="text" name="tochuc"
+							ng-model="self.entity.tenTochuc" />
+					</div>
+				</div>
+				<div class="row">
+					<label class="col-sm-4">Cá nhân sử dụng</label>
+					<div class="col-sm-8">
+						<input class="form-control" type="text"
+							ng-model="self.entity.tenCanhan" />
+					</div>
+				</div>
+				<div class="row">
+					<label class="col-sm-4">Email</label>
+					<div class="col-sm-8">
+						<input class="form-control" type="text"
+							ng-model="self.entity.email" />
+					</div>
+				</div>
+				<div class="row">
+					<label class="col-sm-4">Điện thoại</label>
+					<div class="col-sm-8">
+						<input class="form-control" type="text"
+							ng-model="self.entity.mobile" />
+					</div>
+				</div>
+				<div class="row">
+					<label class="col-sm-4">Thông tin số liệu của người sử dụng
+					</label>
+					<div class="col-md-8">
+						<textarea rows="2" cols="50" class="form-control" maxlength="128"
+							ng-model="self.entity.mota"></textarea>
+					</div>
+				</div>
+				<div class="row">
+					<label class="col-sm-4">Chỉ tiêu thống kê chính</label>
+					<div class="col-sm-8">
+						<input class="form-control" type="text"
+							ng-model="self.entity.chitieuTK" />
+					</div>
+				</div>
+				<div class="row">
+					<label class="col-sm-4">Khái niệm, định nghĩa</label>
+					<div class="col-sm-8">
+						<input class="form-control" type="text"
+							ng-model="self.entity.khainiem" />
+					</div>
+				</div>
+				<div class="row">
+					<label class="col-sm-4">Căn cứ vào tài liệu</label>
+					<div class="col-sm-8">
+						<textarea rows="2" cols="50" class="form-control" maxlength="128"
+							ng-model="self.entity.cancu"></textarea>
+					</div>
+				</div>
+				<div class="row">
+					<label class="col-sm-4">Tần suất<br />(ngày, tuần,
+						tháng,...)
+					</label>
+					<div class="col-sm-8">
+						<textarea rows="2" cols="50" class="form-control" maxlength="128"
+							ng-model="self.entity.tansuat"></textarea>
+					</div>
+				</div>
+				<div class="row">
+					<label class="col-sm-4">Dạng dữ liệu<br />(MS Excel,
+						Word,...)
+					</label>
+					<div class="col-sm-8">
+						<input class="form-control" type="text"
+							ng-model="self.entity.dexuatDL" />
+					</div>
+				</div>
+				<div class="row">
+					<label class="col-sm-4">Công chức xử lý</label>
+					<div class="col-sm-8">
+						<select name="congchucSelect" class="form-control"
+							ng-model="self.entity.userId">
+							<option value="">---Please select---</option>
+							<option ng-repeat="option in self.lstUser"
+								value="{{option.userId}}">{{option.userName}}</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<label class="col-sm-4">Ghi chú</label>
+					<div class="col-sm-8">
+						<textarea rows="2" cols="50" class="form-control" maxlength="128"
+							ng-model="self.entity.ghichu"></textarea>
+					</div>
+				</div>
+				<div class="row">
+					<label class="col-sm-4">Mức độ đáp ứng</label>
+					<div class="col-sm-8">
+						<input class="form-control" type="text"
+							ng-model="self.entity.mucdo" />
+					</div>
+				</div>
+				<div class="col-sm-12" align="center">
+					<button class="btn btn-primary" ng-click="self.saveData()">Lưu</button>
+					<button class="btn btn-primary" ng-click="self.cancel()">Hủy
+						bỏ</button>
+				</div>
+				<br/>
+			</form>
+		</div>
+	</section>
+</div>

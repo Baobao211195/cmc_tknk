@@ -1,0 +1,59 @@
+package com.tkhq.cmc.dao;
+
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
+import com.tkhq.cmc.model.Tbs_Haiquan_KTTXNK;
+
+@Repository
+public class Tbs_Haiquan_KTTXNKDAOImpl extends BaseDAO<String, Tbs_Haiquan_KTTXNK>  implements  Tbs_Haiquan_KTTXNKDAO{
+
+	public Tbs_Haiquan_KTTXNK getHaiQuanCTByMaChiCuc(String maChiCuc) {
+		
+		Criteria cr = this.getSession().createCriteria(Tbs_Haiquan_KTTXNK.class);
+		cr.add(Restrictions.eq("ma",maChiCuc));
+
+		List results = cr.list();
+		if(results.size() > 0)
+			return (Tbs_Haiquan_KTTXNK)results.get(0);
+		else return null;		
+	}
+
+	public List<Tbs_Haiquan_KTTXNK> getAllHaiQuan() {
+		Criteria cr = this.getSession().createCriteria(Tbs_Haiquan_KTTXNK.class);
+		List<Tbs_Haiquan_KTTXNK>  results = (List<Tbs_Haiquan_KTTXNK>)cr.list();
+		if(results.size() > 0)
+			return results;
+		else return null;	
+	}
+	
+	public List<Tbs_Haiquan_KTTXNK> getAllCucHaiQuan() {
+		
+		Criteria cr = this.getSession().createCriteria(Tbs_Haiquan_KTTXNK.class);
+		cr.add(Restrictions.eq("cap",2));
+		cr.add(Restrictions.eq("hide",0));
+		cr.addOrder(Order.asc("ma"));
+
+		List<Tbs_Haiquan_KTTXNK> results = cr.list();
+		if(results.size() > 0)
+			return results;
+		else return null;		
+	}
+	
+	public List<Tbs_Haiquan_KTTXNK> getChiCucByCuc(String maCuc) {
+		
+		Criteria cr = this.getSession().createCriteria(Tbs_Haiquan_KTTXNK.class);
+		cr.add(Restrictions.eq("maHQCT",maCuc));
+		cr.add(Restrictions.eq("hide",0));
+		cr.addOrder(Order.asc("ma"));
+
+		List<Tbs_Haiquan_KTTXNK> results = cr.list();
+		if(results.size() > 0)
+			return results;
+		else return null;		
+	}
+}

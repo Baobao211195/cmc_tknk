@@ -1,0 +1,300 @@
+/**
+ * 
+ */
+'use strict';
+
+angular.module('myApp').controller('dienBienHangHoaXNKController',
+		dienBienHangHoaXNKController);
+dienBienHangHoaXNKController.$inject = [ '$scope', 'dienBienHangHoaXNKService',
+		'pagerService', '$uibModal', '$PopupMessage', '$rootScope',
+		'contextPath' ];
+function dienBienHangHoaXNKController($scope, dienBienHangHoaXNKService,
+		pagerService, $uibModal, $PopupMessage, $rootScope, contextPath) {
+
+	console.log('start dienBienHangHoaXNKController');
+	var self = this;
+	self.lstTrangThai = [];
+	self.lstMatHang = [];
+	self.lstCucHQ = [];
+	self.lstChiCuc = [];
+	self.GetNewPage = GetNewPage;
+	self.getMatHang = getMatHang;
+	self.feedBack = feedBack;
+	self.showPopup = showPopup;
+	self.GetSoLieuTheoChiTieuThongKe04 = GetSoLieuTheoChiTieuThongKe04;
+	self.animationsEnabled = true;
+	self.lstDataKy = [];
+	self.lstDataThang = [];
+	self.soLieuChiTieuTK = '';
+	self.nhx = '';
+	self.showChart1 = false;
+	self.linkAPI_LuongTK = ''; //contextPath + '/pbtk/API_dienBienHangHoaXNK_ky?nhx=X&trangThai=SB&radioBox=KY&maCucHQ=29&maChicucHQ=32d&mathang=0101&loaiTK=luongTK';
+	self.linkAPI_dongiaTK = '';//contextPath + '/pbtk/API_dienBienHangHoaXNK_ky?nhx=X&trangThai=SB&radioBox=KY&maCucHQ=29&maChicucHQ=32d&mathang=0101&loaiTK=dongiaTK';
+	self.linkAPI_dvt = '';//contextPath + '/pbtk/API_dienBienHangHoaXNK_ky?nhx=X&trangThai=SB&radioBox=KY&maCucHQ=29&maChicucHQ=32d&mathang=0101&loaiTK=dvt';
+	self.linkAPI_trigiaTk = '';//contextPath + '/pbtk/API_dienBienHangHoaXNK_ky?nhx=X&trangThai=SB&radioBox=KY&maCucHQ=29&maChicucHQ=32d&mathang=0101&loaiTK=trigiaTK';
+	self.loai_bc = '4';
+	self.soLieuEntity = {
+		mo_ta : '',
+		ma_hang : '',
+		ma_tk : '',
+		isChecked : false
+	};
+	self.getCucHQ = getCucHQ;
+	getCucHQ();
+	// self.GetChiCucHQByCucHQ = GetChiCucHQByCucHQ;
+	$rootScope.$on('childEmit', function(event, data) {
+		self.nhx = data;
+		GetNewPage(data);
+
+	});
+
+	function GetSoLieuTheoChiTieuThongKe04() {
+		$rootScope.showLoading = true;
+		var chicuc = '';
+		if (self.lstChiCuc != null && !angular.isUndefined($scope.chicucHQSeletected)&& $scope.chicucHQSeletected.ma != '0' ) {
+			chicuc =  $scope.chicucHQSeletected.ma;
+		}
+		var mathang = angular.isUndefined($scope.matHang) ? ''
+				: $scope.matHang.ma;
+		var cuc = angular.isUndefined($scope.cucHQSeletected) ? ''
+				: $scope.cucHQSeletected.ma;
+
+		dienBienHangHoaXNKService.GetSoLieuChiTieuTK04(cuc, self.nhx,
+				$scope.trangThai.ma, mathang, chicuc).then(
+				function(respone) {
+					if (respone.length > 0) {
+						self.soLieuChiTieuTK = respone[0];
+						
+//						for(var i = 0; i < self.soLieuChiTieuTK.length; i++){
+							for(var ii = 0; ii < self.soLieuChiTieuTK.group_data.length; ii++){
+								var maxKy = 0;
+								var minKy = 0;// self.soLieuChiTieuTK.group_data[ii].data_ky.data[0].gia_tri;
+								if(!isNaN(self.soLieuChiTieuTK.group_data[ii].data_ky.data[0].gia_tri) &&
+								   self.soLieuChiTieuTK.group_data[ii].data_ky.data[0].gia_tri != null &&
+								   self.soLieuChiTieuTK.group_data[ii].data_ky.data[0].gia_tri.trim() != ''){
+									minKy = self.soLieuChiTieuTK.group_data[ii].data_ky.data[0].gia_tri;
+								}
+								var maxThang = 0;
+								var minThang = 0;//self.soLieuChiTieuTK.group_data[ii].data_thang.data[0].gia_tri;
+								if(self.soLieuChiTieuTK.group_data[ii].data_thang.data[0].gia_tri != null &&
+								   self.soLieuChiTieuTK.group_data[ii].data_thang.data[0].gia_tri.trim() != ''){
+									minThang = self.soLieuChiTieuTK.group_data[ii].data_thang.data[0].gia_tri;
+								}
+								
+								var lengthKY = self.soLieuChiTieuTK.group_data[ii].data_ky.data.length;
+								var lengthTHANG = self.soLieuChiTieuTK.group_data[ii].data_thang.data.length;
+								var tenKY = '';
+								var tenTHANG = '';
+//								if (self.soLieuChiTieuTK.group_data[ii].data_ky.data.length > 0
+//										&& self.soLieuChiTieuTK.group_data[ii].data_ky.data.length % 2 != 0) {
+									lengthKY = self.soLieuChiTieuTK.group_data[ii].data_ky.data.length -1;
+									lengthTHANG = self.soLieuChiTieuTK.group_data[ii].data_thang.data.length -1;
+									tenKY = self.soLieuChiTieuTK.group_data[ii].data_ky.data[lengthKY].ky;
+									tenTHANG = self.soLieuChiTieuTK.group_data[ii].data_thang.data[lengthTHANG].thang;
+//								}								
+								for(var j = 0; j < lengthKY; j++){									
+									if(!isNaN(self.soLieuChiTieuTK.group_data[ii].data_ky.data[j].gia_tri) &&
+									   self.soLieuChiTieuTK.group_data[ii].data_ky.data[j].gia_tri != null &&
+									   self.soLieuChiTieuTK.group_data[ii].data_ky.data[j].gia_tri.trim() != ''){
+										if(parseFloat(self.soLieuChiTieuTK.group_data[ii].data_ky.data[j].gia_tri) > parseFloat(maxKy)){
+											maxKy = self.soLieuChiTieuTK.group_data[ii].data_ky.data[j].gia_tri;
+										}
+										if(parseFloat(self.soLieuChiTieuTK.group_data[ii].data_ky.data[j].gia_tri) < parseFloat(minKy)){
+											minKy = self.soLieuChiTieuTK.group_data[ii].data_ky.data[j].gia_tri;
+										}
+									}
+								}
+								for(var k = 0; k < lengthTHANG; k++){									
+									if(self.soLieuChiTieuTK.group_data[ii].data_thang.data[k].gia_tri != null &&
+									   self.soLieuChiTieuTK.group_data[ii].data_thang.data[k].gia_tri.trim() != ''){									
+										if(parseFloat(self.soLieuChiTieuTK.group_data[ii].data_thang.data[k].gia_tri) > parseFloat(maxThang)){
+											maxThang = self.soLieuChiTieuTK.group_data[ii].data_thang.data[k].gia_tri;											
+										}
+										if(parseFloat(self.soLieuChiTieuTK.group_data[ii].data_thang.data[k].gia_tri) < parseFloat(minThang)){
+											minThang = self.soLieuChiTieuTK.group_data[ii].data_thang.data[k].gia_tri;
+										}
+									}
+								}
+								self.soLieuChiTieuTK.group_data[ii].data_ky["maxKy"] = maxKy;
+								self.soLieuChiTieuTK.group_data[ii].data_ky["minKy"] = minKy;								
+								self.soLieuChiTieuTK.group_data[ii].data_thang["maxThang"] = maxThang;
+								self.soLieuChiTieuTK.group_data[ii].data_thang["minThang"] = minThang;
+								self.soLieuChiTieuTK.group_data[ii].data_ky["tenKY"] = tenKY;
+								self.soLieuChiTieuTK.group_data[ii].data_thang["tenTHANG"] = tenTHANG;
+							}
+//						}
+						
+						for (var int = 0; int < self.soLieuChiTieuTK.group_data.length; int++) {
+							if (self.soLieuChiTieuTK.group_data[int].data_ky.data.length > 0
+									&& self.soLieuChiTieuTK.group_data[int].data_ky.data.length % 2 != 0) {
+								self.soLieuChiTieuTK.group_data[int].data_ky.data.push({
+									"gia_tri" : null,
+									"ky" : null
+								});
+							}
+						}
+					}
+					$rootScope.showLoading = false;
+				}, function(errResponse) {
+					console.error(errResponse);
+					$rootScope.showLoading = false;
+				});
+	}
+	function GetNewPage(xnk) {
+		self.lstTrangThai = [ {
+			"ma" : "SB",
+			"ten" : "Sơ bộ"
+		}, {
+			"ma" : "DC",
+			"ten" : "Điều chỉnh"
+		}, {
+			"ma" : "CT",
+			"ten" : "Chính thức"
+		}, {
+			"ma" : "UC",
+			"ten" : "Ước"
+		} ];
+
+		getMatHang(xnk);
+		console.log('#########################self.loai_bc:' + self.loai_bc);
+		$rootScope.$emit('PhanHoiQuyTrinhXLDL', self.loai_bc);
+		$scope.trangThai = self.lstTrangThai[0];
+		$scope.radioBox = 'KY';
+		//GetSoLieuTheoChiTieuThongKe04();
+	}
+	function getCucHQ() {
+		dienBienHangHoaXNKService.GetCucHQ().then(function(response) {
+			var array = angular.fromJson(response);
+			array = array.filter(function(el) {
+				return el.name !== "Tổng Cục Hải Quan";
+			});
+			self.lstCucHQ = array;
+			$scope.cucHQSeletected = array[0];
+			$scope.GetChiCucHQByCuc();
+		})
+	}
+	$scope.GetChiCucHQByCuc = function() {
+		var ma = $scope.cucHQSeletected.ma;
+		if (ma != "00") {
+			dienBienHangHoaXNKService.GetChiCucHQByCuc(ma).then(
+					function(response) {
+						// console.log(JSON.stringify(response));
+						var array = angular.fromJson(response);
+						self.lstChiCuc = array;
+//						self.lstChiCuc.splice(0, 0, {
+//							"ma" : "0",
+//							"ten" : "---chọn---"
+//						})
+						self.lstChiCuc = [{"ma": "","ten": "---chọn---"}].concat(self.lstChiCuc);
+						$scope.chicucHQSeletected = self.lstChiCuc[0];
+					});
+		} else {
+//			self.lstChiCuc = null;
+			self.lstChiCuc = [{"ma": "","ten": "---chọn---"}];
+			$scope.chicucHQSeletected = self.lstChiCuc[0];
+		}
+	}
+	function getMatHang(xnk) {
+		dienBienHangHoaXNKService.GetlstMatHang(xnk).then(function(response) {
+			var array = angular.fromJson(response);
+			self.lstMatHang = array;
+			$scope.matHang = self.lstMatHang[0];
+		})
+
+	}
+	$scope.doExport = function () {
+		var param = {};
+		var chicuc = '';
+		if (self.lstChiCuc != null && !angular.isUndefined($scope.chicucHQSeletected)&& $scope.chicucHQSeletected.ma != '0' ) {
+			chicuc =  $scope.chicucHQSeletected.ma;
+		}
+		param["ma"] = angular.isUndefined($scope.cucHQSeletected) ? ''
+				: $scope.cucHQSeletected.ma;
+		param["ma_cc"] = chicuc;
+		param["trangthai"] = $scope.trangThai.ma;
+		param["type"] = self.nhx;
+		param["mathang"]  = angular.isUndefined($scope.matHang) ? ''
+				: $scope.matHang.ma;
+		console.log(param);
+		dienBienHangHoaXNKService.doExport(param);
+	}
+	function feedBack() {
+		console.log('Id to be edited');
+		self.showPopup(self.lstManager);
+	}
+	function showPopup(grid) {
+		var modalInstance = $uibModal.open({
+			animation : self.animationsEnabled,
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : 'phanHoiQuyTrinhXLDL',
+			controller : 'dienBienHangHoaXNKModalCtrl',
+			controllerAs : 'self',
+			resolve : {
+				grid : function() {
+					return grid;
+				}
+			}
+		});
+	}
+
+	$scope.showChart = function() {
+		var chicuc = '';
+		if (self.lstChiCuc != null && !angular.isUndefined($scope.chicucHQSeletected)&& $scope.chicucHQSeletected.ma != '0' ) {
+			chicuc =  $scope.chicucHQSeletected.ma;
+		}
+		self.linkAPI_LuongTK = contextPath
+				+ '/pbtk/API_dienBienHangHoaXNK_ky?nhx=' + self.nhx
+				+ '&trangThai=' + $scope.trangThai.ma + '&radioBox='
+				+ $scope.radioBox + '&maCucHQ=' + $scope.cucHQSeletected.ma
+				+ '&maChicucHQ=' + chicuc + "&mathang="
+				+ $scope.matHang.ma + '&loaiTK=luongTK';
+		self.linkAPI_dongiaTK = contextPath
+				+ '/pbtk/API_dienBienHangHoaXNK_ky?nhx=' + self.nhx
+				+ '&trangThai=' + $scope.trangThai.ma + '&radioBox='
+				+ $scope.radioBox + '&maCucHQ=' + $scope.cucHQSeletected.ma
+				+ '&maChicucHQ=' + chicuc + "&mathang="
+				+ $scope.matHang.ma + '&loaiTK=dongiaTK';
+		self.linkAPI_dvt = contextPath + '/pbtk/API_dienBienHangHoaXNK_ky?nhx='
+				+ self.nhx + '&trangThai=' + $scope.trangThai.ma + '&radioBox='
+				+ $scope.radioBox + '&maCucHQ=' + $scope.cucHQSeletected.ma
+				+ '&maChicucHQ=' + chicuc + "&mathang="
+				+ $scope.matHang.ma + '&loaiTK=dvt';
+		self.linkAPI_trigiaTk = contextPath
+				+ '/pbtk/API_dienBienHangHoaXNK_ky?nhx=' + self.nhx
+				+ '&trangThai=' + $scope.trangThai.ma + '&radioBox='
+				+ $scope.radioBox + '&maCucHQ=' + $scope.cucHQSeletected.ma
+				+ '&maChicucHQ=' + chicuc + "&mathang="
+				+ $scope.matHang.ma + '&loaiTK=trigiaTK';
+
+		console.log('showChart@self.linkAPI_LuongTK:' + self.linkAPI_LuongTK
+				+ '||' + self.linkAPI_dongiaTK + '||' + self.linkAPI_dvt + '||'
+				+ self.linkAPI_trigiaTk);
+		$scope.showChart2 = true;
+		self.showChart1 = true;
+	};
+
+	$scope.clickDongButton = function() {
+		self.showChart1 = false;
+	};
+
+	$scope.btnPhanHoi_Click = function() {
+		$rootScope.$emit('PhanHoiQuyTrinhXLDL', self.loai_bc);
+	};
+}
+angular.module('myApp').controller('dienBienHangHoaXNKModalCtrl',
+		dienBienHangHoaXNKModalCtrl);
+dienBienHangHoaXNKModalCtrl.$inject = [ '$uibModalInstance', 'grid',
+		'dienBienHangHoaXNKService', '$PopupMessage' ]
+function dienBienHangHoaXNKModalCtrl($uibModalInstance, grid,
+		dienBienHangHoaXNKService, $PopupMessage) {
+	var self = this;
+	self.lstManager = angular.copy(grid);
+	// self.entity = angular.copy(row);
+	self.message = '';
+
+	self.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+
+}

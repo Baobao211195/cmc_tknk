@@ -1,0 +1,324 @@
+package com.tkhq.cmc.dto;
+
+/**
+ * @author oanhpv
+ *
+ */
+public class HTRaXoatSanPhamTKDTO {
+
+	private String tenDanhMucBaoCao;
+	
+	/** MA_BC**/
+	private String maDanhMucBaoCao;
+	
+	private String tenCongChucQuanLy;
+	
+	private String maCongChucQuanLy;
+	
+	private int ky;
+	
+	private int thang;
+	
+	private int quy;
+	
+	private int nam;
+	
+	private int loaiBc;
+	
+	/** X or N**/
+	private String typeNhapXuat;
+	
+	private String trangThai;
+	
+	private int pheDuyet;
+	
+	/** Láº¥y user login **/
+	private String nguoiPheDuyet;
+	
+	/**Láº¥y ngÃ y hiá»‡n táº¡i. **/
+	private String ngayPheDuyet;
+	
+	private String lyDoThayDoiDL;
+	
+	private String lyDoPheDuyet;
+	
+	private int thayDoiDuLieu;
+	
+	private int hoanThanhRaXoat;
+	
+	private String ttPheDuyet;
+	
+	private String pathBC;
+	
+	private Integer maHQ; 
+
+	public String getPathBC() {
+		return pathBC;
+	}
+
+	public void setPathBC(String pathBC) {
+		this.pathBC = pathBC;
+	}
+
+	public Integer getMaHQ() {
+		return maHQ;
+	}
+
+	public void setMaHQ(Integer maHQ) {
+		this.maHQ = maHQ;
+	}
+
+	public String getTtPheDuyet() {
+		return ttPheDuyet;
+	}
+
+	public void setTtPheDuyet(String tTPheDuyet) {
+		ttPheDuyet = tTPheDuyet;
+	}
+
+	/**
+	 * @return the tenDanhMucBaoCao
+	 */
+	public String getTenDanhMucBaoCao() {
+		return tenDanhMucBaoCao;
+	}
+
+	/**
+	 * @param tenDanhMucBaoCao the tenDanhMucBaoCao to set
+	 */
+	public void setTenDanhMucBaoCao(String tenDanhMucBaoCao) {
+		this.tenDanhMucBaoCao = tenDanhMucBaoCao;
+	}
+
+	/**
+	 * @return the maDanhMucBaoCao
+	 */
+	public String getMaDanhMucBaoCao() {
+		return maDanhMucBaoCao;
+	}
+
+	/**
+	 * @param maDanhMucBaoCao the maDanhMucBaoCao to set
+	 */
+	public void setMaDanhMucBaoCao(String maDanhMucBaoCao) {
+		this.maDanhMucBaoCao = maDanhMucBaoCao;
+	}
+
+	/**
+	 * @return the tenCongChucQuanLy
+	 */
+	public String getTenCongChucQuanLy() {
+		return tenCongChucQuanLy;
+	}
+
+	/**
+	 * @param tenCongChucQuanLy the tenCongChucQuanLy to set
+	 */
+	public void setTenCongChucQuanLy(String tenCongChucQuanLy) {
+		this.tenCongChucQuanLy = tenCongChucQuanLy;
+	}
+
+	/**
+	 * @return the maCongChucQuanLy
+	 */
+	public String getMaCongChucQuanLy() {
+		return maCongChucQuanLy;
+	}
+
+	/**
+	 * @param maCongChucQuanLy the maCongChucQuanLy to set
+	 */
+	public void setMaCongChucQuanLy(String maCongChucQuanLy) {
+		this.maCongChucQuanLy = maCongChucQuanLy;
+	}
+
+	/**
+	 * @return the ky
+	 */
+	public int getKy() {
+		return ky;
+	}
+
+	/**
+	 * @param ky the ky to set
+	 */
+	public void setKy(int ky) {
+		this.ky = ky;
+	}
+
+	/**
+	 * @return the thang
+	 */
+	public int getThang() {
+		return thang;
+	}
+
+	/**
+	 * @param thang the thang to set
+	 */
+	public void setThang(int thang) {
+		this.thang = thang;
+	}
+
+	/**
+	 * @return the nam
+	 */
+	public int getNam() {
+		return nam;
+	}
+
+	/**
+	 * @param nam the nam to set
+	 */
+	public void setNam(int nam) {
+		this.nam = nam;
+	}
+
+	/**
+	 * @return the typeNhapXuat
+	 */
+	public String getTypeNhapXuat() {
+		return typeNhapXuat;
+	}
+
+	/**
+	 * @param typeNhapXuat the typeNhapXuat to set
+	 */
+	public void setTypeNhapXuat(String typeNhapXuat) {
+		this.typeNhapXuat = typeNhapXuat;
+	}
+
+	/**
+	 * @return the trangThai
+	 */
+	public String getTrangThai() {
+		return trangThai;
+	}
+
+	/**
+	 * @param trangThai the trangThai to set
+	 */
+	public void setTrangThai(String trangThai) {
+		this.trangThai = trangThai;
+	}
+
+	/**
+	 * @return the pheDuyet
+	 */
+	public int getPheDuyet() {
+		return pheDuyet;
+	}
+
+	/**
+	 * @param pheDuyet the pheDuyet to set
+	 */
+	public void setPheDuyet(int pheDuyet) {
+		this.pheDuyet = pheDuyet;
+	}
+
+	/**
+	 * @return the nguoiPheDuyet
+	 */
+	public String getNguoiPheDuyet() {
+		return nguoiPheDuyet;
+	}
+
+	/**
+	 * @param nguoiPheDuyet the nguoiPheDuyet to set
+	 */
+	public void setNguoiPheDuyet(String nguoiPheDuyet) {
+		this.nguoiPheDuyet = nguoiPheDuyet;
+	}
+
+	/**
+	 * @return the ngayPheDuyet
+	 */
+	public String getNgayPheDuyet() {
+		return ngayPheDuyet;
+	}
+
+	/**
+	 * @param ngayPheDuyet the ngayPheDuyet to set
+	 */
+	public void setNgayPheDuyet(String ngayPheDuyet) {
+		this.ngayPheDuyet = ngayPheDuyet;
+	}
+
+	/**
+	 * @return the lyDo
+	 */
+	public String getLyDoThayDoiDL() {
+		return lyDoThayDoiDL;
+	}
+
+	/**
+	 * @param lyDo the lyDo to set
+	 */
+	public void setLyDoThayDoiDL(String lyDoThayDoiDL) {
+		this.lyDoThayDoiDL = lyDoThayDoiDL;
+	}
+
+	/**
+	 * @return the thayDoiDuLieu
+	 */
+	public int getThayDoiDuLieu() {
+		return thayDoiDuLieu;
+	}
+
+	/**
+	 * @param thayDoiDuLieu the thayDoiDuLieu to set
+	 */
+	public void setThayDoiDuLieu(int thayDoiDuLieu) {
+		this.thayDoiDuLieu = thayDoiDuLieu;
+	}
+
+	public int getHoanThanhRaXoat() {
+		return hoanThanhRaXoat;
+	}
+
+	public void setHoanThanhRaXoat(int hoanThanhRaXoat) {
+		this.hoanThanhRaXoat = hoanThanhRaXoat;
+	}
+
+	/**
+	 * @return the quy
+	 */
+	public int getQuy() {
+		return quy;
+	}
+
+	/**
+	 * @param quy the quy to set
+	 */
+	public void setQuy(int quy) {
+		this.quy = quy;
+	}
+
+	/**
+	 * @return the loaiBc
+	 */
+	public int getLoaiBc() {
+		return loaiBc;
+	}
+
+	/**
+	 * @param loaiBc the loaiBc to set
+	 */
+	public void setLoaiBc(int loaiBc) {
+		this.loaiBc = loaiBc;
+	}
+
+	/**
+	 * @return the lyDoPheDuyet
+	 */
+	public String getLyDoPheDuyet() {
+		return lyDoPheDuyet;
+	}
+
+	/**
+	 * @param lyDoPheDuyet the lyDoPheDuyet to set
+	 */
+	public void setLyDoPheDuyet(String lyDoPheDuyet) {
+		this.lyDoPheDuyet = lyDoPheDuyet;
+	}
+}

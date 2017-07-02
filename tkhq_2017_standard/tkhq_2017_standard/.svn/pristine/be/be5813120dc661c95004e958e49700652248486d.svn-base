@@ -1,0 +1,114 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<script type="text/javascript">
+	var _contextPath = "${pageContext.request.contextPath}";
+</script>
+<script src="<c:url value='/static/js/service/tbs_chuyendeService.js' />"></script>
+<script	src="<c:url value='/static/js/controller/tbs_chuyendeController.js' />"></script>
+
+ <div class="generic-container"						
+	ng-controller="Tbs_ChuyenDeController as chuyenDeCtrl">
+	<div class="panel panel-success">
+		<h3 class="panel-heading">Danh mục chuyên đề </h3>
+	</div>
+	<div class="container">
+		<fieldset class="form-group form-wrapper">
+			<legend class="form-wrapper">Thông tin tìm kiếm</legend>
+			<form class="form-search">
+				<table style="width: 100%">
+					<tr>
+						<td><label class="col-sm-3">Mã chuyên đề:</label>
+							<div class="col-sm-3">
+								<input type="text" id="maCDe" ng-model="maCDe" />
+							</div></td>
+							<td><label class="col-sm-3">Tên chuyên đề:</label>
+							<div class="col-sm-3">
+								<input type="text" id="tenCDe" ng-model="tenCDe" />
+							</div></td>
+
+					</tr>
+			
+					<tr>
+						
+						<td><label class="col-sm-3">Mã hàng:</label>
+							<div class="col-sm-3">
+								<input type="text" id="maHang" ng-model="maHang" />
+							</div></td>						
+						<td><label class="col-sm-3">Mô tả hàng hóa:</label>
+							<div class="col-sm-3">
+								<input type="text" id="motaHH" ng-model="motaHH" />
+							</div></td>							
+						<td></td>
+					</tr>		
+				</table>
+				
+				</br>
+				
+				<div class="form-group row form-btn-align" align="center">
+					<button type="submit" id="btnSearch"
+						ng-click="chuyenDeCtrl.search(1,chuyenDeCtrl.pageSize)"
+						class="btn btn-success">
+						<i class="glyphicon glyphicon-search icon-white"></i>Tìm kiếm
+					</button>
+					<button type="button" id="addRow" class="btn btn-success"
+						ng-click="addRow()">
+						<i class="glyphicon glyphicon-plus icon-white"></i>Thêm mới
+					</button>	
+					<button type="submit" id="btnDel" class="btn btn-danger"
+						ng-click="chuyenDeCtrl.remove()">
+						<i class="glyphicon glyphicon-remove icon-white"></i>Xóa
+					</button>
+				</div>
+				</br>
+
+			</form>
+		</fieldset>
+	</div>
+ <table id="tblChuyenDe">
+		<colgroup>
+			<col width="11%" />
+			<col width="21%" />
+			<col width="25%" />
+			<col width="25%" />
+			<col width="15%" />
+		</colgroup>
+		<thead>
+			<tr>
+				<th><input type="checkbox" ng-model="chuyenDeCtrl.checkAll"></th>
+				<!--<th>STT</th> -->
+				<th>Mã chuyên đề</th>
+				<th>Tên chuyên đề</th>
+				<th>Mã hàng hóa</th>
+				<th>Mô tả hàng hóa</th>
+
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-if="chuyenDeCtrl.lstChuyenDe"></tr>			
+			<tr ng-repeat="row in chuyenDeCtrl.lstChuyenDe">
+			<td><input type="checkbox" ng-checked="chuyenDeCtrl.checkAll"
+					ng-model="row.isChecked"></td>
+				<td ng-bind="row.maCDe"></td>
+				<td ng-bind="row.tenCDe"></td>
+				<td ng-bind="row.maHang"></td>
+				<td ng-bind="row.motaHH"></td>
+				<td>
+					<button type="button" ng-click="chuyenDeCtrl.editRow(row.maCDe)"
+						class="btn btn-success custom-width">Edit</button>
+				</td>
+
+			</tr>
+			
+		</tbody>
+	</table>
+	<div class="row">
+		<div></div>
+		<div>
+			<pagination total-items="chuyenDeCtrl.totalItems"
+				ng-change="pageChanged()" ng-model="chuyenDeCtrl.currentPage"
+				max-size="chuyenDeCtrl.maxSize" class="pagination"
+				boundary-links="true" rotate="false"></pagination>
+		</div>
+	</div>
+</div> 

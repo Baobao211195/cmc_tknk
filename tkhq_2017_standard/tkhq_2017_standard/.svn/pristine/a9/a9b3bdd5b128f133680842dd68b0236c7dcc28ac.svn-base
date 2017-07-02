@@ -1,0 +1,32 @@
+package com.tkhq.cmc.services;
+
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tkhq.cmc.dao.PHANHE_PBTKSPDAO;
+import com.tkhq.cmc.dto.BCSLVNBELARUTDTO;
+import com.tkhq.cmc.dto.BCSLVNUCRAINADTO;
+import com.tkhq.cmc.dto.BCSLVN_LAODTO;
+
+@Service
+@Transactional
+public class PHANHE_PBTKSPServiceImpl implements PHANHE_PBTKSPService {
+	@Autowired
+	PHANHE_PBTKSPDAO baocaoDAO;
+
+	public List<BCSLVNUCRAINADTO> Ts_BCSLVN_UCRAINA(int ky, int nam) {
+		return baocaoDAO.Ts_BCSLVN_UCRAINA(ky, nam);
+	}
+
+	public List<BCSLVNBELARUTDTO> Ts_BCSLVN_BELARUT(int ky, int nam,String nhx) {
+		return baocaoDAO.Ts_BCSLVN_BELARUT(ky, nam, nhx);
+	}
+	
+	public List<BCSLVN_LAODTO> ts_BCSLVN_LAO(int ky, int nam) {
+		return baocaoDAO.ts_BCSLVN_LAO(ky, nam);
+	}
+}

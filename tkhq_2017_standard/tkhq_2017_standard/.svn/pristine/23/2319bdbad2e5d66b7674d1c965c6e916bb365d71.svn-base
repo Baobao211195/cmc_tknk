@@ -1,0 +1,76 @@
+package com.tkhq.cmc.config;
+
+import java.util.Properties;
+
+import javax.sql.DataSource;
+
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.hibernate4.HibernateTransactionManager;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+
+
+@Configuration
+@EnableTransactionManagement
+@ComponentScan({ "com.tkhq.cmc.config" })
+@PropertySource(value = { "classpath:jdbc.properties" })
+
+public class HibernateConfig {
+
+	@Autowired
+	private Environment env;
+
+	@Bean
+	public LocalSessionFactoryBean sessionFactory() {
+		System.out.println("load sessionFactory \n");
+		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+		System.out.println("start sessionFactory \n");
+		sessionFactory.setDataSource(dataSource());
+		sessionFactory.setPackagesToScan(new String[] { "com.tkhq.cmc.model"});
+		sessionFactory.setHibernateProperties(hibernateProperties());
+
+		return sessionFactory;
+	}
+
+	@Bean
+	public DataSource dataSource() {
+		System.out.println("load datasource \n");
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		System.out.println("start load datasource \n");
+		dataSource.setDriverClassName(env.getRequiredProperty("jdbc.driverClass"));
+		dataSource.setUrl(env.getRequiredProperty("jdbc.url"));
+		dataSource.setUsername(env.getRequiredProperty("jdbc.username"));
+		dataSource.setPassword(env.getRequiredProperty("jdbc.password"));
+
+		return dataSource;
+	}
+
+	private Properties hibernateProperties() {
+		System.out.println("load properties \n");
+		Properties properties = new Properties();
+		System.out.println("start load hibernate properties \n");
+		properties.put("hibernate.dialect", env.getRequiredProperty("hibernate.dialect"));
+		properties.put("hibernate.show_sql", env.getRequiredProperty("hibernate.show_sql"));
+		properties.put("hibernate.format_sql", env.getRequiredProperty("hibernate.format_sql"));
+		return properties;
+	}
+
+	@Bean
+	@Autowired
+	public HibernateTransactionManager transactionManager(SessionFactory s) {
+		System.out.println("load transaction manager");
+		HibernateTransactionManager txManager = new HibernateTransactionManager();
+		System.out.println("load 1transaction manager");
+		txManager.setSessionFactory(s);
+		System.out.println("load2 transaction manager");
+		return txManager;
+	}
+}

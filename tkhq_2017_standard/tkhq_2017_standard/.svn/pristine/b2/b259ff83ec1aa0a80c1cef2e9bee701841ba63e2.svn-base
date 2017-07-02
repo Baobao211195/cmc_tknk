@@ -1,0 +1,1384 @@
+package com.tkhq.global.dao;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.jdbc.ReturningWork;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tkhq.cmc.utils.Utils;
+import com.tkhq.global.model.bcptbangbieu.*;
+
+import oracle.jdbc.OracleTypes;
+
+@Repository
+@Transactional
+public class SLTheoCTTKDaoImpl extends GlobalBaseDao implements SLTheoCTTKDao {
+
+	private void setParams(CallableStatement statement, SLTheoCTTKRequestParams params) throws SQLException {
+		statement.setString(1, params.getTrangthai());
+		statement.setString(2, params.getNhx());
+		statement.setString(3, params.getMaCucHQ());
+		statement.setString(4, params.getMaChicucHQ());
+		statement.setString(5, params.getUsername());
+
+	}
+
+	@Override
+	public SLTheoCTTK01Response getSLTheoCTTK01(final SLTheoCTTKRequestParams params) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<SLTheoCTTK01Response>() {
+			@Override
+			public SLTheoCTTK01Response execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+				List<SLTheoCTTK01Response> response = new ArrayList<SLTheoCTTK01Response>();
+				statement = conn
+						.prepareCall("{call " + Utils.readProperties("GetSLTheoCTTK01") + "(?,?,?,?,?, ?,?,?)}");
+				setParams(statement, params);
+				statement.registerOutParameter(6, OracleTypes.CURSOR);
+				statement.registerOutParameter(7, OracleTypes.CURSOR);
+				statement.registerOutParameter(8, OracleTypes.CURSOR);
+				statement.execute();
+				// Group dataset
+				ResultSet rsGroup = (ResultSet) statement.getObject(6);
+				while (rsGroup.next()) {
+
+					SLTheoCTTK01Response group = new SLTheoCTTK01Response();
+					group.setSub_name(rsGroup.getString("SUBNAME"));
+					group.setAvg(rsGroup.getString("AVG_SUB"));
+
+					group.getData_ky().setSs_ky_truoc(
+							markupMinus(rsGroup.getString("ss_ky_truoc_ky")));
+					group.getData_ky().setSs_ky_nam_truoc(
+							markupMinus(rsGroup.getString("ss_ky_nam_truoc_ky")));
+
+					group.getData_thang().setSs_thang_truoc(
+							markupMinus(rsGroup.getString("ss_ky_truoc_thang")));
+					group.getData_thang().setSs_thang_nam_truoc(
+							markupMinus(rsGroup.getString("ss_ky_nam_truoc_thang")));
+					response.add(group);
+				}
+				rsGroup.close();
+				rsGroup = null;
+
+				// DataKy dataset
+				ResultSet rsDataKy = (ResultSet) statement.getObject(7);
+				int subID;
+				while (rsDataKy.next()) {
+					response.get(0).getData_ky().getData()
+							.add(new DataKyObj(rsDataKy.getString("ky"), rsDataKy.getString("giatri")));
+				}
+				rsDataKy.close();
+				rsDataKy = null;
+
+				// DataThang dataset
+				ResultSet rsDataThang = (ResultSet) statement.getObject(8);
+				while (rsDataThang.next()) {
+
+					response.get(0).getData_thang().getData()
+							.add(new DataThangObj(rsDataThang.getString("ky"), rsDataThang.getString("giatri")));
+				}
+				rsDataThang.close();
+				rsDataThang = null;
+
+				return response.get(0);
+			}
+		});
+	}
+
+	@Override
+	public List<SLTheoCTTK02Response> getSLTheoCTTK02(final SLTheoCTTKRequestParams params) {
+		// TODO Auto-generated method stub
+
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<SLTheoCTTK02Response>>() {
+
+			@Override
+			public List<SLTheoCTTK02Response> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn
+						.prepareCall("{call " + Utils.readProperties("GetSLTheoCTTK02") + "(?,?,?,?,?, ?,?,?,?)}");
+				setParams(statement, params);
+				statement.registerOutParameter(6, OracleTypes.CURSOR);
+				statement.registerOutParameter(7, OracleTypes.CURSOR);
+				statement.registerOutParameter(8, OracleTypes.CURSOR);
+				statement.registerOutParameter(9, OracleTypes.CURSOR);
+				statement.execute();
+				// Group dataset
+				ResultSet rsGroup = (ResultSet) statement.getObject(6);
+				List<SLTheoCTTK02Response> response = new ArrayList<SLTheoCTTK02Response>();
+				while (rsGroup.next()) {
+					SLTheoCTTK02Response group = new SLTheoCTTK02Response();
+					group.setGroup_name(rsGroup.getString("GROUP_NAME"));
+					group.setGroup_id(rsGroup.getInt("ID"));
+					response.add(group);
+				}
+				rsGroup.close();
+				rsGroup = null;
+
+				// Sub group dataset
+				int groupIndex = 0;
+				int subIndex = 0;
+				// System.out.println("Group size: " + response.size());
+				ResultSet rsSubGroup = (ResultSet) statement.getObject(7);
+				while (rsSubGroup.next()) {
+
+					SLTheoCTTK02SubGroupData subGroupTK = new SLTheoCTTK02SubGroupData();
+					SLTheoCTTK02SubGroupData subGroupDH = new SLTheoCTTK02SubGroupData();
+
+					// To khai
+					subIndex++;
+					subGroupTK.setSub_id(subIndex);
+					subGroupTK.setSubname(rsSubGroup.getString("SUB_NAME"));
+					subGroupTK.setAvg(rsSubGroup.getString("AVG_SUB"));
+					SLTheoCTTK02DataKy data_ky = new SLTheoCTTK02DataKy();
+					data_ky.setSs_ky_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_truoc_ky")));
+					data_ky.setSs_ky_nam_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_nam_truoc_ky")));
+					data_ky.setTrend("");
+					data_ky.setForecast("");
+					
+					SLTheoCTTK02DataThang data_thang = new SLTheoCTTK02DataThang();
+					data_thang.setSs_thang_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_truoc_thang")));
+					data_thang.setSs_thang_nam_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_nam_truoc_thang")));
+					data_thang.setTrend(rsSubGroup.getString("trend_thang"));
+					data_thang.setForecast(rsSubGroup.getString("forcast_thang"));
+					
+					subGroupTK.setData_ky(data_ky);
+					subGroupTK.setData_thang(data_thang);
+					
+					// Dong hang
+					if (rsSubGroup.next()) {
+						subIndex++;
+						subGroupDH.setSub_id(subIndex);
+						subGroupDH.setSubname(rsSubGroup.getString("SUB_NAME"));
+						subGroupDH.setAvg(rsSubGroup.getString("AVG_SUB"));
+						SLTheoCTTK02DataKy data_ky_dh = new SLTheoCTTK02DataKy();
+						data_ky_dh.setSs_ky_truoc(
+								markupMinus(rsSubGroup.getString("ss_ky_truoc_ky")));
+						data_ky_dh.setSs_ky_nam_truoc(
+								markupMinus(rsSubGroup.getString("ss_ky_nam_truoc_ky")));
+						data_ky_dh.setTrend("");
+						data_ky_dh.setForecast("");
+						
+						SLTheoCTTK02DataThang data_thang_dh = new SLTheoCTTK02DataThang();
+						data_thang_dh.setSs_thang_truoc(
+								markupMinus(rsSubGroup.getString("ss_ky_truoc_thang")));
+						data_thang_dh.setSs_thang_nam_truoc(
+								markupMinus(rsSubGroup.getString("ss_ky_nam_truoc_thang")));
+						data_thang_dh.setTrend(rsSubGroup.getString("trend_thang"));
+						data_thang_dh.setForecast(rsSubGroup.getString("forcast_thang"));
+						
+						subGroupDH.setData_ky(data_ky_dh);
+						subGroupDH.setData_thang(data_thang_dh);
+					}
+
+					// Group update
+					List<SLTheoCTTK02SubGroupData> groupData = new ArrayList<SLTheoCTTK02SubGroupData>();
+					groupData.add(subGroupTK);
+					groupData.add(subGroupDH);
+					response.get(groupIndex).setGroup_data(groupData);
+					groupIndex++;// Arraylist 0-base index
+				}
+				rsSubGroup.close();
+				rsSubGroup = null;
+
+				// DataKy dataset
+				ResultSet rsDataKy = (ResultSet) statement.getObject(8);
+				int groupID, subID;
+				while (rsDataKy.next()) {
+					// groupIndex++;
+					groupID = rsDataKy.getInt("GROUPID");
+					subID = rsDataKy.getInt("SUBGROUPID");
+
+					// to khai
+					if (subID % 2 == 1) {
+						response.get(groupID - 1).getGroup_data().get(0).getData_ky().getData()
+								.add(new DataKyObj(rsDataKy.getString("KY"), rsDataKy.getString("GIATRI")));
+					} else {
+						// dong hang
+						// if (rsDataKy.next())
+						response.get(groupID - 1).getGroup_data().get(1).getData_ky().getData()
+								.add(new DataKyObj(rsDataKy.getString("KY"), rsDataKy.getString("GIATRI")));
+					}
+				}
+				rsDataKy.close();
+				rsDataKy = null;
+
+				// DataThang dataset
+				ResultSet rsDataThang = (ResultSet) statement.getObject(9);
+				while (rsDataThang.next()) {
+					// groupIndex++;
+					groupID = rsDataThang.getInt("GROUPID");
+					subID = rsDataThang.getInt("SUBGROUPID");
+
+					// to khai
+					if (subID % 2 == 1) {
+						response.get(groupID - 1).getGroup_data().get(0).getData_thang().getData()
+								.add(new DataThangObj(rsDataThang.getString("KY"), rsDataThang.getString("GIATRI")));
+					} else {
+						// dong hang
+						// if (rsDataThang.next())
+						response.get(groupID - 1).getGroup_data().get(1).getData_thang().getData()
+								.add(new DataThangObj(rsDataThang.getString("KY"), rsDataThang.getString("GIATRI")));
+					}
+				}
+				rsDataThang.close();
+				rsDataThang = null;
+
+				return response;
+				// return null;
+			}
+		});
+	}
+
+	@Override
+	public List<SLTheoCTTK03Response> getSLTheoCTTK03(final SLTheoCTTKRequestParams params) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<SLTheoCTTK03Response>>() {
+
+			@Override
+			public List<SLTheoCTTK03Response> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+				List<SLTheoCTTK03Response> response = new ArrayList<SLTheoCTTK03Response>();
+				statement = conn
+						.prepareCall("{call " + Utils.readProperties("GetSLTheoCTTK03") + "(?,?,?,?,?, ?,?,?)}");
+				setParams(statement, params);
+				statement.registerOutParameter(6, OracleTypes.CURSOR);
+				statement.registerOutParameter(7, OracleTypes.CURSOR);
+				statement.registerOutParameter(8, OracleTypes.CURSOR);
+				statement.execute();
+				// Group dataset
+				ResultSet rsGroup = (ResultSet) statement.getObject(6);
+				while (rsGroup.next()) {
+					// group to khai and group dong hang in 2 loop run
+					SLTheoCTTK03Response group = new SLTheoCTTK03Response();
+					group.setGroup_name(rsGroup.getString("SUBNAME"));
+					group.setAvg(rsGroup.getString("AVG_SUB"));
+
+					group.getData_ky().setSs_ky_truoc(
+							markupMinus(rsGroup.getString("ss_ky_truoc_ky")));
+					group.getData_ky().setSs_ky_nam_truoc(
+							markupMinus(rsGroup.getString("ss_ky_nam_truoc_ky")));
+					group.getData_ky().setTrend("");
+					group.getData_ky().setForecast("");
+
+					group.getData_thang().setSs_thang_truoc(
+							markupMinus(rsGroup.getString("ss_ky_truoc_thang")));
+					group.getData_thang().setSs_thang_nam_truoc(
+							markupMinus(rsGroup.getString("ss_ky_nam_truoc_thang")));
+					group.getData_thang().setTrend(rsGroup.getString("trend_thang"));
+					group.getData_thang().setForecast(rsGroup.getString("forcast_thang"));
+					response.add(group);
+				}
+				rsGroup.close();
+				rsGroup = null;
+
+				// DataKy dataset
+				ResultSet rsDataKy = (ResultSet) statement.getObject(7);
+				int subID;
+				while (rsDataKy.next()) {
+					subID = rsDataKy.getInt("SUBGROUPID");
+					// to khai
+					if (subID % 2 == 1) {
+						response.get(0).getData_ky().getData()
+								.add(new DataKyObj(rsDataKy.getString("ky"), rsDataKy.getString("giatri")));
+					}
+					// dong hang
+					else {
+						response.get(1).getData_ky().getData()
+								.add(new DataKyObj(rsDataKy.getString("ky"), rsDataKy.getString("giatri")));
+					}
+				}
+				rsDataKy.close();
+				rsDataKy = null;
+
+				// DataThang dataset
+				ResultSet rsDataThang = (ResultSet) statement.getObject(8);
+				while (rsDataThang.next()) {
+					subID = rsDataThang.getInt("SUBGROUPID");
+					// to khai
+					if (subID % 2 == 1) {
+						response.get(0).getData_thang().getData()
+								.add(new DataThangObj(rsDataThang.getString("ky"), rsDataThang.getString("giatri")));
+					}
+					// dong hang
+					else {
+						response.get(1).getData_thang().getData()
+								.add(new DataThangObj(rsDataThang.getString("ky"), rsDataThang.getString("giatri")));
+					}
+				}
+				rsDataThang.close();
+				rsDataThang = null;
+
+				return response;
+			}
+		});
+
+		// return null;
+	}
+
+	@Override
+	public List<SLTheoCTTK05Response> getSLTheoCTTK05(final SLTheoCTTKRequestParams params, final String chuong,
+			final String nhom) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<SLTheoCTTK05Response>>() {
+
+			@Override
+			public List<SLTheoCTTK05Response> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn
+						.prepareCall("{call " + Utils.readProperties("GetSLTheoCTTK05") + "(?,?,?,?,?, ?,?, ?,?,?,?)}");
+				setParams(statement, params);
+				statement.setString(6, chuong);
+				statement.setString(7, nhom);
+				statement.registerOutParameter(8, OracleTypes.CURSOR);
+				statement.registerOutParameter(9, OracleTypes.CURSOR);
+				statement.registerOutParameter(10, OracleTypes.CURSOR);
+				statement.registerOutParameter(11, OracleTypes.CURSOR);
+				statement.execute();
+				// Group dataset
+				ResultSet rsGroup = (ResultSet) statement.getObject(8);
+				List<SLTheoCTTK05Response> response = new ArrayList<SLTheoCTTK05Response>();
+				while (rsGroup.next()) {
+					SLTheoCTTK05Response group = new SLTheoCTTK05Response();
+					group.setGroup_name(rsGroup.getString("GROUP_NAME"));
+					group.setGroup_id(rsGroup.getInt("ID"));
+					response.add(group);
+				}
+				rsGroup.close();
+				rsGroup = null;
+
+				// Sub group dataset
+				int groupIndex = 0;
+				// System.out.println("Group size: " + response.size());
+				ResultSet rsSubGroup = (ResultSet) statement.getObject(9);
+				while (rsSubGroup.next()) {
+
+					SLTheoCTTK05SubGroupData subGroup = new SLTheoCTTK05SubGroupData();
+
+					subGroup.setSub_name(rsSubGroup.getString("SUB_NAME"));
+					subGroup.setAvg(rsSubGroup.getString("AVG_SUB"));
+					SLTheoCTTK05DataKy data_ky = new SLTheoCTTK05DataKy();
+					data_ky.setSs_ky_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_truoc_ky")));
+					data_ky.setSs_ky_nam_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_nam_truoc_ky")));
+					data_ky.setTrend("");
+					data_ky.setForecast("");
+					
+					SLTheoCTTK05DataThang data_thang = new SLTheoCTTK05DataThang();
+					data_thang.setSs_thang_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_truoc_thang")));
+					data_thang.setSs_thang_nam_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_nam_truoc_thang")));
+					data_thang.setTrend(rsSubGroup.getString("trend_thang"));
+					data_thang.setForecast(rsSubGroup.getString("forcast_thang"));
+					
+					subGroup.setData_ky(data_ky);
+					subGroup.setData_thang(data_thang);
+
+					// Group update
+					List<SLTheoCTTK05SubGroupData> groupData = new ArrayList<SLTheoCTTK05SubGroupData>();
+					groupData.add(subGroup);
+					response.get(groupIndex).setGroup_data(groupData);
+					groupIndex++;// Arraylist 0-base index
+				}
+				rsSubGroup.close();
+				rsSubGroup = null;
+
+				// DataKy dataset
+				ResultSet rsDataKy = (ResultSet) statement.getObject(10);
+				int groupID, subID;
+				while (rsDataKy.next()) {
+					groupID = rsDataKy.getInt("GROUPID");
+					subID = rsDataKy.getInt("SUBGROUPID");
+
+					response.get(groupID - 1).getGroup_data().get(0).getData_ky().getData()
+							.add(new DataKyObj(rsDataKy.getString("KY"), rsDataKy.getString("GIATRI")));
+				}
+				rsDataKy.close();
+				rsDataKy = null;
+
+				// DataThang dataset
+				ResultSet rsDataThang = (ResultSet) statement.getObject(11);
+				while (rsDataThang.next()) {
+					groupID = rsDataThang.getInt("GROUPID");
+					subID = rsDataThang.getInt("SUBGROUPID");
+
+					response.get(groupID - 1).getGroup_data().get(0).getData_thang().getData()
+							.add(new DataThangObj(rsDataThang.getString("KY"), rsDataThang.getString("GIATRI")));
+				}
+				rsDataThang.close();
+				rsDataThang = null;
+
+				return response;
+				// return null;
+			}
+		});
+	}
+
+	@Override
+	public List<SLTheoCTTK06Response> getSLTheoCTTK06(final SLTheoCTTKRequestParams params, final String phan) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<SLTheoCTTK06Response>>() {
+			@Override
+			public List<SLTheoCTTK06Response> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+				List<SLTheoCTTK06Response> response = new ArrayList<SLTheoCTTK06Response>();
+				statement = conn
+						.prepareCall("{call " + Utils.readProperties("GetSLTheoCTTK06") + "(?,?,?,?,?, ?, ?,?,?)}");
+				setParams(statement, params);
+				statement.setString(6, phan);
+				statement.registerOutParameter(7, OracleTypes.CURSOR);
+				statement.registerOutParameter(8, OracleTypes.CURSOR);
+				statement.registerOutParameter(9, OracleTypes.CURSOR);
+				statement.execute();
+				// Group dataset
+				ResultSet rsGroup = (ResultSet) statement.getObject(7);
+				while (rsGroup.next()) {
+
+					SLTheoCTTK06Response group = new SLTheoCTTK06Response();
+					group.setSub_name(rsGroup.getString("SUBNAME"));
+					group.setAvg(rsGroup.getString("AVG_SUB"));
+
+					group.getData_ky().setSs_ky_truoc(
+							markupMinus(rsGroup.getString("ss_ky_truoc_ky")));
+					group.getData_ky().setSs_ky_nam_truoc(
+							markupMinus(rsGroup.getString("ss_ky_nam_truoc_ky")));
+
+					group.getData_thang().setSs_thang_truoc(
+							markupMinus(rsGroup.getString("ss_ky_truoc_thang")));
+					group.getData_thang().setSs_thang_nam_truoc(
+							markupMinus(rsGroup.getString("ss_ky_nam_truoc_thang")));
+					response.add(group);
+				}
+				rsGroup.close();
+				rsGroup = null;
+
+				// DataKy dataset
+				ResultSet rsDataKy = (ResultSet) statement.getObject(8);
+				int subID;
+				while (rsDataKy.next()) {
+					response.get(0).getData_ky().getData()
+							.add(new DataKyObj(rsDataKy.getString("ky"), rsDataKy.getString("giatri")));
+				}
+				rsDataKy.close();
+				rsDataKy = null;
+
+				// DataThang dataset
+				ResultSet rsDataThang = (ResultSet) statement.getObject(9);
+				while (rsDataThang.next()) {
+
+					response.get(0).getData_thang().getData()
+							.add(new DataThangObj(rsDataThang.getString("ky"), rsDataThang.getString("giatri")));
+				}
+				rsDataThang.close();
+				rsDataThang = null;
+
+				return response;
+			}
+		});
+	}
+
+	@Override
+	public List<SLTheoCTTK08Response> getSLTheoCTTK08(final SLTheoCTTKRequestParams params, final String khoi,
+			final String nuoc) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<SLTheoCTTK08Response>>() {
+
+			@Override
+			public List<SLTheoCTTK08Response> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn
+						.prepareCall("{call " + Utils.readProperties("GetSLTheoCTTK08") + "(?,?,?,?,?, ?,?, ?,?,?,?)}");
+				setParams(statement, params);
+				statement.setString(6, khoi);
+				statement.setString(7, nuoc);
+				statement.registerOutParameter(8, OracleTypes.CURSOR);
+				statement.registerOutParameter(9, OracleTypes.CURSOR);
+				statement.registerOutParameter(10, OracleTypes.CURSOR);
+				statement.registerOutParameter(11, OracleTypes.CURSOR);
+				statement.execute();
+				// Group dataset
+				ResultSet rsGroup = (ResultSet) statement.getObject(8);
+				List<SLTheoCTTK08Response> response = new ArrayList<SLTheoCTTK08Response>();
+				while (rsGroup.next()) {
+					SLTheoCTTK08Response group = new SLTheoCTTK08Response();
+					group.setGroup_name(rsGroup.getString("GROUP_NAME"));
+					group.setGroup_id(rsGroup.getInt("ID"));
+					response.add(group);
+				}
+				rsGroup.close();
+				rsGroup = null;
+
+				// Sub group dataset
+				int groupIndex = 0;
+				// System.out.println("Group size: " + response.size());
+				ResultSet rsSubGroup = (ResultSet) statement.getObject(9);
+				while (rsSubGroup.next()) {
+
+					SLTheoCTTK08SubGroupData subGroup = new SLTheoCTTK08SubGroupData();
+
+					subGroup.setSub_name(rsSubGroup.getString("SUB_NAME"));
+					subGroup.setAvg(rsSubGroup.getString("AVG_SUB"));
+					SLTheoCTTK08DataKy data_ky = new SLTheoCTTK08DataKy();
+					data_ky.setSs_ky_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_truoc_ky")));
+					data_ky.setSs_ky_nam_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_nam_truoc_ky")));
+					data_ky.setTrend("");
+					data_ky.setForecast("");
+					
+					SLTheoCTTK08DataThang data_thang = new SLTheoCTTK08DataThang();
+					data_thang.setSs_thang_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_truoc_thang")));
+					data_thang.setSs_thang_nam_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_nam_truoc_thang")));
+					data_thang.setTrend(rsSubGroup.getString("trend_thang"));
+					data_thang.setForecast(rsSubGroup.getString("forcast_thang"));
+					
+					subGroup.setData_ky(data_ky);
+					subGroup.setData_thang(data_thang);
+
+					// Group update
+					List<SLTheoCTTK08SubGroupData> groupData = new ArrayList<SLTheoCTTK08SubGroupData>();
+					groupData.add(subGroup);
+					response.get(groupIndex).setGroup_data(groupData);
+					groupIndex++;// Arraylist 0-base index
+				}
+				rsSubGroup.close();
+				rsSubGroup = null;
+
+				// DataKy dataset
+				ResultSet rsDataKy = (ResultSet) statement.getObject(10);
+				int groupID, subID;
+				while (rsDataKy.next()) {
+					groupID = rsDataKy.getInt("GROUPID");
+					subID = rsDataKy.getInt("SUBGROUPID");
+
+					response.get(groupID - 1).getGroup_data().get(0).getData_ky().getData()
+							.add(new DataKyObj(rsDataKy.getString("KY"), rsDataKy.getString("GIATRI")));
+				}
+				rsDataKy.close();
+				rsDataKy = null;
+
+				// DataThang dataset
+				ResultSet rsDataThang = (ResultSet) statement.getObject(11);
+				while (rsDataThang.next()) {
+					groupID = rsDataThang.getInt("GROUPID");
+					subID = rsDataThang.getInt("SUBGROUPID");
+
+					response.get(groupID - 1).getGroup_data().get(0).getData_thang().getData()
+							.add(new DataThangObj(rsDataThang.getString("KY"), rsDataThang.getString("GIATRI")));
+				}
+				rsDataThang.close();
+				rsDataThang = null;
+
+				return response;
+				// return null;
+			}
+		});
+	}
+
+	@Override
+	public List<SLTheoCTTK10Response> getSLTheoCTTK10(final SLTheoCTTKRequestParams params) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<SLTheoCTTK10Response>>() {
+
+			@Override
+			public List<SLTheoCTTK10Response> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+				List<SLTheoCTTK10Response> response = new ArrayList<SLTheoCTTK10Response>();
+				statement = conn
+						.prepareCall("{call " + Utils.readProperties("GetSLTheoCTTK10") + "(?,?,?,?,?, ?,?,?)}");
+				setParams(statement, params);
+				statement.registerOutParameter(6, OracleTypes.CURSOR);
+				statement.registerOutParameter(7, OracleTypes.CURSOR);
+				statement.registerOutParameter(8, OracleTypes.CURSOR);
+				statement.execute();
+				// Group dataset
+				ResultSet rsGroup = (ResultSet) statement.getObject(6);
+				while (rsGroup.next()) {
+
+					SLTheoCTTK10Response group = new SLTheoCTTK10Response();
+					group.setSubname(rsGroup.getString("SUBNAME"));
+					group.setAvg(rsGroup.getString("AVG_SUB"));
+
+					group.getData_ky().setSs_ky_truoc(
+							markupMinus(rsGroup.getString("ss_ky_truoc_ky")));
+					group.getData_ky().setSs_ky_nam_truoc(
+							markupMinus(rsGroup.getString("ss_ky_nam_truoc_ky")));
+					group.getData_ky().setTrend("");
+					group.getData_ky().setForecast("");
+
+					group.getData_thang().setSs_thang_truoc(
+							markupMinus(rsGroup.getString("ss_ky_truoc_thang")));
+					group.getData_thang().setSs_thang_nam_truoc(
+							markupMinus(rsGroup.getString("ss_ky_nam_truoc_thang")));
+					group.getData_thang().setTrend(rsGroup.getString("trend_thang"));
+					group.getData_thang().setForecast(rsGroup.getString("forcast_thang"));
+					response.add(group);
+				}
+				rsGroup.close();
+				rsGroup = null;
+
+				// DataKy dataset
+				ResultSet rsDataKy = (ResultSet) statement.getObject(7);
+				int subID;
+				int vTest;
+				while (rsDataKy.next()) {
+					subID = rsDataKy.getInt("SUBGROUPID");
+					vTest = subID % 3;
+					// sub 1
+					if (vTest == 1) {
+						response.get(0).getData_ky().getData()
+								.add(new DataKyObj(rsDataKy.getString("ky"), rsDataKy.getString("giatri")));
+					}
+					// sub 2
+					else if (vTest == 2) {
+						response.get(1).getData_ky().getData()
+								.add(new DataKyObj(rsDataKy.getString("ky"), rsDataKy.getString("giatri")));
+					}
+					// sub 3
+					else if (vTest == 0) {
+						response.get(2).getData_ky().getData()
+								.add(new DataKyObj(rsDataKy.getString("ky"), rsDataKy.getString("giatri")));
+					}
+				}
+				rsDataKy.close();
+				rsDataKy = null;
+
+				// DataThang dataset
+				ResultSet rsDataThang = (ResultSet) statement.getObject(8);
+				while (rsDataThang.next()) {
+					subID = rsDataThang.getInt("SUBGROUPID");
+					vTest = subID % 3;
+					// sub1
+					if (vTest == 1) {
+						response.get(0).getData_thang().getData()
+								.add(new DataThangObj(rsDataThang.getString("ky"), rsDataThang.getString("giatri")));
+					}
+					// sub2
+					else if (vTest == 2) {
+						response.get(1).getData_thang().getData()
+								.add(new DataThangObj(rsDataThang.getString("ky"), rsDataThang.getString("giatri")));
+					}
+					// sub3
+					else if (vTest == 0) {
+						response.get(2).getData_thang().getData()
+								.add(new DataThangObj(rsDataThang.getString("ky"), rsDataThang.getString("giatri")));
+					}
+				}
+				rsDataThang.close();
+				rsDataThang = null;
+
+				return response;
+			}
+		});
+	}
+
+	@Override
+	public List<SLTheoCTTK11Response> getSLTheoCTTK11(final SLTheoCTTKRequestParams params, final String tinh) {
+		// TODO Auto-generated method stub
+
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<SLTheoCTTK11Response>>() {
+			@Override
+			public List<SLTheoCTTK11Response> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+				List<SLTheoCTTK11Response> response = new ArrayList<SLTheoCTTK11Response>();
+				statement = conn
+						.prepareCall("{call " + Utils.readProperties("GetSLTheoCTTK11") + "(?,?,?,?,?, ?, ?,?,?)}");
+				setParams(statement, params);
+				statement.setString(6, tinh);
+				statement.registerOutParameter(7, OracleTypes.CURSOR);
+				statement.registerOutParameter(8, OracleTypes.CURSOR);
+				statement.registerOutParameter(9, OracleTypes.CURSOR);
+				statement.execute();
+				// Group dataset
+				ResultSet rsGroup = (ResultSet) statement.getObject(7);
+				while (rsGroup.next()) {
+
+					SLTheoCTTK11Response group = new SLTheoCTTK11Response();
+					group.setSub_name(rsGroup.getString("SUBNAME"));
+					group.setAvg(rsGroup.getString("AVG_SUB"));
+
+					group.getData_ky().setSs_ky_truoc(
+							markupMinus(rsGroup.getString("ss_ky_truoc_ky")));
+					group.getData_ky().setSs_ky_nam_truoc(
+							markupMinus(rsGroup.getString("ss_ky_nam_truoc_ky")));
+
+					group.getData_thang().setSs_thang_truoc(
+							markupMinus(rsGroup.getString("ss_ky_truoc_thang")));
+					group.getData_thang().setSs_thang_nam_truoc(
+							markupMinus(rsGroup.getString("ss_ky_nam_truoc_thang")));
+					response.add(group);
+				}
+				rsGroup.close();
+				rsGroup = null;
+
+				// DataKy dataset
+				ResultSet rsDataKy = (ResultSet) statement.getObject(8);
+				int subID;
+				while (rsDataKy.next()) {
+					response.get(0).getData_ky().getData()
+							.add(new DataKyObj(rsDataKy.getString("ky"), rsDataKy.getString("giatri")));
+				}
+				rsDataKy.close();
+				rsDataKy = null;
+
+				// DataThang dataset
+				ResultSet rsDataThang = (ResultSet) statement.getObject(9);
+				while (rsDataThang.next()) {
+
+					response.get(0).getData_thang().getData()
+							.add(new DataThangObj(rsDataThang.getString("ky"), rsDataThang.getString("giatri")));
+				}
+				rsDataThang.close();
+				rsDataThang = null;
+
+				return response;
+			}
+		});
+	}
+
+	@Override
+	public List<SLTheoCTTK12Response> getSLTheoCTTK12(final SLTheoCTTKRequestParams params) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<SLTheoCTTK12Response>>() {
+
+			@Override
+			public List<SLTheoCTTK12Response> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn
+						.prepareCall("{call " + Utils.readProperties("GetSLTheoCTTK12") + "(?,?,?,?,?, ?,?,?,?)}");
+				setParams(statement, params);
+				statement.registerOutParameter(6, OracleTypes.CURSOR);
+				statement.registerOutParameter(7, OracleTypes.CURSOR);
+				statement.registerOutParameter(8, OracleTypes.CURSOR);
+				statement.registerOutParameter(9, OracleTypes.CURSOR);
+				statement.execute();
+				// Group dataset
+				ResultSet rsGroup = (ResultSet) statement.getObject(6);
+				List<SLTheoCTTK12Response> response = new ArrayList<SLTheoCTTK12Response>();
+				while (rsGroup.next()) {
+					SLTheoCTTK12Response group = new SLTheoCTTK12Response();
+					group.setGroup_name(rsGroup.getString("GROUP_NAME"));
+					group.setGroup_id(rsGroup.getInt("ID"));
+					response.add(group);
+				}
+				rsGroup.close();
+				rsGroup = null;
+
+				// Sub group dataset
+				int groupIndex = 0;
+				// System.out.println("Group size: " + response.size());
+				ResultSet rsSubGroup = (ResultSet) statement.getObject(7);
+				while (rsSubGroup.next()) {
+
+					SLTheoCTTK12SubGroupData subGroup = new SLTheoCTTK12SubGroupData();
+
+					subGroup.setSub_name(rsSubGroup.getString("SUBNAME"));
+					subGroup.setAvg(rsSubGroup.getString("AVG_SUB"));
+					SLTheoCTTK12DataKy data_ky = new SLTheoCTTK12DataKy();
+					data_ky.setSs_ky_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_truoc_ky")));
+					data_ky.setSs_ky_nam_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_nam_truoc_ky")));
+					subGroup.setData_ky(data_ky);
+
+					// Group update
+					List<SLTheoCTTK12SubGroupData> groupData = new ArrayList<SLTheoCTTK12SubGroupData>();
+					groupData.add(subGroup);
+					response.get(groupIndex).setGroup_data(groupData);
+					groupIndex++;// Arraylist 0-base index
+				}
+				rsSubGroup.close();
+				rsSubGroup = null;
+
+				// DataKy dataset
+				ResultSet rsDataKy = (ResultSet) statement.getObject(8);
+				int groupID, subID;
+				while (rsDataKy.next()) {
+					groupID = rsDataKy.getInt("GROUPID");
+					subID = rsDataKy.getInt("SUBGROUPID");
+
+					response.get(groupID - 1).getGroup_data().get(0).getData_ky().getData()
+							.add(new DataKyObj(rsDataKy.getString("KY"), rsDataKy.getString("GIATRI")));
+				}
+				rsDataKy.close();
+				rsDataKy = null;
+
+				// DataThang dataset
+				ResultSet rsDataThang = (ResultSet) statement.getObject(9);
+				while (rsDataThang.next()) {
+					groupID = rsDataThang.getInt("GROUPID");
+					subID = rsDataThang.getInt("SUBGROUPID");
+
+					response.get(groupID - 1).getGroup_data().get(0).getData_thang().getData()
+							.add(new DataThangObj(rsDataThang.getString("KY"), rsDataThang.getString("GIATRI")));
+				}
+				rsDataThang.close();
+				rsDataThang = null;
+
+				return response;
+				// return null;
+			}
+		});
+	}
+
+	@Override
+	public List<SLTheoCTTK13Response> getSLTheoCTTK13(final SLTheoCTTKRequestParams params,
+			final String group_transport, final String transport) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<SLTheoCTTK13Response>>() {
+
+			@Override
+			public List<SLTheoCTTK13Response> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn
+						.prepareCall("{call " + Utils.readProperties("GetSLTheoCTTK13") + "(?,?,?,?,?, ?,?, ?,?,?,?)}");
+				setParams(statement, params);
+				statement.setString(6, group_transport);
+				statement.setString(7, transport);
+				statement.registerOutParameter(8, OracleTypes.CURSOR);
+				statement.registerOutParameter(9, OracleTypes.CURSOR);
+				statement.registerOutParameter(10, OracleTypes.CURSOR);
+				statement.registerOutParameter(11, OracleTypes.CURSOR);
+				statement.execute();
+				// Group dataset
+				ResultSet rsGroup = (ResultSet) statement.getObject(8);
+				List<SLTheoCTTK13Response> response = new ArrayList<SLTheoCTTK13Response>();
+				while (rsGroup.next()) {
+					SLTheoCTTK13Response group = new SLTheoCTTK13Response();
+					group.setGroup_name(rsGroup.getString("GROUP_NAME"));
+					group.setGroup_id(rsGroup.getInt("ID"));
+					response.add(group);
+				}
+				rsGroup.close();
+				rsGroup = null;
+
+				// Sub group dataset
+				int groupIndex = 0;
+				// System.out.println("Group size: " + response.size());
+				ResultSet rsSubGroup = (ResultSet) statement.getObject(9);
+				while (rsSubGroup.next()) {
+
+					SLTheoCTTK13SubGroupData subGroup = new SLTheoCTTK13SubGroupData();
+
+					subGroup.setSub_name(rsSubGroup.getString("SUBNAME"));
+					subGroup.setAvg(rsSubGroup.getString("AVG_SUB"));
+					SLTheoCTTK13DataKy data_ky = new SLTheoCTTK13DataKy();
+					data_ky.setSs_ky_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_truoc_ky")));
+					data_ky.setSs_ky_nam_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_nam_truoc_ky")));
+					subGroup.setData_ky(data_ky);
+
+					// Group update
+					List<SLTheoCTTK13SubGroupData> groupData = new ArrayList<SLTheoCTTK13SubGroupData>();
+					groupData.add(subGroup);
+					response.get(groupIndex).setGroup_data(groupData);
+					groupIndex++;// Arraylist 0-base index
+				}
+				rsSubGroup.close();
+				rsSubGroup = null;
+
+				// DataKy dataset
+				ResultSet rsDataKy = (ResultSet) statement.getObject(10);
+				int groupID, subID;
+				while (rsDataKy.next()) {
+					groupID = rsDataKy.getInt("GROUPID");
+					subID = rsDataKy.getInt("SUBGROUPID");
+
+					response.get(groupID - 1).getGroup_data().get(0).getData_ky().getData()
+							.add(new DataKyObj(rsDataKy.getString("KY"), rsDataKy.getString("GIATRI")));
+				}
+				rsDataKy.close();
+				rsDataKy = null;
+
+				// DataThang dataset
+				ResultSet rsDataThang = (ResultSet) statement.getObject(11);
+				while (rsDataThang.next()) {
+					groupID = rsDataThang.getInt("GROUPID");
+					subID = rsDataThang.getInt("SUBGROUPID");
+
+					response.get(groupID - 1).getGroup_data().get(0).getData_thang().getData()
+							.add(new DataThangObj(rsDataThang.getString("KY"), rsDataThang.getString("GIATRI")));
+				}
+				rsDataThang.close();
+				rsDataThang = null;
+
+				return response;
+				// return null;
+			}
+		});
+	}
+
+	@Override
+	public List<SLTheoCTTK15Response> getSLTheoCTTK15(final SLTheoCTTKRequestParams params, final String cuakhau,
+			final String phamvi, final String loaihinh) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<SLTheoCTTK15Response>>() {
+			@Override
+			public List<SLTheoCTTK15Response> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+				List<SLTheoCTTK15Response> response = new ArrayList<SLTheoCTTK15Response>();
+				statement = conn
+						.prepareCall("{call " + Utils.readProperties("GetSLTheoCTTK15") + "(?,?,?,?,?, ?,?,?, ?,?,?)}");
+				setParams(statement, params);
+				statement.setString(6, cuakhau);
+				statement.setString(7, phamvi);
+				statement.setString(8, loaihinh);
+				statement.registerOutParameter(9, OracleTypes.CURSOR);
+				statement.registerOutParameter(10, OracleTypes.CURSOR);
+				statement.registerOutParameter(11, OracleTypes.CURSOR);
+				statement.execute();
+				// Group dataset
+				ResultSet rsGroup = (ResultSet) statement.getObject(9);
+				while (rsGroup.next()) {
+
+					SLTheoCTTK15Response group = new SLTheoCTTK15Response();
+					group.setSub_name(rsGroup.getString("SUBNAME"));
+					group.setAvg(rsGroup.getString("AVG_SUB"));
+
+					group.getData_ky().setSs_ky_truoc(
+							markupMinus(rsGroup.getString("ss_ky_truoc_ky")));
+					group.getData_ky().setSs_ky_nam_truoc(
+							markupMinus(rsGroup.getString("ss_ky_nam_truoc_ky")));
+
+					group.getData_thang().setSs_thang_truoc(
+							markupMinus(rsGroup.getString("ss_ky_truoc_thang")));
+					group.getData_thang().setSs_thang_nam_truoc(
+							markupMinus(rsGroup.getString("ss_ky_nam_truoc_thang")));
+					response.add(group);
+				}
+				rsGroup.close();
+				rsGroup = null;
+
+				// DataKy dataset
+				ResultSet rsDataKy = (ResultSet) statement.getObject(10);
+				int subID;
+				while (rsDataKy.next()) {
+					response.get(0).getData_ky().getData()
+							.add(new DataKyObj(rsDataKy.getString("ky"), rsDataKy.getString("giatri")));
+				}
+				rsDataKy.close();
+				rsDataKy = null;
+
+				// DataThang dataset
+				ResultSet rsDataThang = (ResultSet) statement.getObject(11);
+				while (rsDataThang.next()) {
+
+					response.get(0).getData_thang().getData()
+							.add(new DataThangObj(rsDataThang.getString("ky"), rsDataThang.getString("giatri")));
+				}
+				rsDataThang.close();
+				rsDataThang = null;
+
+				return response;
+			}
+		});
+	}
+
+	@Override
+	public List<SLTheoCTTK04Response> getSLTheoCTTK04(final SLTheoCTTKRequestParams params, final String mathang) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<SLTheoCTTK04Response>>() {
+
+			@Override
+			public List<SLTheoCTTK04Response> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn
+						.prepareCall("{call " + Utils.readProperties("GetSLTheoCTTK04") + "(?,?,?,?,?, ?, ?,?,?,?)}");
+				setParams(statement, params);
+				statement.setString(6, mathang);
+				statement.registerOutParameter(7, OracleTypes.CURSOR);
+				statement.registerOutParameter(8, OracleTypes.CURSOR);
+				statement.registerOutParameter(9, OracleTypes.CURSOR);
+				statement.registerOutParameter(10, OracleTypes.CURSOR);
+				statement.execute();
+				// Group dataset
+				ResultSet rsGroup = (ResultSet) statement.getObject(7);
+				List<SLTheoCTTK04Response> response = new ArrayList<SLTheoCTTK04Response>();
+				while (rsGroup.next()) {
+					SLTheoCTTK04Response group = new SLTheoCTTK04Response();
+					group.setGroup_name(rsGroup.getString("GROUP_NAME"));
+					group.setGroup_id(rsGroup.getInt("ID"));
+					response.add(group);
+				}
+				rsGroup.close();
+				rsGroup = null;
+
+				// Sub group dataset
+				// int groupIndex = 0;
+				// System.out.println("Group size: " + response.size());
+				ResultSet rsSubGroup = (ResultSet) statement.getObject(8);
+				while (rsSubGroup.next()) {
+					SLTheoCTTK04SubGroupData subGroup = new SLTheoCTTK04SubGroupData();
+
+					subGroup.setSub_name(rsSubGroup.getString("SUBNAME"));
+					subGroup.setAvg(rsSubGroup.getString("AVG_SUB"));
+					SLTheoCTTK04DataKy data_ky = new SLTheoCTTK04DataKy();
+					data_ky.setSs_ky_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_truoc_ky")));
+					data_ky.setSs_ky_nam_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_nam_truoc_ky")));
+					data_ky.setTrend("");
+					data_ky.setForecast("");
+					
+					SLTheoCTTK04DataThang data_thang = new SLTheoCTTK04DataThang();
+					data_thang.setSs_thang_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_truoc_thang")));
+					data_thang.setSs_thang_nam_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_nam_truoc_thang")));
+					data_thang.setTrend(rsSubGroup.getString("trend_thang"));
+					data_thang.setForecast(rsSubGroup.getString("forcast_thang"));
+					
+					subGroup.setData_ky(data_ky);
+					subGroup.setData_thang(data_thang);
+
+					response.get(0).getGroup_data().add(subGroup);
+				}
+				rsSubGroup.close();
+				rsSubGroup = null;
+
+				// DataKy dataset
+				ResultSet rsDataKy = (ResultSet) statement.getObject(9);
+				int subID;
+				while (rsDataKy.next()) {
+					// groupID = rsDataKy.getInt("GROUPID");
+					subID = rsDataKy.getInt("SUBGROUPID");
+					// System.out.println(subID);
+					if(subID == 1){
+						response.get(0).getGroup_data().get(subID - 1).getData_ky().getData()
+							.add(new DataKyObj(rsDataKy.getString("KY"), rsDataKy.getString("DONVI")));
+					} else{
+						response.get(0).getGroup_data().get(subID - 1).getData_ky().getData()
+							.add(new DataKyObj(rsDataKy.getString("KY"), rsDataKy.getString("GIATRI")));
+					}					
+
+				}
+				rsDataKy.close();
+				rsDataKy = null;
+
+				// DataThang dataset
+				ResultSet rsDataThang = (ResultSet) statement.getObject(10);
+				while (rsDataThang.next()) {
+					// groupID = rsDataThang.getInt("GROUPID");
+					subID = rsDataThang.getInt("SUBGROUPID");
+
+					response.get(0).getGroup_data().get(subID - 1).getData_thang().getData()
+							.add(new DataThangObj(rsDataThang.getString("KY"), rsDataThang.getString("GIATRI")));
+				}
+				rsDataThang.close();
+				rsDataThang = null;
+
+				return response;
+				// return null;
+			}
+		});
+	}
+
+	@Override
+	public List<SLTheoCTTK09Response> getSLTheoCTTK09(final SLTheoCTTKRequestParams params, final String thitruong,
+			final String mathang) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<SLTheoCTTK09Response>>() {
+
+			@Override
+			public List<SLTheoCTTK09Response> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn
+						.prepareCall("{call " + Utils.readProperties("GetSLTheoCTTK09") + "(?,?,?,?,?, ?,?, ?,?,?,?)}");
+				setParams(statement, params);
+				statement.setString(6, thitruong);
+				statement.setString(7, mathang);
+				statement.registerOutParameter(8, OracleTypes.CURSOR);
+				statement.registerOutParameter(9, OracleTypes.CURSOR);
+				statement.registerOutParameter(10, OracleTypes.CURSOR);
+				statement.registerOutParameter(11, OracleTypes.CURSOR);
+				statement.execute();
+				// Group dataset
+				ResultSet rsGroup = (ResultSet) statement.getObject(8);
+				List<SLTheoCTTK09Response> response = new ArrayList<SLTheoCTTK09Response>();
+				while (rsGroup.next()) {
+					SLTheoCTTK09Response group = new SLTheoCTTK09Response();
+					group.setGroup_name(rsGroup.getString("GROUP_NAME"));
+					group.setGroup_id(rsGroup.getInt("ID"));
+					response.add(group);
+				}
+				rsGroup.close();
+				rsGroup = null;
+
+				// Sub group dataset
+				int groupIndex = 0;
+				// System.out.println("Group size: " + response.size());
+				ResultSet rsSubGroup = (ResultSet) statement.getObject(9);
+				while (rsSubGroup.next()) {
+
+					SLTheoCTTK09SubGroupData subGroup = new SLTheoCTTK09SubGroupData();
+
+					subGroup.setSub_name(rsSubGroup.getString("SUBNAME"));
+					subGroup.setAvg(rsSubGroup.getString("AVG_SUB"));
+					SLTheoCTTK09DataKy data_ky = new SLTheoCTTK09DataKy();
+					data_ky.setSs_ky_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_truoc_ky")));
+					data_ky.setSs_ky_nam_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_nam_truoc_ky")));
+					data_ky.setTrend("");
+					data_ky.setForecast("");
+					
+					SLTheoCTTK09DataThang data_thang = new SLTheoCTTK09DataThang();
+					data_thang.setSs_thang_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_truoc_thang")));
+					data_thang.setSs_thang_nam_truoc(
+							markupMinus(rsSubGroup.getString("ss_ky_nam_truoc_thang")));
+					data_thang.setTrend(rsSubGroup.getString("trend_thang"));
+					data_thang.setForecast(rsSubGroup.getString("forcast_thang"));
+					
+					subGroup.setData_ky(data_ky);
+					subGroup.setData_thang(data_thang);
+
+					response.get(0).getGroup_data().add(subGroup);
+				}
+				rsSubGroup.close();
+				rsSubGroup = null;
+
+				// DataKy dataset
+				ResultSet rsDataKy = (ResultSet) statement.getObject(10);
+				int groupID, subID;
+				while (rsDataKy.next()) {
+					groupID = rsDataKy.getInt("GROUPID");
+					subID = rsDataKy.getInt("SUBGROUPID");
+					
+					if (subID % 3 == 1)
+						response.get(groupID - 1).getGroup_data().get(0).getData_ky().getData()
+							.add(new DataKyObj(rsDataKy.getString("KY"), rsDataKy.getString("GIATRI")));
+					else if (subID % 3 == 2)
+						response.get(groupID - 1).getGroup_data().get(1).getData_ky().getData()
+							.add(new DataKyObj(rsDataKy.getString("KY"), rsDataKy.getString("GIATRI")));
+					else if (subID % 3 == 0)
+						response.get(groupID - 1).getGroup_data().get(2).getData_ky().getData()
+							.add(new DataKyObj(rsDataKy.getString("KY"), rsDataKy.getString("GIATRI")));
+				}
+				rsDataKy.close();
+				rsDataKy = null;
+
+				// DataThang dataset
+				ResultSet rsDataThang = (ResultSet) statement.getObject(11);
+				while (rsDataThang.next()) {
+					groupID = rsDataThang.getInt("GROUPID");
+					subID = rsDataThang.getInt("SUBGROUPID");
+					if (subID % 3 == 1)
+						response.get(groupID - 1).getGroup_data().get(0).getData_thang().getData()
+							.add(new DataThangObj(rsDataThang.getString("KY"), rsDataThang.getString("GIATRI")));
+					else if (subID % 3 == 2)
+						response.get(groupID - 1).getGroup_data().get(1).getData_thang().getData()
+							.add(new DataThangObj(rsDataThang.getString("KY"), rsDataThang.getString("GIATRI")));
+					else if (subID % 3 == 0)
+						response.get(groupID - 1).getGroup_data().get(2).getData_thang().getData()
+							.add(new DataThangObj(rsDataThang.getString("KY"), rsDataThang.getString("GIATRI")));
+				}
+				rsDataThang.close();
+				rsDataThang = null;
+
+				return response;
+				// return null;
+			}
+		});
+	}
+
+	@Override
+	public List<SLTheoCTTK07Response> getSLTheoCTTK07(final SLTheoCTTKRequestParams params, final String thoigian,
+			final String mathang, final String chiso, final String loaichiso) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<SLTheoCTTK07Response>>() {
+
+			@Override
+			public List<SLTheoCTTK07Response> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+				List<SLTheoCTTK07Response> response = new ArrayList<SLTheoCTTK07Response>();
+				statement = conn.prepareCall(
+						"{call " + Utils.readProperties("GetSLTheoCTTK07") + "(?,?,?,?,?, ?,?,?,?, ?,?)}");
+				setParams(statement, params);
+				statement.setString(6, thoigian);
+				statement.setString(7, mathang);
+				statement.setString(8, chiso);
+				statement.setString(9, loaichiso);
+
+				statement.registerOutParameter(10, OracleTypes.CURSOR);
+				statement.registerOutParameter(11, OracleTypes.CURSOR);
+				statement.execute();
+
+				// DataKy dataset
+//				int index = 0;
+				if (thoigian.equals("THA") || thoigian.equals("QUY")) {
+					ResultSet rsData = (ResultSet) statement.getObject(10);
+					while (rsData.next()) {
+						response.add(new SLTheoCTTK07Response(rsData.getString("TEN_MAT_HANG"),
+								rsData.getString("SS_KYGOC"),
+								rsData.getString("SS_CUNGKY_NAMTRUOC"),
+								rsData.getString("SS_KYCUOI_NAMTRUOC"),
+								rsData.getString("SS_KYTRUOC"),
+								rsData.getString("SS_LUYKE")));
+					}
+					rsData.close();
+					rsData = null;
+				} else if (thoigian.equals("NAM")) {
+					ResultSet rsDataNAM = (ResultSet) statement.getObject(11);
+					while (rsDataNAM.next()) {
+						
+						response.add(new SLTheoCTTK07Response(rsDataNAM.getString("TEN_MAT_HANG"),
+								rsDataNAM.getString(1),
+								rsDataNAM.getString(2),
+								"",
+								"",
+								""));
+					}
+					rsDataNAM.close();
+					rsDataNAM = null;
+				} else {
+					System.out.println("Invalid argument format");
+				}
+
+				return response;
+			}
+		});
+	}
+
+	@Override
+	public List<SLTheoCTTK14Response> getSLTheoCTTK14(final SLTheoCTTKRequestParams params, final String loai_ngay,
+			final String thoi_gian, final String tu_thoigian, final String tu_nam, final String den_thoigian,
+			final String den_nam) {
+		// TODO Auto-generated method stub
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<List<SLTheoCTTK14Response>>() {
+
+			@Override
+			public List<SLTheoCTTK14Response> execute(Connection conn) throws SQLException {
+				CallableStatement statement = null;
+
+				statement = conn.prepareCall(
+						"{call " + Utils.readProperties("GetSLTheoCTTK14") + "(?,?,?,?,?, ?,?, ?,?,?,?, ?,?,?)}");
+				setParams(statement, params);
+				statement.setString(6, loai_ngay);
+				statement.setString(7, thoi_gian);
+				statement.setString(8, tu_thoigian);
+				statement.setString(9, tu_nam);
+				statement.setString(10, den_thoigian);
+				statement.setString(11, den_nam);
+
+				statement.registerOutParameter(12, OracleTypes.CURSOR);
+				statement.registerOutParameter(13, OracleTypes.CURSOR);
+				statement.registerOutParameter(14, OracleTypes.CURSOR);
+				statement.execute();
+				// Group dataset
+				ResultSet rsGroup = (ResultSet) statement.getObject(12);
+				List<SLTheoCTTK14Response> response = new ArrayList<SLTheoCTTK14Response>();
+				while (rsGroup.next()) {
+					SLTheoCTTK14Response group = new SLTheoCTTK14Response();
+					group.setGroup_name(rsGroup.getString("GROUP_NAME"));
+					group.setGroup_id(rsGroup.getInt("ID"));
+					response.add(group);
+				}
+				rsGroup.close();
+				rsGroup = null;
+
+				// Sub group dataset
+				int groupIndex = 0;
+				int subIndex = 0;
+				ResultSet rsSubGroup = (ResultSet) statement.getObject(13);
+				while (rsSubGroup.next()) {
+
+					SLTheoCTTK14SubGroupData subGroupTK = new SLTheoCTTK14SubGroupData();
+					SLTheoCTTK14SubGroupData subGroupTG = new SLTheoCTTK14SubGroupData();
+
+					// To khai
+					// subIndex++;
+					// subGroupTK.setSub_id(subIndex);
+					subGroupTK.setSub_name(rsSubGroup.getString("SUBNAME"));
+					subGroupTK.setAvg(rsSubGroup.getString("AVG_SUB"));
+					// SLTheoCTTK14DataKy data_ky_dh = new SLTheoCTTK14DataKy();
+					// subGroupTK.setData_ky(data_ky_dh);
+					// Tri gia
+					if (rsSubGroup.next()) {
+						// subIndex++;
+						// subGroupTG.setSub_id(subIndex);
+						subGroupTG.setSub_name(rsSubGroup.getString("SUBNAME"));
+						subGroupTG.setAvg(rsSubGroup.getString("AVG_SUB"));
+						// SLTheoCTTK14DataKy data_ky_tg = new
+						// SLTheoCTTK14DataKy();
+						// subGroupTG.setData_ky(data_ky_tg);
+					}
+
+					// Group update
+					List<SLTheoCTTK14SubGroupData> groupData = new ArrayList<SLTheoCTTK14SubGroupData>();
+					// groupData.add(subGroupTK);
+					// groupData.add(subGroupTG);
+					response.get(groupIndex).getGroup_data().add(subGroupTK);
+					response.get(groupIndex).getGroup_data().add(subGroupTG);
+					groupIndex++;// Arraylist 0-base index
+				}
+				rsSubGroup.close();
+				rsSubGroup = null;
+
+				// DataKy dataset
+				ResultSet rsDataKy = (ResultSet) statement.getObject(14);
+				int groupID, subID;
+				String columnHeader;
+
+				while (rsDataKy.next()) {
+					groupID = rsDataKy.getInt("GROUPID");
+					subID = rsDataKy.getInt("SUBGROUPID");
+					columnHeader = rsDataKy.getString("KY");
+					// sl to khai
+					if (subID % 2 == 1) {
+						response.get(groupID - 1).getGroup_data().get(0).getData_ky().getData()
+								.add(new DataKyObj(columnHeader, rsDataKy.getString("GIATRI")));
+					} else {
+						// tri gia tk
+
+						response.get(groupID - 1).getGroup_data().get(1).getData_ky().getData()
+								.add(new DataKyObj(columnHeader, rsDataKy.getString("GIATRI")));
+					}
+				}
+				rsDataKy.close();
+				rsDataKy = null;
+				if (thoi_gian == "NG") {
+					for (SLTheoCTTK14Response x : response) {
+						x.getGroup_data().get(0).getData_ky().getData().get(0)
+								.setKy(Utils.getMessageProperties("BCPT.SLTheoCTTK14.NGAY_HEADER"));
+						x.getGroup_data().get(1).getData_ky().getData().get(0)
+								.setKy(Utils.getMessageProperties("BCPT.SLTheoCTTK14.NGAY_HEADER"));
+					}
+				}
+
+				return response;
+				// return null;
+			}
+		});
+	}
+
+	private String markupMinus(String input){
+		if(input != null && input.charAt(0) == '-'){
+			//input = "(-)" + input.substring(1);
+			input = "(" + input + ")";
+		}
+		
+		return input;
+	}
+}

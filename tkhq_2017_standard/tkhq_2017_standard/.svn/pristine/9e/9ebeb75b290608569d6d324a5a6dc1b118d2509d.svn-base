@@ -1,0 +1,510 @@
+package com.tkhq.cmc.dto;
+
+import java.util.Date;
+
+public class Tbd_KetXuatTNHTDTO {
+	
+	private Integer ketXuatId;
+	
+	private String userKetXuat;
+	
+	private Integer userIdKetXuat;
+	
+	private Date ngayKetXuat;
+	
+	private String kieuKetXuat;
+	
+	private Date tuNgayKetXuat;
+	
+	private Date denNgayKetXuat;
+	
+	private String loaiDuLieuKetXuat;
+	
+	private Integer nguonSLKetXuat;
+	
+	private String maHaiQuan;
+	
+	private String tenHaiQuan;
+	
+	private String loaiHangHoaKetXuat;
+	
+	private String maDichVu;
+	
+	private String maHang;
+	
+	private String maThongKe;
+	
+	private String maTinhTP;
+	
+	private String maLHDN;
+	
+	private String lyDoKetXuat;
+	
+	private String dsNuoc;
+	
+	private String dsChiTieuKetXuat;
+	
+	private String userPheDuyet;
+	
+	private int trangThaiPheDuyet;
+	
+	private Date ngayPheDuyet;
+	
+	private String fileName;
+	
+	private String tenHang;
+	
+	private String maDonVi;
+	
+	private String tenDonVi;
+	
+	private String tenTinhTP;
+	
+	private String tenLoaiHinhDN;
+	
+	private String userPD;
+	
+	private boolean isChecked;
+	
+	private String tuNgayTimKiem;
+	
+	private String denNgayTimKiem;
+	
+	/**
+	 * 
+	 */
+	public Tbd_KetXuatTNHTDTO() {
+		super();
+	}
+	
+	
+
+	public Tbd_KetXuatTNHTDTO(String tuNgayTimKiem, String denNgayTimKiem) {
+		super();
+		this.tuNgayTimKiem = tuNgayTimKiem;
+		this.denNgayTimKiem = denNgayTimKiem;
+	}
+
+
+
+	/**
+	 * @return the ketXuatId
+	 */
+	public Integer getKetXuatId() {
+		return ketXuatId;
+	}
+
+	/**
+	 * @param ketXuatId the ketXuatId to set
+	 */
+	public void setKetXuatId(Integer ketXuatId) {
+		this.ketXuatId = ketXuatId;
+	}
+
+	/**
+	 * @return the userKetXuat
+	 */
+	public String getUserKetXuat() {
+		return userKetXuat;
+	}
+
+	/**
+	 * @param userKetXuat the userKetXuat to set
+	 */
+	public void setUserKetXuat(String userKetXuat) {
+		this.userKetXuat = userKetXuat;
+	}
+
+	/**
+	 * @return the userIdKetXuat
+	 */
+	public Integer getUserIdKetXuat() {
+		return userIdKetXuat;
+	}
+
+	/**
+	 * @param userIdKetXuat the userIdKetXuat to set
+	 */
+	public void setUserIdKetXuat(Integer userIdKetXuat) {
+		this.userIdKetXuat = userIdKetXuat;
+	}
+
+	/**
+	 * @return the ngayKetXuat
+	 */
+	public Date getNgayKetXuat() {
+		return ngayKetXuat;
+	}
+
+	/**
+	 * @param ngayKetXuat the ngayKetXuat to set
+	 */
+	public void setNgayKetXuat(Date ngayKetXuat) {
+		this.ngayKetXuat = ngayKetXuat;
+	}
+
+	/**
+	 * @return the kieuKetXuat
+	 */
+	public String getKieuKetXuat() {
+		return kieuKetXuat;
+	}
+
+	/**
+	 * @param kieuKetXuat the kieuKetXuat to set
+	 */
+	public void setKieuKetXuat(String kieuKetXuat) {
+		this.kieuKetXuat = kieuKetXuat;
+	}
+
+	/**
+	 * @return the tuNgayKetXuat
+	 */
+	public Date getTuNgayKetXuat() {
+		return tuNgayKetXuat;
+	}
+
+	/**
+	 * @param tuNgayKetXuat the tuNgayKetXuat to set
+	 */
+	public void setTuNgayKetXuat(Date tuNgayKetXuat) {
+		this.tuNgayKetXuat = tuNgayKetXuat;
+	}
+
+	/**
+	 * @return the denNgayKetXuat
+	 */
+	public Date getDenNgayKetXuat() {
+		return denNgayKetXuat;
+	}
+
+	/**
+	 * @param denNgayKetXuat the denNgayKetXuat to set
+	 */
+	public void setDenNgayKetXuat(Date denNgayKetXuat) {
+		this.denNgayKetXuat = denNgayKetXuat;
+	}
+
+	/**
+	 * @return the loaiDuLieuKetXuat
+	 */
+	public String getLoaiDuLieuKetXuat() {
+		return loaiDuLieuKetXuat;
+	}
+
+	/**
+	 * @param loaiDuLieuKetXuat the loaiDuLieuKetXuat to set
+	 */
+	public void setLoaiDuLieuKetXuat(String loaiDuLieuKetXuat) {
+		this.loaiDuLieuKetXuat = loaiDuLieuKetXuat;
+	}
+
+	/**
+	 * @return the nguonSLKetXuat
+	 */
+	public Integer getNguonSLKetXuat() {
+		return nguonSLKetXuat;
+	}
+
+	/**
+	 * @param nguonSLKetXuat the nguonSLKetXuat to set
+	 */
+	public void setNguonSLKetXuat(Integer nguonSLKetXuat) {
+		this.nguonSLKetXuat = nguonSLKetXuat;
+	}
+
+	/**
+	 * @return the maHaiQuan
+	 */
+	public String getMaHaiQuan() {
+		return maHaiQuan;
+	}
+
+	/**
+	 * @param maHaiQuan the maHaiQuan to set
+	 */
+	public void setMaHaiQuan(String maHaiQuan) {
+		this.maHaiQuan = maHaiQuan;
+	}
+
+	/**
+	 * @return the loaiHangHoaKetXuat
+	 */
+	public String getLoaiHangHoaKetXuat() {
+		return loaiHangHoaKetXuat;
+	}
+
+	/**
+	 * @param loaiHangHoaKetXuat the loaiHangHoaKetXuat to set
+	 */
+	public void setLoaiHangHoaKetXuat(String loaiHangHoaKetXuat) {
+		this.loaiHangHoaKetXuat = loaiHangHoaKetXuat;
+	}
+
+	/**
+	 * @return the maDichVu
+	 */
+	public String getMaDichVu() {
+		return maDichVu;
+	}
+
+	/**
+	 * @param maDichVu the maDichVu to set
+	 */
+	public void setMaDichVu(String maDichVu) {
+		this.maDichVu = maDichVu;
+	}
+
+	/**
+	 * @return the maHang
+	 */
+	public String getMaHang() {
+		return maHang;
+	}
+
+	/**
+	 * @param maHang the maHang to set
+	 */
+	public void setMaHang(String maHang) {
+		this.maHang = maHang;
+	}
+
+	/**
+	 * @return the maThongKe
+	 */
+	public String getMaThongKe() {
+		return maThongKe;
+	}
+
+	/**
+	 * @param maThongKe the maThongKe to set
+	 */
+	public void setMaThongKe(String maThongKe) {
+		this.maThongKe = maThongKe;
+	}
+
+	/**
+	 * @return the maTinhTP
+	 */
+	public String getMaTinhTP() {
+		return maTinhTP;
+	}
+
+	/**
+	 * @return the isChecked
+	 */
+	public boolean isChecked() {
+		return isChecked;
+	}
+
+	/**
+	 * @param isChecked the isChecked to set
+	 */
+	public void setChecked(boolean isChecked) {
+		this.isChecked = isChecked;
+	}
+
+	/**
+	 * @param maTinhTP the maTinhTP to set
+	 */
+	public void setMaTinhTP(String maTinhTP) {
+		this.maTinhTP = maTinhTP;
+	}
+
+	/**
+	 * @return the maLHDN
+	 */
+	public String getMaLHDN() {
+		return maLHDN;
+	}
+
+	/**
+	 * @param maLHDN the maLHDN to set
+	 */
+	public void setMaLHDN(String maLHDN) {
+		this.maLHDN = maLHDN;
+	}
+
+	/**
+	 * @return the lyDoKetXuat
+	 */
+	public String getLyDoKetXuat() {
+		return lyDoKetXuat;
+	}
+
+	/**
+	 * @param lyDoKetXuat the lyDoKetXuat to set
+	 */
+	public void setLyDoKetXuat(String lyDoKetXuat) {
+		this.lyDoKetXuat = lyDoKetXuat;
+	}
+
+	/**
+	 * @return the dsNuoc
+	 */
+	public String getDsNuoc() {
+		return dsNuoc;
+	}
+
+	/**
+	 * @param dsNuoc the dsNuoc to set
+	 */
+	public void setDsNuoc(String dsNuoc) {
+		this.dsNuoc = dsNuoc;
+	}
+
+	/**
+	 * @return the dsChiTieuKetXuat
+	 */
+	public String getDsChiTieuKetXuat() {
+		return dsChiTieuKetXuat;
+	}
+
+	/**
+	 * @param dsChiTieuKetXuat the dsChiTieuKetXuat to set
+	 */
+	public void setDsChiTieuKetXuat(String dsChiTieuKetXuat) {
+		this.dsChiTieuKetXuat = dsChiTieuKetXuat;
+	}
+
+	/**
+	 * @return the userPheDuyet
+	 */
+	public String getUserPheDuyet() {
+		return userPheDuyet;
+	}
+
+	/**
+	 * @param userPheDuyet the userPheDuyet to set
+	 */
+	public void setUserPheDuyet(String userPheDuyet) {
+		this.userPheDuyet = userPheDuyet;
+	}
+
+	/**
+	 * @return the trangThaiPheDuyet
+	 */
+	public int getTrangThaiPheDuyet() {
+		return trangThaiPheDuyet;
+	}
+
+	/**
+	 * @param trangThaiPheDuyet the trangThaiPheDuyet to set
+	 */
+	public void setTrangThaiPheDuyet(int trangThaiPheDuyet) {
+		this.trangThaiPheDuyet = trangThaiPheDuyet;
+	}
+
+	/**
+	 * @return the ngayPheDuyet
+	 */
+	public Date getNgayPheDuyet() {
+		return ngayPheDuyet;
+	}
+
+	/**
+	 * @param ngayPheDuyet the ngayPheDuyet to set
+	 */
+	public void setNgayPheDuyet(Date ngayPheDuyet) {
+		this.ngayPheDuyet = ngayPheDuyet;
+	}
+
+	/**
+	 * @return the fileName
+	 */
+	public String getFileName() {
+		return fileName;
+	}
+
+	/**
+	 * @param fileName the fileName to set
+	 */
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	/**
+	 * @return the tenHang
+	 */
+	public String getTenHang() {
+		return tenHang;
+	}
+
+	/**
+	 * @param tenHang the tenHang to set
+	 */
+	public void setTenHang(String tenHang) {
+		this.tenHang = tenHang;
+	}
+
+	/**
+	 * @return the tenHaiQuan
+	 */
+	public String getTenHaiQuan() {
+		return tenHaiQuan;
+	}
+
+	/**
+	 * @param tenHaiQuan the tenHaiQuan to set
+	 */
+	public void setTenHaiQuan(String tenHaiQuan) {
+		this.tenHaiQuan = tenHaiQuan;
+	}
+
+	public String getMaDonVi() {
+		return maDonVi;
+	}
+
+	public void setMaDonVi(String maDonVi) {
+		this.maDonVi = maDonVi;
+	}
+
+	public String getTenDonVi() {
+		return tenDonVi;
+	}
+
+	public void setTenDonVi(String tenDonVi) {
+		this.tenDonVi = tenDonVi;
+	}
+
+	public String getTenTinhTP() {
+		return tenTinhTP;
+	}
+
+	public void setTenTinhTP(String tenTinhTP) {
+		this.tenTinhTP = tenTinhTP;
+	}
+
+	public String getTenLoaiHinhDN() {
+		return tenLoaiHinhDN;
+	}
+
+	public void setTenLoaiHinhDN(String tenLoaiHinhDN) {
+		this.tenLoaiHinhDN = tenLoaiHinhDN;
+	}
+
+	public String getUserPD() {
+		return userPD;
+	}
+
+	public void setUserPD(String userPD) {
+		this.userPD = userPD;
+	}
+
+	public String getTuNgayTimKiem() {
+		return tuNgayTimKiem;
+	}
+
+	public void setTuNgayTimKiem(String tuNgayTimKiem) {
+		this.tuNgayTimKiem = tuNgayTimKiem;
+	}
+
+	public String getDenNgayTimKiem() {
+		return denNgayTimKiem;
+	}
+
+	public void setDenNgayTimKiem(String denNgayTimKiem) {
+		this.denNgayTimKiem = denNgayTimKiem;
+	}
+
+}

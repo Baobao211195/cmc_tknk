@@ -1,0 +1,286 @@
+/**
+ * Controller of model TBS_BIEUTHUE
+ */
+
+'use strict';
+
+App.controller('dienBienSoLieuChiTieuTKController', dienBienSoLieuChiTieuTKController);
+dienBienSoLieuChiTieuTKController.$inject = ['$scope', 'dienBienSoLieuChiTieuTKService', 'pagerService', '$uibModal', '$PopupMessage', '$rootScope', 'contextPath'];
+
+function dienBienSoLieuChiTieuTKController($scope, dienBienSoLieuChiTieuTKService, pagerService, $uibModal, $PopupMessage, $rootScope, contextPath) {		
+	console.log('start dienBienSoLieuChiTieuTKController');
+		var self = this;
+		self.lstTrangThai = [];
+		self.lstManager = [];
+		self.lstDataKy = [];
+		self.lstDataThang = [];
+		self.soLieuChiTieuTK = '';
+        self.cuaKhaunnVnaccsEntity = {
+        		mo_ta: '',
+        		ma_hang: '',
+        		ma_tk: '',        		        	
+        		isChecked: false        		
+        };        
+        self.selectedList = []; //Danh sach row da chon        
+        self.checkAll = false;                      
+        
+        //Them moi row su dung popup start
+        self.feedBack = feedBack;                
+        self.showPopup = showPopup;
+        self.showReport = showReport;
+        self.showReportChart = showReportChart;
+        self.animationsEnabled = true;         
+        self.search = search;
+        
+        self.totalItems = 0;
+        self.currentPage = 1;
+        self.maxSize = 5;
+        self.pageSize = 10;
+        self.nhx = 'X';        
+        self.linkAPI = '';//contextPath +'/pbtk/API_dienbiensolieuchitieuTK_ky?nhx=X&trangThai=SB&radioBox=KY';
+        self.loai_bc = '1';
+//        search(self.currentPage, self.pageSize);        
+        self.showChart1 = false;
+        $scope.showReport1 = true;
+        GetNewPage();
+//        GetSoLieuChiTieuTK01();
+        
+        function GetSoLieuChiTieuTK01() {
+        	console.log('Controller GetSoLieuChiTieuTK01@trangThai:'+$scope.trangThai.ma+'|self.nhx:'+self.nhx);
+        	/*self.paramTest = dienBienSoLieuChiTieuTKService.GetSoLieuChiTieuTK01($scope.trangThai.ma, self.nhx);
+        	console.log(self.paramTest.data_ky.data[0].ky);*/
+        	$rootScope.showLoading = true;
+        	dienBienSoLieuChiTieuTKService.GetSoLieuChiTieuTK01($scope.trangThai.ma, self.nhx)
+    		.then(function(respone){        			
+    			self.soLieuChiTieuTK = respone;    			
+    			self.lstDataKy = respone.data_ky.data;
+//    			if (self.lstDataKy.length > 0 && self.lstDataKy.length %2 != 0 ) {
+//    				self.lstDataKy.push({"gia_tri":null,"ky":null});
+//    			}	
+    			self.lstDataThang = respone.data_thang.data;      			
+    			console.log(self.soLieuChiTieuTK.chi_tieu+"|"+self.lstDataKy.length+"|"+self.lstDataThang.length);
+    			
+    			var maxKy = 0;
+				var minKy = self.lstDataKy[0].gia_tri;
+				var maxThang = 0;
+				var minThang = self.lstDataThang[0].gia_tri;
+				
+				var lengthKY = self.lstDataKy.length;
+				var lengthTHANG = self.lstDataThang.length;
+				var tenKY = '';
+				var tenTHANG = '';				
+//				if (self.lstDataKy.length > 0 && self.lstDataKy.length %2 != 0 ) {
+					lengthKY = self.lstDataKy.length -1;
+					lengthTHANG = self.lstDataThang.length -1;
+					tenKY = self.lstDataKy[lengthKY].ky;
+					tenTHANG = self.lstDataThang[lengthTHANG].thang;
+//				}
+				
+				for(var j = 0; j < lengthKY; j++){
+					if(parseFloat(self.lstDataKy[j].gia_tri) > parseFloat(maxKy)){
+						maxKy = self.lstDataKy[j].gia_tri;
+					}
+					if(parseFloat(self.lstDataKy[j].gia_tri) < parseFloat(minKy)){
+						minKy = self.lstDataKy[j].gia_tri;
+					}
+				}
+				
+				for(var k = 0; k < lengthTHANG; k++){
+					if(parseFloat(self.lstDataThang[k].gia_tri) > parseFloat(maxThang)){
+						maxThang = self.lstDataThang[k].gia_tri;
+					}
+					if(parseFloat(self.lstDataThang[k].gia_tri) < parseFloat(minThang)){
+						minThang = self.lstDataThang[k].gia_tri;
+					}
+//					console.log('########################:self.lstDataThang['+k+'].gia_tri:'+self.lstDataThang[k].gia_tri+'|maxThang:'+maxThang);
+//					console.log('########################:'+(parseFloat(self.lstDataThang[k].gia_tri) > parseFloat(maxThang)));
+				}
+				self.soLieuChiTieuTK.data_ky["maxKy"] = maxKy;
+				self.soLieuChiTieuTK.data_ky["minKy"] = minKy;
+				self.soLieuChiTieuTK.data_ky["tenKY"] = tenKY;
+				self.soLieuChiTieuTK.data_thang["maxThang"] = maxThang;
+				self.soLieuChiTieuTK.data_thang["minThang"] = minThang;
+				self.soLieuChiTieuTK.data_thang["tenTHANG"] = tenTHANG;
+				
+				if (self.lstDataKy.length > 0 && self.lstDataKy.length %2 != 0 ) {
+    				self.lstDataKy.push({"gia_tri":null,"ky":null});
+    			}
+    							
+				$scope.showReport1 = false;
+				$rootScope.showLoading = false;			
+    			},
+    			function(errResponse){
+    				console.error(errResponse);
+    			}
+    		); 
+        }
+        
+        function GetNewPage() {
+        	self.lstTrangThai = [{
+    	                	    "ma": "SB",
+    	                	    "ten": "Sơ bộ"
+    	                	  },
+    	                	  {
+    	                	    "ma": "DC",
+    	                	    "ten": "Điều chỉnh"
+    	                	  },
+    	                	  {
+    	                	    "ma": "CT",
+    	                	    "ten": "Chính thức"
+    	                	  },
+    	                	  {
+      	                	    "ma": "UC",
+      	                	    "ten": "Ước"
+      	                	  }];
+        	$scope.trangThai = self.lstTrangThai[0];
+        	$scope.radioBox = 'KY';
+        	$rootScope.$emit('PhanHoiQuyTrinhXLDL', self.loai_bc);
+        }                                           
+        
+        $rootScope.$on('childEmit', function(event, data) {
+            console.log(data);
+            self.nhx = data;   
+//            GetSoLieuChiTieuTK01();
+          });
+        
+        $scope.selectTrangThai = function(item) {
+            console.log('selectTrangThai@item:' + item.ten+"|"+item.ma);
+            GetSoLieuChiTieuTK01();
+        };  
+        
+//        $scope.clickDongButton = function() {
+//            console.log('clickDongButton@$scope.trangThai:'+$scope.trangThai.ma);
+//            window.location.href = "dienBienSoLieuChiTieuTK";
+//        };
+        $scope.clickDongButton = function() {
+        	self.showChart1 = false;
+        };
+        
+        $scope.showChart = function() {        	
+        	self.linkAPI = contextPath+'/pbtk/API_dienbiensolieuchitieuTK_ky?nhx='+self.nhx+'&trangThai='+$scope.trangThai.ma+'&radioBox='+$scope.radioBox;
+            console.log('showChart@self.linkAPI:'+self.linkAPI);
+            $scope.showChart2 = true;
+            self.showChart1 = true;
+        };
+        
+        $scope.btnPhanHoi_Click = function () {
+			$rootScope.$emit('PhanHoiQuyTrinhXLDL', self.loai_bc);
+		};
+        
+        function search(currentPage, pageSize){
+        	var param = {};
+        	param["maCang"] = $scope.maCang;
+        	param["loaiCang"] = $scope.loaiCang;
+        	param["tenNuoc"] = $scope.tenNuoc;
+        	param["tenTP"] = $scope.tenTP;
+        	param["maNuoc"] = $scope.maNuoc;
+        	param["currentPage"] = currentPage;
+        	param["pageSize"] = pageSize;
+        	
+        	console.log('search@param:',param);        	
+        	
+        	thayDoiBoSungToKhaiHeThongService.searchCuaKhauNN(param)
+        		.then(function(respone){        			
+        			self.lstCuaKhauNN = respone.lstCuaKhauNN;
+        			self.totalItems = respone.totalCount;
+        			self.pageSize = parseInt(respone.pageSize);
+        			self.currentPage = parseInt(respone.currentPage);
+        			},
+        			function(errResponse){
+        				console.error(errResponse);
+        			}
+        		);        	
+        }
+        
+        //Them moi truc tiep row tren grid end
+
+//        function reset() {
+//        	self.cuaKhaunnVnaccsEntity = {
+//            		maCang: '',
+//            		tenTP: '',
+//            		maNuoc: '',
+//            		tenNuoc: '',        	
+//            		loaiCang: '',
+//            		isChecked: false,
+//            		addOrUpdate: ''
+//            };
+//            //$scope.myForm.$setPristine(); //reset Form
+//        }
+        
+        //Them moi row su dung popup
+        $scope.addRow = function() {
+        	reset(); //Lam moi entity
+        	self.cuaKhaunnVnaccsEntity.addOrUpdate = 'add';
+    		self.showPopup(self.lstCuaKhauNN, self.cuaKhaunnVnaccsEntity);
+    	};
+    	
+    	function feedBack(){
+    		console.log('Id to be edited');            
+            self.showPopup(self.lstManager);
+    	}
+    	
+    	$scope.doExport = function(){
+    		var param = {};
+        	param["trangthai"] = $scope.trangThai.ma == null ? '' : $scope.trangThai.ma;
+        	param["nhx"] = self.nhx;
+        	console.log('$scope.trangThai.ma:'+$scope.trangThai.ma+'|self.nhx:'+self.nhx);   
+        	dienBienSoLieuChiTieuTKService.doExport(param);
+    	};
+    	
+    	function showReportChart(){            
+            self.showReport(self.lstManager);
+    	}
+    	
+    	function showPopup(grid){
+    		var modalInstance = $uibModal.open({
+    			animation: self.animationsEnabled,
+    			templateUrl: 'phanHoiQuyTrinhXLDL',
+    			controller: 'dienBienSoLieuChiTieuTKModalCtrl',
+    			controllerAs: 'self',
+    			resolve: {
+    				grid : function() {
+						return grid;
+					}
+    			}
+    		});
+    		
+    		modalInstance.result.then(function (data) {    				
+    		    }, function () {
+    		    });
+    	}    	
+    	
+    	function showReport(grid){
+    		var modalInstance = $uibModal.open({
+    			animation: self.animationsEnabled,
+    			ariaLabelledBy: 'modal-title',
+    			ariaDescribedBy: 'modal-body',
+    			templateUrl: 'pageReportChart',
+    			controller: 'dienBienSoLieuChiTieuTKModalCtrl',
+    			controllerAs: 'self',
+    			windowClass: 'app-modal-window',
+    			resolve: {
+    				grid : function() {
+						return grid;
+					}
+    			}
+    		});
+    		
+    		modalInstance.result.then(function (data) {    				
+    		    }, function () {    		     
+    		    });
+    	} 
+
+}
+
+angular.module('myApp').controller('dienBienSoLieuChiTieuTKModalCtrl', dienBienSoLieuChiTieuTKModalCtrl);
+dienBienSoLieuChiTieuTKModalCtrl.$inject = ['$uibModalInstance', 'grid', 'dienBienSoLieuChiTieuTKService', '$PopupMessage']
+function dienBienSoLieuChiTieuTKModalCtrl($uibModalInstance, grid, dienBienSoLieuChiTieuTKService, $PopupMessage) {
+	var self = this;
+	self.lstManager = angular.copy(grid);	
+	self.message = '';
+
+	self.cancel = function () {
+	    $uibModalInstance.dismiss('cancel');
+	};	  
+	
+}

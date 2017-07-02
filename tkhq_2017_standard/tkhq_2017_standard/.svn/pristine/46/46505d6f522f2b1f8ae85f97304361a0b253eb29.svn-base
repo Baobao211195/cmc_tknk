@@ -1,0 +1,67 @@
+'use strict';
+
+App.factory('Phancong_Service', [ '$http', '$q', 'contextPath',
+		'$httpParamSerializerJQLike', Phancong_Service ]);
+function Phancong_Service($http, $q, contextPath, $httpParamSerializerJQLike) {
+	var REST_SERVICE_URI = "http://10.224.65.220:8080/tkhq_2017_standard/getAllPhancong/";
+	var REST_URI_GET_ALL_CONGVIEC = contextPath + '/getAllCongviec';
+	var REST_URI_GET_ALL_SEARCH = contextPath + '/phancong/search';
+	var factory = {
+		GetPhanCong : GetPhanCong,
+		GetCongViec : GetCongViec,
+		GetPhanCongByMaCv:GetPhanCongByMaCv
+	};
+	return factory;
+	function GetPhanCong() {
+		var deferred = $q.defer();
+		$http.get(REST_SERVICE_URI).then(function(response) {
+			deferred.resolve(response.data);
+			console.log(response.data);
+		}, function(errResponse) {
+			console.error('Không thể cập nhập thông tin');
+			deferred.reject(errResponse);
+		});
+		return deferred.promise;
+	}
+	function GetCongViec() {
+		var deferred = $q.defer();
+		$http.get(REST_URI_GET_ALL_CONGVIEC).then(function(response) {
+			deferred.resolve(response.data);
+			console.log(response.data);
+		}, function(errResponse) {
+			console.error('Không thể cập nhập thông tin');
+			deferred.reject(errResponse);
+		});
+		return deferred.promise;
+	}
+
+	function GetPhanCongByMaCv(maCv,type) {
+		var deferred = $q.defer();
+		console.log("vao roi");
+		$http.post(REST_URI_GET_ALL_SEARCH,maCv,type).then(function(response){
+			deferred.resolve(response.data);
+			console.log(response.data);
+		}, function(errResponse) {
+			console.error('Không thể cập nhập thông tin');
+			deferred.reject(errResponse);
+		});
+//		$http({
+//			url : REST_URI_GET_ALL_SEARCH,
+//			method : 'POST',
+//			data : {
+//				"maCv" : maCv,
+//				"type" : type
+//			},
+//			headers : {
+//				'Content-Type' : 'application/json'
+//			}
+//
+//		}).then(function(response) {
+//			deferred.resolve(response.data);
+//		}, function(errResponse) {
+//			console.error('Có lỗi xảy ra trong khi lấy thông tin');
+//			deferred.reject(errResponse);
+//		});
+	}
+
+}

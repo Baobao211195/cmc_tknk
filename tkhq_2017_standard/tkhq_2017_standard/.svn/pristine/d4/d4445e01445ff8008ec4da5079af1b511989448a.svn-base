@@ -1,0 +1,152 @@
+/**
+ *
+ */
+
+'use strict';
+
+angular.module('myApp').controller('canhBao_SLToKhaiXNKController_chart', canhBao_SLToKhaiXNKController_chart);
+canhBao_SLToKhaiXNKController_chart.$inject = ['$scope', 'CanhBaoSLToKhaiXNKService', '$uibModal', '$PopupMessage',
+   '$rootScope', 'contextPath'];
+
+function canhBao_SLToKhaiXNKController_chart($scope, CanhBaoSLToKhaiXNKService, $uibModal, $PopupMessage, $rootScope,
+		contextPath) {
+	var self = this;
+	self.animationsEnabled = true;
+	self.loai_bc = '2';
+		
+	$scope.lstCucHQ = [];
+	$scope.lstChiCucHQ = [];
+	
+	self.cucHQSelected = null;
+	self.chiCucHQSelected = null;
+	
+	$scope.loaiHinh = 'X';
+	$scope.rbLoaiKy = {value: 'ky'};
+	
+	$scope.showData = false;
+	$scope.showButton = false;
+	
+	function initComponent() {
+		// Reset value
+		self.cucHQSelected = null;
+		self.chiCucHQSelected = null;
+		
+		$scope.lstCucHQ = [];
+		$scope.lstChiCucHQ = [];
+		$scope.rbLoaiKy = {value: 'ky'};
+		
+		$scope.showData = false;
+		$rootScope.$emit('PhanHoiQuyTrinhXLDL', self.loai_bc);
+		
+		CanhBaoSLToKhaiXNKService.getLstCucHQ().then(function(deferred) {
+			$scope.lstCucHQ = deferred;
+//			self.cucHQSelected = deferred[0].ma;
+		}, function(errResponse) {
+			console.error(errResponse);
+		});
+	}
+	
+	$scope.changeCucHQ = function() {
+		console.log("Selected item: " + self.cucHQSelected);
+		if (self.cucHQSelected != "00") {
+		CanhBaoSLToKhaiXNKService.getLstChiCucHQ(self.cucHQSelected).then(
+			function(deferred) {
+				$scope.lstChiCucHQ = deferred;
+//				if(deferred.length >0)
+//				{	
+//					self.chiCucHQSelected = deferred[0].ten;
+//				};
+			},
+			function(errResponse) {
+				console.error(errResponse);
+			});
+		} else{
+			$scope.lstChiCucHQ = null;
+		}
+	};
+	
+	$scope.changeTab = function(index) {
+		console.log("Tab selected: " + index);
+		if (index == 0) {
+			$scope.loaiHinh = 'X';
+			initComponent();
+		} else if (index == 1) {
+			$scope.loaiHinh = 'N';
+			initComponent();
+		} else if (index == 2) {
+			$scope.loaiHinh = 'NX';
+			initComponent();
+		} else {
+			console.error("No tab index found!");
+		}
+	};
+	
+    $scope.searchChart = function() {
+    	if(!checkInput()){
+			return;
+		}
+    	
+    	var param = {};
+		param["maCucHQ"] = self.cucHQSelected == null ? '' : self.cucHQSelected;
+		param["maChiCucHQ"] = self.chiCucHQSelected == null ? '': self.chiCucHQSelected;
+		param["nhx"] = $scope.loaiHinh;
+		
+    	$scope.linkAPI_LuongTK = contextPath + '/bcpt/CanhBaoDBSLTK/doChart?nhx=' + param["nhx"] + '&loaiKy=' +
+    		$scope.rbLoaiKy.value + '&maCucHQ=' + param["maCucHQ"] + '&maChicucHQ=' + param["maChiCucHQ"] + '&loaiTK=luongTK';
+        $scope.linkAPI_LuongDH = contextPath + '/bcpt/CanhBaoDBSLTK/doChart?nhx=' + param["nhx"] + '&loaiKy=' +
+        	$scope.rbLoaiKy.value + '&maCucHQ=' + param["maCucHQ"] + '&maChicucHQ=' + param["maChiCucHQ"] + '&loaiTK=luongDH';
+        
+        var iframe, iframe2;
+    	
+		iframe = document.getElementById('frBDSLTK');
+    	iframe.src = iframe.src;
+    	iframe2 = document.getElementById('frBDSLDH');
+		iframe2.src = iframe2.src;
+    	
+		$scope.showData = true;
+    };
+    
+    function checkInput(){	
+		if(self.cucHQSelected == null || typeof self.cucHQSelected == 'undefined' || self.cucHQSelected == ''){
+			angular.element(document.querySelector('#messageErrorArea')).text('Trường Cục hải quan là bắt buộc.');
+			$scope.showError == true;
+			
+			return false;
+		}
+		
+		angular.element(document.querySelector('#messageErrorArea')).text('');
+		$scope.showError == false;
+		return true;
+	}
+    	
+	$scope.showFeedback = function(){
+//		var modalInstance = $uibModal.open({
+//			animation: self.animationsEnabled,
+//			ariaLabelledBy: 'modal-title',
+//			ariaDescribedBy: 'modal-body',
+//			templateUrl: 'phanHoiQuyTrinhXLDL',
+//			controller: 'feedbackQTXLDLModalCtrl',
+//			controllerAs: 'self',
+//			resolve: {
+//			}
+//		});
+//		
+//		modalInstance.result.then(
+//			function (data) {
+//	    	},
+//	    	function () {
+//	    	}
+//	    );
+	};
+}
+
+angular.module('myApp').controller('feedbackQTXLDLModalCtrl', feedbackQTXLDLModalCtrl);
+dienBienSLDoanhNghiepFDIModalCtrl.$inject = ['$uibModalInstance', 'CanhBaoSLToKhaiXNKService']
+function feedbackQTXLDLModalCtrl($uibModalInstance, CanhBaoSLToKhaiXNKService) {
+	var self = this;
+	
+	self.cancel = function () {
+	    $uibModalInstance.dismiss('cancel');
+	};
+	
+}

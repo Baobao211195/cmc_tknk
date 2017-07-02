@@ -1,0 +1,320 @@
+package com.tkhq.cmc.dao;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.jdbc.ReturningWork;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.tkhq.cmc.dto.HTRaXoatSanPhamTKDTO;
+import com.tkhq.cmc.utils.Utils;
+
+import oracle.jdbc.internal.OracleTypes;
+
+@Repository
+public class HTRaXoatSanPhamTKDAOImpl implements HTRaXoatSanPhamTKDAO {
+	
+	@Autowired
+	private SessionFactory sessionFactory;
+	
+
+	public List<HTRaXoatSanPhamTKDTO> getListDanhMucBaoCao(final String typeNhapXuat) {
+		return sessionFactory.getCurrentSession().doReturningWork(
+			new ReturningWork<List<HTRaXoatSanPhamTKDTO>>() {
+
+				public List<HTRaXoatSanPhamTKDTO> execute(Connection con) throws SQLException {
+					List<HTRaXoatSanPhamTKDTO> listDto = new ArrayList<HTRaXoatSanPhamTKDTO>();;
+					CallableStatement callStm = con.prepareCall(new StringBuilder()
+														.append("{call ")
+														.append(Utils.readProperties("PK_RAXOAT_SANPHAM_TK_DAURA.ts_readDanhMucBaoCao"))
+														.append("(?,?)}").toString());
+					
+					callStm.setString(1, typeNhapXuat);
+					callStm.registerOutParameter(2, OracleTypes.CURSOR);
+					
+					callStm.execute();
+					
+					ResultSet rs = (ResultSet) callStm.getObject(2);
+					HTRaXoatSanPhamTKDTO dto = null;
+					while (rs.next()) {
+						dto = new HTRaXoatSanPhamTKDTO();
+						dto.setMaDanhMucBaoCao(rs.getString("MA"));
+						dto.setTenDanhMucBaoCao(rs.getString("TEN"));
+						listDto.add(dto);
+					}
+					return listDto;
+				}
+			});
+	}
+
+	public List<HTRaXoatSanPhamTKDTO> getListCongChucQuanLy(final String typeNhapXuat) {
+		return sessionFactory.getCurrentSession().doReturningWork(
+			new ReturningWork<List<HTRaXoatSanPhamTKDTO>>() {
+
+				public List<HTRaXoatSanPhamTKDTO> execute(Connection con) throws SQLException {
+					List<HTRaXoatSanPhamTKDTO> listDto = new ArrayList<HTRaXoatSanPhamTKDTO>();
+					CallableStatement callStm = con.prepareCall(new StringBuilder()
+														.append("{call ")
+														.append(Utils.readProperties("PK_RAXOAT_SANPHAM_TK_DAURA.ts_readCongChucQuanLy"))
+														.append("(?,?)}").toString());
+					
+					callStm.setString(1, typeNhapXuat);
+					callStm.registerOutParameter(2, OracleTypes.CURSOR);
+					
+					callStm.execute();
+					
+					ResultSet rs = (ResultSet) callStm.getObject(2);
+					HTRaXoatSanPhamTKDTO dto = null;
+					while (rs.next()) {
+						dto = new HTRaXoatSanPhamTKDTO();
+						dto.setMaCongChucQuanLy(rs.getString("USER_ID_PA1"));;
+						dto.setTenCongChucQuanLy(rs.getString("USER_NAME_PA1"));
+	   					listDto.add(dto);
+					}
+					return listDto;
+				}
+			});
+	}
+
+	public List<HTRaXoatSanPhamTKDTO> getListThongTinXuLy(final String typeNhapXuat) {
+		return sessionFactory.getCurrentSession().doReturningWork(
+			new ReturningWork<List<HTRaXoatSanPhamTKDTO>>() {
+
+				public List<HTRaXoatSanPhamTKDTO> execute(Connection con) throws SQLException {
+					List<HTRaXoatSanPhamTKDTO> listDto = new ArrayList<HTRaXoatSanPhamTKDTO>();
+					CallableStatement callStm = con.prepareCall(new StringBuilder()
+														.append("{call ")
+														.append(Utils.readProperties("PK_RAXOAT_SANPHAM_TK_DAURA.ts_readThongTinXuLy"))
+														.append("(?,?)}").toString());
+					
+					callStm.setString(1, typeNhapXuat);
+					callStm.registerOutParameter(2, OracleTypes.CURSOR);
+					
+					callStm.execute();
+					
+					ResultSet rs = (ResultSet) callStm.getObject(2);
+					HTRaXoatSanPhamTKDTO dto = null;
+					while (rs.next()) {
+						dto = new HTRaXoatSanPhamTKDTO();
+						dto.setNguoiPheDuyet(rs.getString("NGUOI_PD"));
+						dto.setMaDanhMucBaoCao(rs.getString("MA_BC"));
+						dto.setNgayPheDuyet(rs.getString("NGAY_PD"));
+						dto.setTrangThai(rs.getString("TRANGTHAI"));
+						dto.setPheDuyet(rs.getInt("PHEDUYET"));
+						dto.setLyDoThayDoiDL(rs.getString("LY_DO"));
+						dto.setLyDoPheDuyet(rs.getString("LYDO_PD"));
+						dto.setHoanThanhRaXoat(rs.getInt("HOANTHANH_RAXOAT"));
+
+						listDto.add(dto);
+					}
+					return listDto;
+				}
+			});
+	}
+
+	public int insertThongTinXuLy(final HTRaXoatSanPhamTKDTO hTRaXoatSanPhamTKDTO) throws Exception {
+		return sessionFactory.getCurrentSession().doReturningWork(new ReturningWork<Integer>() {
+
+			public Integer execute(Connection con) throws SQLException {
+				CallableStatement callStm = con.prepareCall("{call "
+						+ Utils.readProperties("PK_RAXOAT_SANPHAM_TK_DAURA.ts_insertThongTinXuLy")
+						+ "(?,?,?,?,?,?,?,?,?,?,?)}");
+
+					callStm.setString(1, hTRaXoatSanPhamTKDTO.getMaDanhMucBaoCao());
+					callStm.setInt(2, hTRaXoatSanPhamTKDTO.getKy());
+					callStm.setInt(3, hTRaXoatSanPhamTKDTO.getThang());
+					callStm.setInt(4, hTRaXoatSanPhamTKDTO.getNam());
+					callStm.setString(5, hTRaXoatSanPhamTKDTO.getTypeNhapXuat());
+					callStm.setString(6, hTRaXoatSanPhamTKDTO.getTrangThai());
+					callStm.setString(7, hTRaXoatSanPhamTKDTO.getNguoiPheDuyet());
+					callStm.setInt(8, hTRaXoatSanPhamTKDTO.getThayDoiDuLieu());
+					callStm.setString(9, hTRaXoatSanPhamTKDTO.getTenCongChucQuanLy());
+					callStm.setString(10, hTRaXoatSanPhamTKDTO.getLyDoThayDoiDL());
+					callStm.setInt(11, hTRaXoatSanPhamTKDTO.getHoanThanhRaXoat());
+
+					return callStm.executeUpdate();
+			}
+		});
+	}
+
+	public HTRaXoatSanPhamTKDTO getThongTinXuLyByMaBaoCao(final HTRaXoatSanPhamTKDTO paramDto) {
+		return sessionFactory.getCurrentSession().doReturningWork(
+			new ReturningWork<HTRaXoatSanPhamTKDTO>() {
+
+				public HTRaXoatSanPhamTKDTO execute(Connection con) throws SQLException {
+					
+					CallableStatement callStm = con.prepareCall(new StringBuilder()
+													.append("{call ")
+													.append(Utils.readProperties("PK_RAXOAT_SANPHAM_TK_DAURA.ts_readThongTinXuLyByMaBacao"))
+													.append("(?,?,?,?,?,?,?,?)}").toString());
+					callStm.setString(1, paramDto.getMaDanhMucBaoCao());
+					callStm.setString(2, paramDto.getTrangThai());
+					callStm.setString(3, paramDto.getTenCongChucQuanLy());
+					callStm.setInt(4, paramDto.getKy());
+					callStm.setInt(5, paramDto.getThang());
+					callStm.setInt(6, paramDto.getNam());
+					callStm.setString(7, paramDto.getTypeNhapXuat());
+					
+					callStm.registerOutParameter(8, OracleTypes.CURSOR);
+					
+					callStm.execute();
+					
+					ResultSet rs = (ResultSet) callStm.getObject(8);
+					HTRaXoatSanPhamTKDTO dto = null;
+					while (rs.next()) {
+						dto = new HTRaXoatSanPhamTKDTO();
+						dto.setNguoiPheDuyet(rs.getString("NGUOI_PD"));
+						dto.setMaDanhMucBaoCao(rs.getString("MA_BC"));
+						dto.setNgayPheDuyet(rs.getString("NGAY_PD"));
+						dto.setTrangThai(rs.getString("TRANGTHAI"));
+						dto.setPheDuyet(rs.getInt("PHEDUYET"));
+						dto.setKy(rs.getInt("KY"));
+						dto.setThang(rs.getInt("THANG"));
+						dto.setNam(rs.getInt("NAM"));
+						dto.setTrangThai(rs.getString("TRANGTHAI"));
+						dto.setLyDoThayDoiDL(rs.getString("LY_DO"));
+						dto.setTenCongChucQuanLy(rs.getString("CONGCHUC_QL"));
+						dto.setHoanThanhRaXoat(rs.getInt("HOANTHANH_RAXOAT"));
+
+					}
+					return dto;
+				}
+		});
+	}
+
+	public List<HTRaXoatSanPhamTKDTO> getThongTinXuLy(final String nhx) {
+		return sessionFactory.getCurrentSession().doReturningWork(
+				new ReturningWork<List<HTRaXoatSanPhamTKDTO>>() {
+
+					public List<HTRaXoatSanPhamTKDTO> execute(Connection con) throws SQLException {
+						List<HTRaXoatSanPhamTKDTO> listDto = new ArrayList<HTRaXoatSanPhamTKDTO>();
+						CallableStatement callStm = con.prepareCall(new StringBuilder()
+															.append("{call ")
+															.append(Utils.readProperties("PK_RAXOAT_SANPHAM_TK_DAURA.getThongTinXuLy"))
+															.append("(?, ?)}").toString());
+						
+						callStm.setString(1, nhx);
+						callStm.registerOutParameter(2, OracleTypes.CURSOR);
+						
+						callStm.execute();
+						
+						ResultSet rs = (ResultSet) callStm.getObject(2);
+						HTRaXoatSanPhamTKDTO dto = null;
+						while (rs.next()) {
+							dto = new HTRaXoatSanPhamTKDTO();
+							dto.setMaDanhMucBaoCao(rs.getString("MA_BC"));
+							dto.setNguoiPheDuyet(rs.getString("NGUOI_PD"));
+							dto.setTenDanhMucBaoCao(rs.getString("TEN_BC"));
+							dto.setNgayPheDuyet(rs.getString("NGAY_PD"));
+							dto.setKy(rs.getInt("KY"));
+							dto.setThang(rs.getInt("THANG"));
+							dto.setNam(rs.getInt("NAM"));
+							dto.setPheDuyet(rs.getInt("PHEDUYET"));
+							dto.setLyDoThayDoiDL(rs.getString("LY_DO"));
+							dto.setTtPheDuyet("Chờ phê duyệt");
+							dto.setTrangThai(rs.getString("TRANGTHAI"));
+							dto.setPathBC(rs.getString("pathBC"));
+							dto.setMaHQ(rs.getInt("maHQ"));
+
+							listDto.add(dto);
+						}
+						return listDto;
+					}
+				});
+	}
+
+	public int doApproval(final String approval, final String maBC, final String ky,
+			final String thang, final String nam, final String nhx, final String trangthai, final String lydoPD) {
+		
+		return sessionFactory.getCurrentSession().doReturningWork(
+				new ReturningWork<Integer>() {
+
+					public Integer execute(Connection con) throws SQLException {
+						CallableStatement callStm = con.prepareCall(new StringBuilder()
+															.append("{call ")
+															.append(Utils.readProperties("PK_RAXOAT_SANPHAM_TK_DAURA.doApproval"))
+															.append("(?,?,?,?,?,?,?,?)}").toString());
+						
+						callStm.setString(1, approval);
+						callStm.setString(2, maBC);
+						callStm.setString(3, ky);
+						callStm.setString(4, thang);
+						callStm.setString(5, nam);
+						callStm.setString(6, nhx);
+						callStm.setString(7, trangthai);
+						callStm.setString(8, lydoPD);
+						
+						return callStm.executeUpdate();
+					}
+				});
+	}
+
+	@Override
+	public HTRaXoatSanPhamTKDTO getDanhMucBaoCaoByMaBC(final String typeNhapXuat, final String maBc) {
+		return sessionFactory.getCurrentSession().doReturningWork(
+			new ReturningWork<HTRaXoatSanPhamTKDTO>() {
+
+				public HTRaXoatSanPhamTKDTO execute(Connection con) throws SQLException {
+					CallableStatement callStm = con.prepareCall(new StringBuilder()
+													.append("{call ")
+													.append(Utils.readProperties("PK_RAXOAT_SANPHAM_TK_DAURA.ts_readDanhMucBaoCaoByMaBacao"))
+													.append("(?,?,?)}").toString());
+					
+					callStm.setString(1, typeNhapXuat);
+					callStm.setString(2, maBc);
+					callStm.registerOutParameter(3, OracleTypes.CURSOR);
+					
+					callStm.execute();
+					
+					ResultSet rs = (ResultSet) callStm.getObject(3);
+					HTRaXoatSanPhamTKDTO dto = null;
+					while (rs.next()) {
+						dto = new HTRaXoatSanPhamTKDTO();
+						dto.setMaDanhMucBaoCao(rs.getString("MA"));
+						dto.setKy(rs.getInt("KY"));
+						dto.setThang(rs.getInt("THANG"));
+						dto.setQuy(rs.getInt("QUY"));
+						dto.setNam(rs.getInt("NAM"));
+						dto.setLoaiBc(rs.getInt("LOAI_BC"));
+					}
+					return dto;
+				}
+			});
+	}
+
+	@Override
+	public int updateThongTinXuLy(final String maBaoCao, final String lyDo, final String ky, final String thang, final String nam,
+			final String typeNhapXuat, final String trangThai, final String tenCongChucQuanLy) throws Exception {
+		
+		return sessionFactory.getCurrentSession().doReturningWork(
+				new ReturningWork<Integer>() {
+
+					public Integer execute(Connection con) throws SQLException {
+						CallableStatement callStm = con.prepareCall(new StringBuilder()
+														.append("{call ")
+														.append(Utils.readProperties("PK_RAXOAT_SANPHAM_TK_DAURA.ts_updateThongTinXuLy"))
+														.append("(?,?,?,?,?,?,?,?)}").toString());
+
+						callStm.setString(1, maBaoCao);
+						callStm.setString(2, lyDo);
+						callStm.setString(3, ky);
+						callStm.setString(4, thang);
+						callStm.setString(5, nam);
+						callStm.setString(6, typeNhapXuat);
+						callStm.setString(7, trangThai);
+						callStm.setString(8, tenCongChucQuanLy);
+		
+						return callStm.executeUpdate();
+				}
+			});
+	}	
+	
+}
+
+

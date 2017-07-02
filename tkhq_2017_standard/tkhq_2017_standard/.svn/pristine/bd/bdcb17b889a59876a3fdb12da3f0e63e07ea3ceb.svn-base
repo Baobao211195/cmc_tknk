@@ -1,0 +1,91 @@
+/**
+ * 
+ */
+App.factory('dienBienHangHoaXNKService',['$http','$q','contextPath', '$httpParamSerializerJQLike', dienBienHangHoaXNKService]);
+function dienBienHangHoaXNKService($http, $q, contextPath, $httpParamSerializerJQLike){
+	
+	var REST_SERVICE_URI_CUCHQ = 'http://10.224.65.169:8080/tkhq_2017_standard/bcpt/GetCustom';//contextPath + '/tbs_cuakhaunn_vnaccs/';
+	var REST_SERVICE_URI_CHICUCHQ = 'http://10.224.65.169:8080/tkhq_2017_standard/bcpt/GetSubCustom';
+	var REST_SERVICE_URI_MATHANG = 'http://10.224.65.169:8080/tkhq_2017_standard/bcpt/DSMatHangChuYeu';
+	var REST_SERVICE_SOlIEU ='http://10.224.65.169:8080/tkhq_2017_standard/bcpt/SoLieuTheoChiTieuThongKe04'
+	var factory ={
+			GetCucHQ:GetCucHQ,
+	    	GetChiCucHQByCuc: GetChiCucHQByCuc,
+	    	GetlstMatHang: GetlstMatHang,
+	    	GetSoLieuChiTieuTK04 : GetSoLieuChiTieuTK04,
+	};
+	
+	return factory;
+	function GetCucHQ() {
+        var deferred = $q.defer();
+        $http.get(REST_SERVICE_URI_CUCHQ)
+            .then(
+            function (response) {            
+                deferred.resolve(response.data);                
+            },
+            function(errResponse){            	
+                console.error('Có lỗi xảy ra trong khi lấy thông tin');
+                deferred.reject(errResponse);
+            }
+        );
+        
+        return deferred.promise;
+    }
+
+    function GetChiCucHQByCuc(maCuc) {
+        var deferred = $q.defer();
+        console.log('GetChiCucHQByCuc@maCuc:'+maCuc);
+        $http.get('http://10.224.65.169:8080/tkhq_2017_standard/bcpt/GetSubCustom?maCucHQ='+ maCuc)
+            .then(
+            function (response) {
+                deferred.resolve(response.data);
+            },
+            function(errResponse){
+                console.error('Có lỗi xảy ra trong khi lấy thông tin');
+                deferred.reject(errResponse);
+            }
+        );
+        return deferred.promise;
+    }
+    
+    function GetlstMatHang(data) {
+        var deferred = $q.defer();
+        $http.get(REST_SERVICE_URI_MATHANG +'?nhx='+data)
+            .then(
+            function (response) {
+                deferred.resolve(response.data);
+            },
+            function(errResponse){
+                console.error('Có lỗi xảy ra trong khi lấy thông tin');
+                deferred.reject(errResponse);
+            }
+        );
+        return deferred.promise;
+    }
+    //function GetSoLieuChiTieuTK04(ma,ma_cc,trangthai,type,mahang) {
+    	 function GetSoLieuChiTieuTK04() {
+    	var ma= "01";
+    	var type ="X";
+    	var trangthai="SB";
+    	var mathang ="0101";
+    	var maChicucHQ = "01SF";
+        var deferred = $q.defer();
+        /*console.log('Service GetSoLieuChiTieuTK04@maCucHQ:'+ma+'|maChicucHQ:'+maChicucHQ+'|trangthai:' + trangthai + "|nhx:" + type+ "|mathang:" + mathang);*/
+        var URI_TEST =REST_SERVICE_SOlIEU + "?maCucHQ="+ma+"&maChicucHQ="+maChicucHQ+"&trangthai=" + trangthai + "&nhx=" + type+ "&mathang=" + mathang;
+        console.log(URI_TEST);
+        $http.get(REST_SERVICE_SOlIEU + "?maCucHQ="+ma+"&maChicucHQ="+maChicucHQ+"&trangthai=" + trangthai + "&nhx=" + type+ "&mathang=" + mathang)
+            .then(
+            function (response) {
+            	//console.log('Service@response:'+response);
+                deferred.resolve(response.data);
+            },
+            function(errResponse){
+                console.error('Có lỗi xảy ra trong khi lấy thông tin service:'+ errResponse);
+                deferred.reject(errResponse);
+            }
+        );
+                
+        return deferred.promise;
+    }
+    
+}

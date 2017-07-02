@@ -1,0 +1,243 @@
+/**
+ * Created by cmcsoft on 6/2/2017.
+ */
+'use strict';
+/**
+ * Controller of upload file phi cau truc.
+ */
+'use strict';
+var myApp = angular.module('myApp');
+
+myApp.controller('tbsQuyTacController', ['$scope',
+                                        '$PopupMessage',
+                                        'pagerService',
+                                        '$uibModal',
+                                        '$location',
+                                        'contextPath',
+                                        'tbsQuyTacService',
+                                        function($scope,
+                                                 $PopupMessage,
+                                                 pagerService,
+                                                 $uibModal,
+                                                 $location,
+                                                 contextPath,
+                                                 tbsQuyTacService){
+
+        $scope.lstTbsQuyTacDb = [];
+
+        $scope.listMaCuaKhau = [];
+        $scope.listMaNuocDen = [];
+        $scope.listMaCuaKhauDen = [];
+
+        $scope.totalItems = 0;
+        $scope.currentPage = 1;
+        $scope.maxSize = 5;
+        $scope.pageSize = 10;
+
+        var tbsQuyTacDbId = "";
+        
+        $scope.dto = {
+            id            :"",
+            macuakhau     : "",
+            manuocden     : "",
+            macuakhauden  : ""
+        }
+
+        init();
+
+        $scope.doSearch = function(currentPage, pageSize){
+            if( $scope.dto.macuakhau === "" && $scope.dto.manuocden === "" && $scope.dto.macuakhauden === ""){
+                getListTbsQuyTacCuaKhauDbVn();
+            } else {
+                search(currentPage, pageSize);
+            }
+        }
+        $scope.pageChanged = function(){
+            search($scope.currentPage, $scope.pageSize);
+        }
+
+        $scope.doAdd = function () {
+        	if($scope.dto.id !== ""){
+        		reloadForm();
+        		$PopupMessage.Error("Không thể thực hiện được thao tác này.");
+        	}
+        	if ($scope.dto.macuakhau === ""){
+                $PopupMessage.Error("Hãy nhập mã cửa khẩu!.");
+                return;
+        	}
+            if ($scope.dto.manuocden === ""){
+                $PopupMessage.Error("Hãy nhập mã nước đến!.");
+                return;
+            }
+            if ($scope.dto.macuakhauden === ""){
+                $PopupMessage.Error("Hãy nhập mã cửa khẩu đến đến!.");
+                return;
+            }
+            addData($scope.dto);
+        }
+
+        $scope.doUpdate = function () {
+        	if($scope.dto.id === ""){
+        		$PopupMessage.Error("Không thể thực hiện được thao tác này.");
+        	}
+            upDateData($scope.dto);
+        }
+
+        $scope.doEditRow = function(id) {
+        	 copyData ($scope.lstTbsQuyTacDb ,id);
+        }
+
+        $scope.doDelete = function (id) {
+            tbsQuyTacDbId = id;
+            $PopupMessage.Confirm('Ban có chắc muốn xóa bản ghi', deleteData, null);
+        }
+
+        function getDataById(id) {
+            tbsQuyTacService.GetTbsQuyTacCuaKhauDbVnById(id)
+                .then(
+                    function (deferred) {
+                        if(deferred !== null){
+                            copyData ($scope.lstTbsQuyTacDb ,id);
+                        }else {
+                            $PopupMessage.Error("Dữ liệu đã bị xóa bởi một người sử dụng khác!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Có lỗi trong quá trình xử lý thông tin!");
+                    }
+
+                );
+        }
+
+        function deleteData() {
+            tbsQuyTacService.DoDeleteTbsQuyTacCuaKhauDbVn(tbsQuyTacDbId)
+                .then(
+                    function (deferred) {
+                        if(deferred === 1){
+                            $PopupMessage.Success("Xóa bỏ thông tin thành công!");
+                            getListTbsQuyTacCuaKhauDbVn();
+                            reloadForm();
+                        } else {
+                            $PopupMessage.Error("Có lỗi trong quá trình xóa bỏ thông tin.!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Có lỗi trong quá trình xóa bỏ thông tin.!");
+                    }
+                );
+        }
+
+        function addData(data) {
+            tbsQuyTacService.DoAddTbsQuyTacCuaKhauDbVn(data)
+                .then(
+                    function (deferred) {
+                        if(deferred === 1){
+                            $PopupMessage.Success("Thêm mới thông tin thành công!");
+                            getListTbsQuyTacCuaKhauDbVn();
+                            reloadForm();
+                        }else {
+                            $PopupMessage.Error("Có lỗi trong quá trình thêm mới thông tin.!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Có lỗi trong quá trình thêm mới thông tin.!");
+                        console.error("Có lỗi trong quá trình thêm mới thông tin.!");
+                    }
+                );
+        }
+
+        function reloadForm() {
+            $scope.dto = {
+                id            :"",
+                macuakhau     : "",
+                manuocden     : "",
+                macuakhauden  : ""
+            }
+        }
+
+        function upDateData(data) {
+            tbsQuyTacService.DoUpdateTbsQuyTacCuaKhauDbVn(data)
+                .then(
+                    function (deferred) {
+                        if(deferred === 1){
+                            $PopupMessage.Success("Cập nhật thông tin thành công!");
+                            getListTbsQuyTacCuaKhauDbVn();
+                        }else {
+                            $PopupMessage.Error("Có lỗi trong quá trình cập nhật thông tin.!");
+                        }
+                        reloadForm();
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Có lỗi trong quá trình cập nhật thông tin.!");
+                        console.error("Có lỗi trong quá trình cập nhật thông tin.!");
+                    }
+                );
+        }
+
+        function copyData (listData ,idCopy){
+            for (var i = 0; i < listData.length; i++){
+                if(listData[i].id === idCopy){
+                    $scope.dto = angular.copy(listData[i]);
+                    break;
+                }
+            }
+        }
+
+        function init() {
+            getListTbsQuyTacCuaKhauDbVn();
+        }
+
+        function getListTbsQuyTacCuaKhauDbVn() {
+            tbsQuyTacService.GetListTbsQuyTacCuaKhauDbVn()
+                .then(
+                    function (deferred) {
+                        if (deferred !== null){
+                            $scope.lstTbsQuyTacDb = deferred.content;
+                            $scope.totalItems = deferred.totalItems;
+                        }
+                    },
+                    function (errResponse) {
+                        console.error("Có lỗi trong quá trình lấy dữ liệu");
+                    }
+                );
+        }
+
+        function search(currentPage, pageSize) {
+            var formData = thietLapData($scope.dto.macuakhau, $scope.dto.manuocden, $scope.dto.macuakhauden, currentPage, pageSize);
+            tbsQuyTacService.SearchTbsQuyTacCuaKhauDbVn(formData)
+                .then(
+                    function (deferred) {
+                        if (deferred.length > 0){
+                            $scope.lstTbsQuyTacDb = deferred;
+                        } else {
+                            $PopupMessage.Error("Không có kết quả tìm kiếm!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Không có kết quả tìm kiếm!");
+                    }
+
+                );
+        }
+
+        function thietLapData(maCuaKhau, maNuocDen, maCuaKhauDen, currentPage, pageSize) {
+
+            if(typeof currentPage == 'undefined' || currentPage == ''){
+                currentPage = $scope.currentPage;
+            }
+            if(typeof pageSize == 'undefined'){
+                pageSize = $scope.pageSize;
+            }
+            var formData = {};
+            formData.macuakhau = maCuaKhau;
+            formData.manuocden = maNuocDen;
+            formData.macuakhauden = maCuaKhauDen;
+            formData.currentPage = currentPage;
+            formData.pageSize = pageSize;
+
+            return formData;
+        }
+      
+}]);
+
+

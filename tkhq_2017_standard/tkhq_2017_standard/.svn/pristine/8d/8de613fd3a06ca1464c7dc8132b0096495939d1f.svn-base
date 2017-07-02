@@ -1,0 +1,150 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<div class="box-search mab10">
+	<div class="container-fluid">
+		<div class="col-md-12 mab10">
+			<label class ="col-sm-3 pa0">Năm</label>
+			<div class="col-sm-3 pa0">
+				<input type="text" class="form-control" ng-model="ctrl.namCB" maxlength="4" ng-blur="search()"
+					onlyDigits/>
+			</div>
+			<span ng-show="errorNamCB" class="col-sm-4 input-warning">Nhập sai định dạng năm</span>
+		</div>
+		<div class="col-md-12 mab10">
+      		<label class ="col-sm-3 pa0">Cơ quan công bố</label>
+      		<div class="col-sm-9 pa0">
+       			<input type="text" class="form-control" ng-model="ctrl.coquanCB" maxlength="100"/>
+			</div>
+		</div>
+		<div class="col-md-12 mab10">
+			<label class ="col-sm-3 pa0">Hình thức công bố</label>
+			<div class="col-sm-9 pa0">
+       			<textarea class="form-control" ng-model="ctrl.hinhthucCB" rows="4"></textarea>
+			</div>
+		</div>
+		<div class="col-md-12 mab10">
+      		<label class ="col-sm-3 pa0">Định dạng file dữ liệu</label>
+      		<div class="col-sm-9 pa0">
+       			<input type="text" class="form-control" ng-model="ctrl.formatFile" maxlength="100"/>
+			</div>
+		</div> 				
+		<div class="col-md-12 mab10">
+      		<label class ="col-sm-3 pa0">Niên giám thống kê</label>
+      		<div class="col-sm-9 pa0">
+       			<input type="text" class="form-control" ng-model="ctrl.niengiamTK" maxlength="100"/>
+			</div>
+		</div>
+		<div class="col-md-12 mab10">
+			<label class ="col-sm-3 pa0">Các loại báo cáo công bố</label>
+			<div class="col-sm-9 pa0">
+       			<textarea class="form-control" ng-model="ctrl.loaiBCCB" rows="3"></textarea>
+			</div>
+		</div>
+		<div class="col-md-12 mab10">
+      		<label class ="col-sm-3 pa0">Loại báo cáo *</label>
+      		<div class="col-sm-6 pa0">
+	       		<select name="loaiBCSelect" class="form-control" ng-model="ctrl.loaiBCSelected">
+	       			<option value="">---Chọn---</option>
+	  				<option ng-repeat="option in lstLoaiBC" value="{{option.ma}}">{{option.ten}}</option>
+				</select>
+			</div>
+		</div>
+		<div class="col-md-12 mab10">
+			<label class ="col-sm-3 pa0">Tháng *</label>
+			<div class="col-sm-5 pa0">
+  				<select name="monthSelect" class="form-control" ng-model="ctrl.monthSelected">
+	  				<option value="">---Chọn---</option>
+       				<option ng-repeat="option in lstThang" value="{{option.id}}">{{option.name}}</option>
+				</select>
+			</div>
+		</div>
+		<div class="col-md-3 mab10">
+			<label class ="col-sm-4 pa0">Số liệu Sơ bộ *</label>
+			<div class="col-sm-6">
+  				<input type="text" name="soboDate" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="ctrl.slSobo"
+  					is-open="popup1.opened" datepicker-options="DayOptions" close-text="Đóng" ng-click="open1()"/>
+  				<i class="fa fa-calendar form-control-feedback" ng-click="open1()"
+					style="top: 3px;"></i>
+			</div>
+		</div>
+		<div class="col-md-5 mab10" style="padding: 0px 0px 0px 10px;">
+			<label class ="col-sm-6 pa0">Số liệu điều chỉnh 6 tháng đầu năm *</label>
+			<div class="col-sm-4">
+  				<input type="text" name="dieuchinhDate" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="ctrl.sl6TDN"
+  					is-open="popup2.opened" datepicker-options="DayOptions" close-text="Đóng" ng-click="open2()"/>
+  				<i class="fa fa-calendar form-control-feedback" ng-click="open2()"
+					style="top: 3px;"></i>
+			</div>
+		</div>
+		<div class="col-md-4 mab10">
+			<label class ="col-sm-4 pa0">Số liệu chính thức *</label>
+			<div class="col-sm-5">
+  				<input type="text" name="chinhthucDate" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="ctrl.slChinhthuc"
+  					is-open="popup3.opened" datepicker-options="DayOptions" close-text="Đóng" ng-click="open3()"/>
+  				<i class="fa fa-calendar form-control-feedback" ng-click="open3()"
+					style="top: 3px;"></i>
+			</div>
+		</div>
+		<div class="col-md-12 mab10">
+      		<label class ="col-sm-3 pa0">Người phụ trách *</label>
+      		<div class="col-sm-6 pa0">
+       			<select name="NSDSelect" class="form-control" ng-model="ctrl.NSDSelected">
+       				<option value="">---Chọn---</option>
+  					<option ng-repeat="option in lstNSD" value="{{option.userId}}">{{option.userName}}</option>
+				</select>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="table-scroll" ng-show="showDataTable">
+	<table id="tblScheduleInfo" class="table table-bordered">						
+		<colgroup>
+		</colgroup>
+		<thead>
+			<tr>
+				<th rowspan="2" width="5%">STT</th>
+				<th rowspan="2" width="35%">Loại báo cáo</th>
+				<th colspan="3">Dự kiến thời gian công bố</th>
+				<th rowspan="2" width="16%">Người phụ trách</th>
+				<th rowspan="2" width="8%">Thao tác</th>	
+			</tr>
+			<tr>
+				<th width="12%">Số liệu sơ bộ</th>
+				<th width="12%">Số liệu điều chỉnh 6 tháng đầu năm</th>
+				<th width="12%">Số liệu chính thức</th>
+			</tr>
+		</thead>
+		<tbody ng-repeat="group in lstScheduleInfo">
+			<tr>
+				<td></td>
+				<td ng-bind="group.thangBC"></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr ng-repeat="row in group.dataMonth">
+				<td><input type="hidden" value="{{row.lichCBTTId}}"/>{{$index + 1}}</td>
+				<td ng-bind="row.tbsDmBaocao.ten"></td>
+				<td ng-bind="row.solieuSB" align="center"></td>
+				<td ng-bind="row.solieu6TDN" align="center"></td>
+				<td ng-bind="row.solieuCT" align="center"></td>
+				<td ng-bind="row.tbdSysUser.userName" align="center"></td>
+				<td align="center">
+					<button type="button" ng-click="editRow(row.lichCBTTId)"
+						class="btn btn-warning"><i class="glyphicon glyphicon-pencil icon-white"></i>Sửa</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="row" align="center" style="margin: 20px 0px;">
+	<button type="button" id="btnInsUpdCT" ng-click="doInsUpd()"
+		class="btn btn-primary">Lưu</button>
+	<button type="button" id="btnExportCT" ng-click="doExport()"
+		class="btn btn-primary">Kết xuất</button>
+	<button type="button" id="btnPrintCT" ng-click="doPrint()"
+		class="btn btn-info">In</button>
+	<button type="button" id="btnUploadCT" ng-click="doUpload()"
+		class="btn btn-primary">Tải tệp tin</button>
+</div>

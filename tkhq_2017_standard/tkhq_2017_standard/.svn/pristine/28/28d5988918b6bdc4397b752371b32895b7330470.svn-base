@@ -1,0 +1,40 @@
+package com.tkhq.cmc.dao;
+
+import java.math.BigDecimal;
+
+import com.tkhq.cmc.model.TbsDvtVnaccs;
+import com.tkhq.cmc.model.TbsQtacVantaiHangnhapNn;
+import com.tkhq.cmc.model.TbsQtacVantaiHangnhapVn;
+
+public class TbsQtacVantaiHangnhapVnDaoImpl extends BaseDAO<String, TbsQtacVantaiHangnhapVn> implements TbsQtacVantaiHangnhapVnDao{
+
+	@Override
+	public void insert(TbsQtacVantaiHangnhapVn entity) {
+		try{
+			this.persist(entity);
+		}catch(Exception ex){
+			throw ex;
+		}
+	}
+
+	@Override
+	public void update(TbsQtacVantaiHangnhapVn entity) {
+		try{
+			this.update(entity);
+		}catch(Exception ex){
+			throw ex;
+		}	
+	}
+
+	@Override
+	public void delete(BigDecimal id) {
+		TbsQtacVantaiHangnhapVn entity = new TbsQtacVantaiHangnhapVn();
+		entity.setId(id);
+		try{
+			this.delete(entity);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
+
+}

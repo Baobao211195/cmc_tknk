@@ -1,0 +1,106 @@
+package com.tkhq.cmc.controller.rest;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tkhq.cmc.common.Constants;
+import com.tkhq.cmc.dto.TbsQtacXuatNhapDTO;
+import com.tkhq.cmc.model.TbsQtacXuatxuHangxuat;
+import com.tkhq.cmc.services.TbsQtacXuatxuHangxuatService;
+
+@RestController
+public class TbsQtacXuatxuHangxuatRestController {
+	@Autowired
+	private TbsQtacXuatxuHangxuatService tbsQtacXuatxuHangxuatService;
+	
+	@RequestMapping(value="/tbsQtacXuatxuHangxuat", method=RequestMethod.GET)
+	public ResponseEntity<TbsQtacXuatNhapDTO> getAllData (){
+		
+		TbsQtacXuatNhapDTO dto = new TbsQtacXuatNhapDTO();
+		
+		List<TbsQtacXuatxuHangxuat> listData = tbsQtacXuatxuHangxuatService.findAll();
+		long totalCount = tbsQtacXuatxuHangxuatService.countTotal(Constants.EMPTY, Constants.EMPTY);
+		dto.setContent(listData);
+		dto.setTotalItems(totalCount);
+		if(listData == null){
+			return new ResponseEntity<TbsQtacXuatNhapDTO>(dto, HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<TbsQtacXuatNhapDTO>(dto, HttpStatus.OK);
+		
+	}
+	
+	@RequestMapping(value="/tbsQtacXuatxuHangxuatById", method=RequestMethod.GET)
+	public ResponseEntity<TbsQtacXuatxuHangxuat> getDataById(String id){
+		TbsQtacXuatxuHangxuat dto = tbsQtacXuatxuHangxuatService.findById(Long.parseLong(id));
+		if(dto == null){
+			return new ResponseEntity<TbsQtacXuatxuHangxuat>(dto, HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<TbsQtacXuatxuHangxuat>(dto, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/delete/tbsQtacXuatxuHangxuat", method=RequestMethod.GET)
+	public ResponseEntity<Integer> doDeleteData(String id){
+		Long idDelete = Long.parseLong(id);
+		TbsQtacXuatxuHangxuat dto = tbsQtacXuatxuHangxuatService.findById(idDelete);
+		if(dto == null){
+			return new ResponseEntity<Integer>(Constants.FAILED, HttpStatus.CONFLICT);
+		}
+		tbsQtacXuatxuHangxuatService.delete(idDelete);
+		return new  ResponseEntity<Integer>(Constants.SUCCESS, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/add/tbsQtacXuatxuHangxuat", method=RequestMethod.POST)
+	public ResponseEntity<Integer> doAddData(@RequestBody TbsQtacXuatxuHangxuat tbsQtacXuatxuHangxuat){
+		try {
+			tbsQtacXuatxuHangxuatService.insert(tbsQtacXuatxuHangxuat);
+			return new  ResponseEntity<Integer>(Constants.SUCCESS, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<Integer>(Constants.FAILED, HttpStatus.CONFLICT);
+		}
+	}
+	
+	@RequestMapping(value="/update/tbsQtacXuatxuHangxuat", method=RequestMethod.POST)
+	public ResponseEntity<Integer> doUpdateData(@RequestBody TbsQtacXuatNhapDTO paramDto){
+		try {
+			TbsQtacXuatxuHangxuat dto = tbsQtacXuatxuHangxuatService.findById(paramDto.getId());
+			if (dto == null){
+				return new ResponseEntity<Integer>(Constants.FAILED, HttpStatus.CONFLICT);
+			}
+			tbsQtacXuatxuHangxuatService.update(paramDto);
+			return new  ResponseEntity<Integer>(Constants.SUCCESS, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<Integer>(Constants.FAILED, HttpStatus.CONFLICT);
+		}
+	}
+	
+	@RequestMapping(value="/search/tbsQtacXuatxuHangxuat", method=RequestMethod.POST)
+	public ResponseEntity<List<TbsQtacXuatxuHangxuat>> SearchData(@RequestBody TbsQtacXuatNhapDTO tbsQtacXuaNhapDTO){
+		List<TbsQtacXuatxuHangxuat> listData = null;
+		try {
+			int minRow = (tbsQtacXuaNhapDTO.getCurrentPage() - 1) * tbsQtacXuaNhapDTO.getPageSize();
+			int maxRow = tbsQtacXuaNhapDTO.getPageSize();
+			
+			long totalCount = tbsQtacXuatxuHangxuatService.countTotal(tbsQtacXuaNhapDTO.getMaphuongthucvanchuyen(), tbsQtacXuaNhapDTO.getManuoc());
+			
+			if (totalCount == 0) {
+
+				listData = new ArrayList<TbsQtacXuatxuHangxuat>();
+				return new ResponseEntity<List<TbsQtacXuatxuHangxuat>>(listData, HttpStatus.ACCEPTED);
+			}
+			listData = tbsQtacXuatxuHangxuatService.searchData(tbsQtacXuaNhapDTO.getMaphuongthucvanchuyen(),
+																tbsQtacXuaNhapDTO.getManuoc(),
+															    minRow, maxRow);
+			return new ResponseEntity<List<TbsQtacXuatxuHangxuat>>(listData, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<TbsQtacXuatxuHangxuat>>(listData, HttpStatus.ACCEPTED);
+		}
+	}
+}

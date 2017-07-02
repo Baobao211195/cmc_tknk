@@ -1,0 +1,35 @@
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<display-name>TKHQ_2017_Standard</display-name>
+	<!-- <session-config> <session-timeout>1</session-timeout> </session-config> 
+		<listener> <listener-class> org.springframework.security.web.session.HttpSessionEventPublisher 
+		</listener-class> </listener> -->
+
+	<servlet>
+		<!-- <servlet-name>BotDetect Captcha</servlet-name>
+		<servlet-class>com.captcha.botdetect.web.servlet.CaptchaServlet</servlet-class> -->
+		
+		<servlet-name>Captcha</servlet-name>
+        <servlet-class>nl.captcha.servlet.SimpleCaptchaServlet</servlet-class>
+        <init-param>
+            <param-name>width</param-name>
+            <param-value>352</param-value>
+        </init-param>
+        <init-param>
+            <param-name>height</param-name>
+            <param-value>50</param-value>
+        </init-param>
+        
+	</servlet>
+	<servlet-mapping>
+		<!-- <servlet-name>BotDetect Captcha</servlet-name>
+		<url-pattern>/botdetectcaptcha</url-pattern> -->
+		
+		<servlet-name>Captcha</servlet-name>
+        <url-pattern>/captcha</url-pattern>
+        
+	</servlet-mapping>
+
+</web-app>

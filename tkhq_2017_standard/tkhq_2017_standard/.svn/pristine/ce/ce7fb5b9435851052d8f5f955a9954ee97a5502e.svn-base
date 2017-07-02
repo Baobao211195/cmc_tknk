@@ -1,0 +1,268 @@
+/**
+ * Notification dialog for create, update, delete
+ */
+
+App.controller('PopupCtrl', ['$scope', '$uibModalInstance', '$PopupMessage', function ($scope, $uibModalInstance, $PopupMessage) {
+    $scope.Title = $PopupMessage.strTitle;
+    $scope.Message = $PopupMessage.strMessage;
+    
+    $scope.close = function () {
+        //Set lại flag để có thể gọi lại Popup nhiều lần
+        $PopupMessage.YesPopup = false;
+        $PopupMessage.ClosePopup = false;
+        
+        $uibModalInstance.close("close");
+    };
+    
+    $scope.cancel = function () {
+        //Set lại flag để có thể gọi lại Popup nhiều lần
+        $PopupMessage.YesPopup = false;
+        $PopupMessage.ClosePopup = false;
+        
+        $uibModalInstance.dismiss('cancel');
+    };
+
+    $scope.ok = function () {
+        //Set lại flag để có thể gọi lại Popup nhiều lần
+        $PopupMessage.YesPopup = false;
+        $PopupMessage.ClosePopup = false;
+        
+        $uibModalInstance.close("ok");
+    };
+}]);
+
+App.factory("$PopupMessage", ["$http", "$q", "$uibModal", function ($http, $q, $uibModal) {
+    var fac = {}
+    fac.strTitle = "";
+    fac.strMessage = "";
+    fac.Return = false;
+    //Cờ set focus Button Popup. Dùng Kiểm tra để chỉ được hiện duy nhất 1 Popup trong một thời điểm
+    fac.ClosePopup = false;
+    fac.YesPopup = false;
+
+    //SetDatePicker
+    //setValueDatePicker();
+
+    /*****Set focus cho Button Popup*****/
+    fac.setFocus = function (bol) {
+        var bolYes = bol;
+        setTimeout(function () {
+            var element;
+            if (bolYes) {
+                //$('#YesPopup').focus();
+                element = document.getElementById("YesPopup");
+            } else {
+                //$('#ClosePopup').focus();
+                element = document.getElementById("ClosePopup");
+            }
+            //Set focus button
+            //element.focus();    
+        }, 200);
+        
+    };
+
+    /*****Message Confirm*****/
+    fac.Confirm = function (msg, fnYes, fnNo) {
+        if (fac.ClosePopup == true || fac.YesPopup == true) {
+            return false;
+        }
+        fac.strTitle = "Xác nhận";
+        fac.strMessage = msg;
+        fac.Return = false;
+
+        var modalInstance = $uibModal.open({
+            controller: "PopupCtrl",
+            templateUrl: '/tkhq_2017_standard/static/dialogs/Confirm.html',
+            size: 'sm',
+            backdrop:false,
+            resolve: {
+                Message: function () {
+                    //Khi thành công thì trả về dữ liệu cần thiết
+                    return msg;
+                }
+            }
+        });
+        //fac.setPositionDialog();
+        fac.YesPopup = true;
+        //Set Focus cho Body để loại bỏ focus khi Tab sang đối tượng HTML khác rùi mới Set focus cho Button Popup
+        document.body.focus();
+        fac.setFocus(true);
+
+        modalInstance.result.then(function (btn) {
+            //Khi ấn Yes : $modalInstance.close("yes");
+        	console.log("Chọn OK",btn);
+            if (btn === 'ok') {
+                if (fnYes != "" && fnYes != null && fnYes != undefined) {
+                    fnYes();
+                }
+            }
+            else
+            	{
+            	console.log("chọn cancel",btn);
+            	}
+        });
+    };
+
+    /*****Message Success*****/
+    fac.Success = function (msg) {
+        if (fac.ClosePopup == true || fac.YesPopup == true) {
+            return false;
+        }
+        fac.strTitle = "Thông báo";
+        fac.strMessage = msg;
+        fac.Return = false;
+        var modalInstance = $uibModal.open({
+            controller: "PopupCtrl",
+            templateUrl: '/tkhq_2017_standard/static/dialogs/Success.html',
+            size: 'sm',
+            backdrop:false,
+            resolve: {
+                Message: function () {   
+                    return msg;
+                }
+            }
+        });
+        //fac.setPositionDialog();
+        fac.ClosePopup = true;
+        document.body.focus();
+        fac.setFocus(false);
+        
+        return modalInstance;
+        
+//        modalInstance.result.then(function (message) {
+//			if(message == 'close'){
+//				console.log("Đóng popup");
+//				return modalInstance;
+//			}
+//	    });
+    };
+
+    /*****Message Warning*****/
+    fac.Warning = function (msg) {
+        if (fac.ClosePopup == true || fac.YesPopup == true) {
+            return false;
+        }
+        try {
+            fac.strTitle = "Cảnh báo";
+            fac.strMessage = msg;
+            fac.Return = false;
+            var modalInstance = $uibModal.open({
+                controller: "PopupCtrl",
+                templateUrl: '/tkhq_2017_standard/static/dialogs/Warning.html',
+                size: 'sm',
+                backdrop:false,
+                resolve: {
+                    Message: function () {
+                        //Khi thành công thì trả về dữ liệu cần thiết
+                        return msg;
+                    }
+                }
+            });
+            //fac.setPositionDialog();
+            fac.ClosePopup = true;
+            document.body.focus();
+            fac.setFocus(false);
+        }
+        catch (err) {
+        	console.log(err);
+        }
+    };
+
+    /*****Message Error*****/
+    fac.Error = function (msg) {
+        if (fac.ClosePopup == true || fac.YesPopup == true) {
+            return false;
+        }
+        
+        
+        fac.strTitle = "Lỗi";
+        fac.strMessage = msg;
+        fac.Return = false;
+        var modalInstance = $uibModal.open({
+        	animation: true,
+            controller: "PopupCtrl",
+            templateUrl: '/tkhq_2017_standard/static/dialogs/Error.html',
+            backdrop:false,
+             //'/src/main/webapp/WEB-INF/static/dialogs/Error.html',
+            //windowTemplateUrl:'Window',            
+            size: 'sm',
+            resolve: {
+                Message: function () {
+                    //Khi thành công thì trả về dữ liệu cần thiết
+                    return msg;
+                }
+            }
+        });
+        fac.setPositionDialog();
+        fac.ClosePopup = true;
+        document.body.focus();
+        fac.setFocus(false);
+    };
+
+    /*****Set Position Dialog*****/
+    fac.setPositionDialog = function () {
+       /* var bodyScrollTop = document.body.scrollTop;
+        var bodyX = document.body.offsetWidth;
+        var bodyY = document.body.offsetHeight;
+        var winX = screen.width;
+        var winY = screen.height;
+        var posiY = 0;
+        var browser = browserName();
+        //170 chiều cao của popup
+        if (browser == 'Chrome') {
+            posiY = bodyY - bodyScrollTop - (winY / 2) + (200);
+        }
+        else if (browser == 'Firefox') {
+            posiY = bodyY - bodyScrollTop - (winY / 2) + (190);
+        }
+        else
+        {
+            posiY = bodyY - bodyScrollTop - (winY / 2) + (200);
+        }
+        //alert(posiY + '--' + winY + '--' + bodyY + '--' + bodyScrollTop);   
+        //document.body.scrollTop = bodyScrollTop;
+        //Set Position Scroll Top : scrollTo(x,y);
+        if (posiY < 0) {
+            posiY = 0;
+        }
+        window.scrollTo(0, bodyScrollTop);
+        var strStyle = "margin-top:-" + posiY + "px !important;";
+        createClass('.popup-dialog', strStyle);*/
+    };
+    
+    var spinnerVisible = false;
+    
+   fac.showProgress = function() {
+        if (!spinnerVisible) {
+            $("div#loading").fadeIn("fast");
+            spinnerVisible = true;
+            document.activeElement.blur();
+            document.body.style.overflow = 'hidden';
+            //Xử lý phím Tab, không cho tab khi loading data
+            window.onkeydown = function (event) {
+                var theEvent = event || window.event;
+                var key = theEvent.keyCode || theEvent.which;
+                if (key === 9) {
+                    theEvent.returnValue = false;
+                    if (theEvent.preventDefault) theEvent.preventDefault();
+                    return false;
+                }
+            };
+        }
+    };
+    
+    fac.hideProgress = function() {
+        if (spinnerVisible) {
+            var spinner = $("div#loading");
+            spinner.stop();
+            spinner.fadeOut("fast");
+            spinnerVisible = false;
+            document.body.style.overflow = 'visible';
+            //Reset Keydown để có thể tab
+            window.onkeydown = null;
+        }
+    };
+    
+    return fac;
+
+}]);

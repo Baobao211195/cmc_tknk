@@ -1,0 +1,50 @@
+/**
+ * Service of  lock users.
+ */
+
+'use strict';
+App.factory('deleteLockUsersService',['$http','$q', deleteLockUsersService]);
+
+function deleteLockUsersService($http, $q) {
+
+	
+	var REST_SERVICE_URI = "http://localhost:8080/tkhq_2017_standard";
+	
+	var factory = {
+		GetListLockUsers  : GetListLockUsers,
+		DoDeleteLockUsers : DoDeleteLockUsers
+	};
+	
+	return factory;
+
+	function GetListLockUsers() {
+		var deferred = $q.defer();
+		
+		$http.get(REST_SERVICE_URI + "/listLockUsers")
+			.then(
+				function(response) {
+					deferred.resolve(response.data)
+				},
+				function (errResponse) {
+					deferred.reject(errResponse);
+					console.log("Có lỗi xảy ra trong khi lấy thông tin");
+				}
+			);
+		return deferred.promise;
+	}
+
+	function DoDeleteLockUsers(userName) {
+		var deferred = $q.defer();
+		$http.get(REST_SERVICE_URI + "/deleteLockUsers?" + "userName="+ userName)
+			.then(
+				function(response)   {
+					deferred.resolve(response.data)
+				},
+				function (errResponse) {
+					deferred.reject(errResponse);
+					console.log("Có lỗi xảy ra trong khi dowload thông tin");
+				} 
+			);
+		return deferred.promise;
+	}
+}

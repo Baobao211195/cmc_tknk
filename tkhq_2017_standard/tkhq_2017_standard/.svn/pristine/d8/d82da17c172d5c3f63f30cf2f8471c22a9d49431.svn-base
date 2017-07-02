@@ -1,0 +1,124 @@
+package com.tkhq.cmc.controller.rest;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.tkhq.cmc.dto.Tbd_sys_groupDTO;
+import com.tkhq.cmc.model.TbdSysGroups;
+import com.tkhq.cmc.services.Tbd_sys_GroupsService;
+
+@RestController
+public class tbd_sys_groupsRestController {
+	@Autowired
+	Tbd_sys_GroupsService tbd_sys_groupsService;
+
+	@RequestMapping(value = "/tbd_sys_groups/", method = RequestMethod.GET)
+	public ResponseEntity<List<TbdSysGroups>> getAllGroups() {
+		System.out.println("getAllGroups");
+		List<TbdSysGroups> listGroups = new ArrayList<TbdSysGroups>();
+		System.out.println("Find all");
+		listGroups = tbd_sys_groupsService.getAllGroups();
+		return new ResponseEntity<List<TbdSysGroups>>(listGroups,
+				HttpStatus.ACCEPTED);
+	}
+
+	@RequestMapping(value = "/tbd_sys_groups/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Integer> createNewGroup(
+			@RequestBody Tbd_sys_groupDTO params, UriComponentsBuilder ucBuilder) {
+		System.out.println("Create new Group");
+		
+		if (tbd_sys_groupsService.findGroupsByCode(params.getGroupCode()) != null) {
+			return new ResponseEntity<Integer>(3,HttpStatus.OK);
+		}
+		TbdSysGroups entity = new TbdSysGroups();
+		try {
+
+			entity.setGroupName(params.getGroupName());
+			entity.setGroupCode(params.getGroupCode());
+			entity.setDescription(params.getDescription());
+
+			tbd_sys_groupsService.insertNewGroup(entity);
+		} catch (Exception ex) {
+			return new ResponseEntity<Integer>(2, HttpStatus.OK);
+		}
+		return new ResponseEntity<Integer>(1, HttpStatus.CREATED);
+	}
+
+	@RequestMapping(value = "/tbd_sys_groups/{groupId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<TbdSysGroups> deleteGroups(
+			@PathVariable("groupId") Integer groupId) {
+
+		System.out.println("Deleting data: " + groupId);
+
+		TbdSysGroups tbdSysGroups = tbd_sys_groupsService
+				.findGroupsById(groupId);
+		if (tbdSysGroups == null) {
+			System.out
+					.println("Unable to delete. Data not found with groupId: "
+							+ groupId);
+			return new ResponseEntity<TbdSysGroups>(HttpStatus.NOT_FOUND);
+		}
+
+		try {
+			tbd_sys_groupsService.deleteById(groupId);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return new ResponseEntity<TbdSysGroups>(HttpStatus.NO_CONTENT);
+	}
+
+	@RequestMapping(value = "/tbd_sys_groups/{groupId}", method = RequestMethod.PUT)
+	public ResponseEntity<TbdSysGroups> updateSysGroups(
+			@PathVariable("groupId") Integer groupId,
+			@RequestBody Tbd_sys_groupDTO tbd_sys_groupDTO) {
+		System.out.println("Updating data with username:" + groupId);
+
+		TbdSysGroups tbdSysGroups = tbd_sys_groupsService
+				.findGroupsById(groupId);
+
+		if (tbdSysGroups == null) {
+			System.out.println("Data not found");
+			return new ResponseEntity<TbdSysGroups>(HttpStatus.NOT_FOUND);
+		}
+
+		try {
+			tbdSysGroups.setGroupName(tbd_sys_groupDTO.getGroupName());
+			tbdSysGroups.setGroupCode(tbd_sys_groupDTO.getGroupCode());
+			tbdSysGroups.setDescription(tbd_sys_groupDTO.getDescription());
+			tbd_sys_groupsService.updateTbd_sysGroups(tbdSysGroups);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return new ResponseEntity<TbdSysGroups>(tbdSysGroups, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/tbd_sys_groups/Search", method = RequestMethod.GET)
+	public ResponseEntity<List<TbdSysGroups>> SearchGroup(
+			@RequestParam String groupCode, @RequestParam String groupName) {
+		List<TbdSysGroups> lstGroups = new ArrayList<TbdSysGroups>();
+		try {
+
+			lstGroups = tbd_sys_groupsService.searchGroup( groupCode,
+					groupName);
+		} catch (Exception ex) {
+			ex.printStackTrace();		}
+
+	
+		return new ResponseEntity<List<TbdSysGroups>>(lstGroups,
+				HttpStatus.OK);
+	}
+}

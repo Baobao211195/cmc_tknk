@@ -1,0 +1,294 @@
+package com.tkhq.cmc.dao;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import oracle.jdbc.internal.OracleTypes;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.jdbc.ReturningWork;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.tkhq.cmc.dto.BCSLVNBELARUTDTO;
+import com.tkhq.cmc.dto.BCSLVNUCRAINADTO;
+import com.tkhq.cmc.dto.BCSLVN_ASIANDTO;
+import com.tkhq.cmc.dto.BCSLVN_LAODTO;
+import com.tkhq.cmc.dto.BCSLVN_NGADTO;
+import com.tkhq.cmc.dto.BCSLVN_TOWORLDDTO;
+import com.tkhq.cmc.utils.Utils;
+
+@Repository
+public class PHANHE_PBTKSPDAOImpl implements PHANHE_PBTKSPDAO {
+	@Autowired
+	private SessionFactory sessionFactory;
+
+	public List<BCSLVNUCRAINADTO> Ts_BCSLVN_UCRAINA(final int ky, final int nam) {
+		return sessionFactory.getCurrentSession().doReturningWork(
+				new ReturningWork<List<BCSLVNUCRAINADTO>>() {
+
+					public List<BCSLVNUCRAINADTO> execute(Connection conn) {
+
+						List<BCSLVNUCRAINADTO> bc = new ArrayList<BCSLVNUCRAINADTO>();
+						try {
+
+							CallableStatement callstatement = conn.prepareCall("{call "
+									+ Utils.readProperties("PK_BAOCAO_SONGPHUONG.Ts_BCSLVN_UCRAINA")
+									+ "(?,?,?)}");
+
+							callstatement.setInt(1, ky);
+							callstatement.setInt(2, nam);
+							callstatement.registerOutParameter(3,
+									OracleTypes.CURSOR);
+
+							callstatement.execute();
+
+							ResultSet rs = (ResultSet) callstatement
+									.getObject(3);
+
+							while (rs.next()) {
+
+								BCSLVNUCRAINADTO entity = new BCSLVNUCRAINADTO(
+										rs.getString("EI"), 
+										rs.getInt("NAM"), 
+										rs.getInt("INTERVALL"), 
+										rs.getString("CODE"), 
+										rs.getString("MA_HS"), 
+										rs.getDouble("TRIGIA_USD"));
+
+								bc.add(entity);
+							}
+						} catch (SQLException ex) {
+							return bc;
+						}
+						return bc;
+					}
+				});
+	}
+
+	public List<BCSLVNBELARUTDTO> Ts_BCSLVN_BELARUT(final int ky, final int nam, final String nhx) {
+		return sessionFactory.getCurrentSession().doReturningWork(
+				new ReturningWork<List<BCSLVNBELARUTDTO>>() {
+
+					public List<BCSLVNBELARUTDTO> execute(Connection conn) {
+
+						List<BCSLVNBELARUTDTO> bc = new ArrayList<BCSLVNBELARUTDTO>();
+						try {
+
+							CallableStatement callstatement = conn.prepareCall("{call "
+									+ Utils.readProperties("PK_BAOCAO_SONGPHUONG.Ts_BCSLVN_BELARUT")
+									+ "(?,?,?,?)}");
+
+							callstatement.setInt(1, ky);
+							callstatement.setInt(2, nam);
+							callstatement.setString(3, nhx);
+							callstatement.registerOutParameter(4,
+									OracleTypes.CURSOR);
+
+							callstatement.execute();
+
+							ResultSet rs = (ResultSet) callstatement
+									.getObject(4);
+
+							while (rs.next()) {
+
+								BCSLVNBELARUTDTO entity = new BCSLVNBELARUTDTO(
+										rs.getString("TITLE"), 
+										rs.getString("MA_HS"), 
+										rs.getString("NUOC_XX"), 
+										rs.getDouble("LUONG_TK"), 
+										rs.getString("TEN_DVT"), 
+										rs.getDouble("TRIGIA_USD"));
+
+								bc.add(entity);
+							}
+						} catch (SQLException ex) {
+							return bc;
+						}
+						return bc;
+					}
+				});
+	}
+	
+	public List<BCSLVN_LAODTO> ts_BCSLVN_LAO(final int ky, final int nam){
+		return sessionFactory.getCurrentSession().doReturningWork(
+				new ReturningWork<List<BCSLVN_LAODTO>>() {
+
+					public List<BCSLVN_LAODTO> execute(Connection conn)
+							throws SQLException {
+
+						List<BCSLVN_LAODTO> bc = new ArrayList<BCSLVN_LAODTO>();
+						try {
+							CallableStatement callstatement = conn.prepareCall("{call "
+									+ Utils.readProperties("PK_BAOCAO_SONGPHUONG.ts_BCSLVN_LAO")
+									+ "(?,?,?)}");
+						
+							callstatement.setInt(1, ky);							
+							callstatement.setInt(2, nam);
+							callstatement.registerOutParameter(3, OracleTypes.CURSOR);
+
+							callstatement.execute();
+
+							ResultSet rs = (ResultSet) callstatement.getObject(3);
+
+							while (rs.next()) {
+
+								BCSLVN_LAODTO entity = new BCSLVN_LAODTO(
+										rs.getString("KY"), 
+										rs.getInt("NAM"),
+										rs.getString("LUONG_HH"),											
+										rs.getString("NUOC_XX"), 
+										rs.getString("MA_HANGKB"),
+										rs.getDouble("LUONG"),
+										rs.getDouble("TRIGIA"),
+										rs.getString("TEN_DVT"));
+								
+								bc.add(entity);
+							}
+						} catch (SQLException ex) {
+							return bc;
+						}
+						return bc;
+					}
+				});
+	}
+
+	@Override
+	public List<BCSLVN_NGADTO> ts_BCSLVN_NGA(final int ky,final int nam) {
+		return sessionFactory.getCurrentSession().doReturningWork(
+				new ReturningWork<List<BCSLVN_NGADTO>>() {
+
+					public List<BCSLVN_NGADTO> execute(Connection conn)
+							throws SQLException {
+
+						List<BCSLVN_NGADTO> bc = new ArrayList<BCSLVN_NGADTO>();
+						try {
+							CallableStatement callstatement = conn.prepareCall("{call "
+									+ Utils.readProperties("PK_BAOCAO_SONGPHUONG.ts_BCSLVN_RUSSIA")
+									+ "(?,?,?)}");
+							
+							callstatement.setInt(1, ky);							
+							callstatement.setInt(2, nam);
+							callstatement.registerOutParameter(3, OracleTypes.CURSOR);
+							callstatement.execute();
+
+							ResultSet rs = (ResultSet) callstatement.getObject(3);
+
+							while (rs.next()) {
+
+								BCSLVN_NGADTO entity = new BCSLVN_NGADTO(
+										rs.getString("NUOC_BC"),
+										rs.getString("KY"), 
+										rs.getString("LUONG_HH"),
+										rs.getInt("NAM"),
+										rs.getString("NUOC_XX"), 
+										rs.getString("NUOC_NK"), 
+										rs.getString("MA_HANGKB"),
+										rs.getDouble("LUONG"),
+										rs.getString("TEN_DVTTK"),
+										rs.getDouble("TRIGIA"),
+										rs.getString("TEN_DVT"));
+								
+								bc.add(entity);
+							}
+						} catch (SQLException ex) {
+							return bc;
+						}
+						return bc;
+					}
+				});
+	}
+
+	@Override
+	public List<BCSLVN_ASIANDTO> ts_BCSLVN_ASIAN(final int ky,final int nam,final String nhx) {
+		return sessionFactory.getCurrentSession().doReturningWork(
+				new ReturningWork<List<BCSLVN_ASIANDTO>>() {
+
+					public List<BCSLVN_ASIANDTO> execute(Connection conn)
+							throws SQLException {
+
+						List<BCSLVN_ASIANDTO> bc = new ArrayList<BCSLVN_ASIANDTO>();
+						try {
+							CallableStatement callstatement = conn.prepareCall("{call "
+									+ Utils.readProperties("PK_BAOCAO_SONGPHUONG.ts_BCSLVN_ASIAN")
+									+ "(?,?,?,?)}");
+							
+							callstatement.setInt(1, ky);							
+							callstatement.setInt(2, nam);
+							callstatement.setString(3, nhx);
+							callstatement.registerOutParameter(4, OracleTypes.CURSOR);
+							callstatement.execute();
+							ResultSet rs = (ResultSet) callstatement.getObject(4);
+							
+							while (rs.next()) {
+								
+
+								BCSLVN_ASIANDTO entity = new BCSLVN_ASIANDTO(
+										rs.getString("RP_NUOC"),
+										rs.getInt("QUY"), 
+										rs.getInt("NAM"),
+										rs.getString("THANG"),
+										rs.getString("NUOC_XNK"), 
+										rs.getString("NUOC_XX"), 
+										rs.getString("MA_HANGKB"),
+										rs.getString("TEN_DVT"),
+										rs.getDouble("LUONG"),
+										rs.getDouble("TRIGIA"),
+										rs.getString("TRONGLUONG_TINH"),
+										rs.getString("LUONG_BOSUNG"),
+										rs.getString("DVT_BOSUNG"));
+									bc.add(entity);
+								
+							}
+						} catch (SQLException ex) {
+							return bc;
+						}
+						return bc;
+					}
+				});
+	}
+	@Override
+	public List<BCSLVN_TOWORLDDTO> ts_BCSLVN_TOWORLD(final int nam,final String nhx) {
+		return sessionFactory.getCurrentSession().doReturningWork(
+				new ReturningWork<List<BCSLVN_TOWORLDDTO>>() {
+
+					public List<BCSLVN_TOWORLDDTO> execute(Connection conn)
+							throws SQLException {
+
+						List<BCSLVN_TOWORLDDTO> bc = new ArrayList<BCSLVN_TOWORLDDTO>();
+						try {
+							CallableStatement callstatement = conn.prepareCall("{call "
+									+ Utils.readProperties("PK_BAOCAO_SONGPHUONG.ts_BCSLVN_TOWORLD")
+									+ "(?,?,?)}");
+							
+							callstatement.setInt(1, nam);
+							callstatement.setString(2, nhx);
+							callstatement.registerOutParameter(3, OracleTypes.CURSOR);
+							callstatement.execute();
+							ResultSet rs = (ResultSet) callstatement.getObject(3);
+							
+							while (rs.next()) {
+								BCSLVN_TOWORLDDTO entity = new BCSLVN_TOWORLDDTO(
+										rs.getString("MA_NUOCXNK"),
+										rs.getString("NUOC_XNK"),
+										rs.getString("MA_HANGKB"),
+										rs.getString("MOTA_HANGKB"),
+										rs.getString("TEN_DVT"),
+										rs.getDouble("LUONG"),
+										rs.getDouble("TRIGIA"),
+										rs.getInt("NAM"));
+									bc.add(entity);
+								
+							}
+						} catch (SQLException ex) {
+							return bc;
+						}
+						return bc;
+					}
+				});
+	}
+}

@@ -1,0 +1,53 @@
+package com.tkhq.global.model.bcptbangbieu;
+
+public class SLTheoCTTK09SubGroupData {
+	private int sub_id;
+	private String sub_name;
+	private String avg=" ";
+	private SLTheoCTTK09DataKy data_ky;
+	private SLTheoCTTK09DataThang data_thang;
+	public SLTheoCTTK09SubGroupData(String subname, String avg, SLTheoCTTK09DataKy data_ky,
+			SLTheoCTTK09DataThang data_thang) {
+		this.sub_name = subname;
+		this.avg = avg;
+		this.data_ky = data_ky;
+		this.data_thang = data_thang;
+	}
+	public SLTheoCTTK09SubGroupData() {
+		// TODO Auto-generated constructor stub
+		data_ky = new SLTheoCTTK09DataKy();
+		data_thang = new SLTheoCTTK09DataThang();
+	}
+	public int getSub_id() {
+		return sub_id;
+	}
+	public void setSub_id(int sub_id) {
+		this.sub_id = sub_id;
+	}
+	public String getSub_name() {
+		return sub_name;
+	}
+	public void setSub_name(String sub_name) {
+		this.sub_name = sub_name;
+	}
+	public String getAvg() {
+		if(avg != null && avg.charAt(0) == '.')
+			avg = "0" + avg;
+		return avg;
+	}
+	public void setAvg(String avg) {
+		this.avg = avg;
+	}
+	public SLTheoCTTK09DataKy getData_ky() {
+		return data_ky;
+	}
+	public void setData_ky(SLTheoCTTK09DataKy data_ky) {
+		this.data_ky = data_ky;
+	}
+	public SLTheoCTTK09DataThang getData_thang() {
+		return data_thang;
+	}
+	public void setData_thang(SLTheoCTTK09DataThang data_thang) {
+		this.data_thang = data_thang;
+	}
+}

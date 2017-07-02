@@ -1,0 +1,285 @@
+package com.tkhq.cmc.controller.rest;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.ss.util.RegionUtil;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tkhq.cmc.common.CExcel;
+import com.tkhq.cmc.utils.Utils;
+
+@RestController
+@RequestMapping(value="/CanhBaoTongTGXNK", method = { RequestMethod.GET, RequestMethod.POST })
+public class CanhBaoTongTGXNKRestController {
+	@RequestMapping(value = "/doExport", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void doExport(@RequestBody Hashtable<String, String> params, HttpServletResponse response) {
+		String currentDate = Utils.getCurrentDate();
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		String excelDir = loader.getResource("ExcelTemplates/").getPath();
+		String excelFilePath = excelDir + "\\DienBienTongTGXNK.xls";
+		String fileName = String.format("Diá»…n biáº¿n tá»•ng trá»‹ giÃ¡ XNK_%s.xls", currentDate);
+		
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
+		try{
+			String myURL = "http://10.224.65.169:8080/tkhq_2017_standard/bcpt/SoLieuTheoChiTieuThongKe03?"
+					+ "nhx=" + params.get("nhx") + "&maCucHQ=" + params.get("maCucHQ")
+					+ "&maChicucHQ=" + params.get("maChicucHQ");
+			String responeJson;
+			BufferedReader reader = null;
+		    try {
+		        URL url = new URL(myURL);
+		        reader = new BufferedReader(new InputStreamReader(url.openStream()));
+		        StringBuffer buffer = new StringBuffer();
+		        int read;
+		        char[] chars = new char[1024];
+		        while ((read = reader.read(chars)) != -1)
+		            buffer.append(chars, 0, read); 
+
+		        responeJson = buffer.toString();
+		    } finally {
+		        if (reader != null)
+		            reader.close();
+		    }
+		    
+		    JSONArray jsonArray = new JSONArray(responeJson);
+		    
+		    for(int i = 0; i < jsonArray.length(); i++){
+		    	JSONObject groupJson = jsonArray.getJSONObject(i);
+		    	Map<String, Object> map = Utils.jsonToMap(groupJson);
+		    	list.add(map);
+		    }
+			
+		    //Tao luong doc workbook
+			InputStream is = new FileInputStream(excelFilePath);
+			Workbook workbook = new HSSFWorkbook(is);
+			Sheet sheet = workbook.getSheetAt(0);
+			Cell cell;	//store value of current cell
+			Row row;	//store value of current row
+			
+			 Map<String, CellStyle> styles = CExcel.createStyles(workbook);
+			
+			Integer colNum = 0;	//position of first column fill data
+			Integer rowNum = 3; //position of first row fill data
+			String mergeRange = "";
+			
+			Map<String, Object> dataKy = new HashMap<String, Object>();
+			List<Map<String, Object>> lstDataKy = new ArrayList<Map<String, Object>>();
+			Map<String, Object> dataThang = new HashMap<String, Object>();
+			List<Map<String, Object>> lstDataThang = new ArrayList<Map<String, Object>>();
+			
+			//fill data to cell
+			for(int i = 0; i < list.size(); i++){
+				dataKy = (Map<String, Object>)list.get(i).get("data_ky");
+				lstDataKy = (List<Map<String, Object>>)dataKy.get("data");
+				
+				rowNum++;
+				row = sheet.createRow(rowNum);
+				cell = 	row.createCell(colNum);
+				cell.setCellValue(params.get("tenChicucHQ"));
+				cell.setCellStyle(styles.get("cell_str"));
+				
+				mergeRange = "$" + CellReference.convertNumToColString(0) + "$" + (rowNum + 1) + ":$"
+							+ CellReference.convertNumToColString(5 + lstDataKy.size()) + "$" + (rowNum + 1);
+				sheet.addMergedRegion(CellRangeAddress.valueOf(mergeRange));
+				RegionUtil.setBorderTop(CellStyle.BORDER_THIN, CellRangeAddress.valueOf(mergeRange), sheet);
+				RegionUtil.setBorderRight(CellStyle.BORDER_THIN, CellRangeAddress.valueOf(mergeRange), sheet);
+				
+				colNum = 0;
+				rowNum++;
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellValue(list.get(i).get("group_name").toString());
+				cell.setCellStyle(styles.get("cell_str_center"));
+				
+				mergeRange = "$" + CellReference.convertNumToColString(0) + "$" + (rowNum + 1)  + ":$"
+						+ CellReference.convertNumToColString(0) + "$" + (rowNum + 2);
+				sheet.addMergedRegion(CellRangeAddress.valueOf(mergeRange));
+				
+				colNum++;
+				cell = row.createCell(colNum);
+				cell.setCellValue("Ká»³");
+				cell.setCellStyle(styles.get("cell_str_center"));
+				
+				for(int k = 0; k < lstDataKy.size(); k++){
+					colNum++;
+					cell = row.createCell(colNum);
+					cell.setCellValue(lstDataKy.get(k).get("ky").toString() + "\n"
+							+ lstDataKy.get(k).get("gia_tri").toString());
+					cell.setCellStyle(styles.get("cell_str_center"));
+					sheet.setColumnWidth(colNum, 10 * 256);
+				}
+				
+				colNum++;
+				cell = row.createCell(colNum);
+				cell.setCellValue(Utils.escapeNull(dataKy.get("ss_ky_truoc")));
+				cell.setCellStyle(styles.get("cell_str_center"));
+				
+				colNum++;
+				cell = row.createCell(colNum);
+				cell.setCellValue(Utils.escapeNull(dataKy.get("ss_ky_nam_truoc")));
+				cell.setCellStyle(styles.get("cell_str_center"));
+				
+				colNum++;
+				cell = row.createCell(colNum);
+				cell.setCellValue(Utils.escapeNull(dataKy.get("trend")));
+				cell.setCellStyle(styles.get("cell_str_center"));
+				
+				colNum++;
+				cell = row.createCell(colNum);
+				cell.setCellValue(Utils.escapeNull(dataKy.get("forecast")));
+				cell.setCellStyle(styles.get("cell_str_center"));
+				
+				rowNum++;
+				colNum = 1;
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellValue("ThÃ¡ng");
+				cell.setCellStyle(styles.get("cell_str_center"));
+				
+				dataThang = (Map<String, Object>)list.get(i).get("data_thang");
+				lstDataThang = (List<Map<String, Object>>)dataThang.get("data");
+				
+				for(int k = 0; k < lstDataThang.size(); k++){
+					colNum++;
+					cell = row.createCell(colNum);
+					cell.setCellValue(lstDataThang.get(k).get("thang").toString() + "\n"
+							+ lstDataThang.get(k).get("gia_tri").toString());
+					cell.setCellStyle(styles.get("cell_str_center"));
+					sheet.setColumnWidth(colNum, 10 * 256);
+					
+					if(k == (lstDataThang.size() - 1) && lstDataKy.size()%2 != 0)
+						continue;
+					
+					mergeRange = "$" + CellReference.convertNumToColString(colNum) + "$" + (rowNum + 1)  + ":$"
+							+ CellReference.convertNumToColString(colNum + 1) + "$" + (rowNum + 1);
+					sheet.addMergedRegion(CellRangeAddress.valueOf(mergeRange));
+					RegionUtil.setBorderBottom(CellStyle.BORDER_THIN, CellRangeAddress.valueOf(mergeRange), sheet);
+					
+					colNum++;
+				}
+				
+				colNum++;
+				cell = row.createCell(colNum);
+				cell.setCellValue(Utils.escapeNull(dataKy.get("ss_thang_truoc")));
+				cell.setCellStyle(styles.get("cell_str_center"));
+				
+				colNum++;
+				cell = row.createCell(colNum);
+				cell.setCellValue(Utils.escapeNull(dataKy.get("ss_thang_nam_truoc")));
+				cell.setCellStyle(styles.get("cell_str_center"));
+				
+				colNum++;
+				cell = row.createCell(colNum);
+				cell.setCellValue(Utils.escapeNull(dataKy.get("trend")));
+				cell.setCellStyle(styles.get("cell_str_center"));
+				
+				colNum++;
+				cell = row.createCell(colNum);
+				cell.setCellValue(Utils.escapeNull(dataKy.get("forecast")));
+				cell.setCellStyle(styles.get("cell_str_center"));
+				
+				rowNum++;
+				colNum = 0;
+				row = sheet.createRow(rowNum);
+				cell = row.createCell(colNum);
+				cell.setCellValue("AVG");
+				cell.setCellStyle(styles.get("cell_str_center"));
+				
+				colNum++;
+				cell = row.createCell(colNum);
+				cell.setCellValue(list.get(i).get("avg").toString());
+				cell.setCellStyle(styles.get("cell_str_center"));
+				
+				mergeRange = "$" + CellReference.convertNumToColString(1) + "$" + (rowNum + 1) + ":$"
+						+ CellReference.convertNumToColString(lstDataKy.size() + 1) + "$" + (rowNum + 1);
+				sheet.addMergedRegion(CellRangeAddress.valueOf(mergeRange));
+				RegionUtil.setBorderBottom(CellStyle.BORDER_THIN, CellRangeAddress.valueOf(mergeRange), sheet);
+				RegionUtil.setBorderRight(CellStyle.BORDER_THIN, CellRangeAddress.valueOf(mergeRange), sheet);
+				
+				mergeRange = "$" + CellReference.convertNumToColString(lstDataKy.size() + 2) + "$" + (rowNum + 1) + ":$"
+						+ CellReference.convertNumToColString(lstDataKy.size() + 5) + "$" + (rowNum + 1);
+				sheet.addMergedRegion(CellRangeAddress.valueOf(mergeRange));
+				RegionUtil.setBorderBottom(CellStyle.BORDER_THIN, CellRangeAddress.valueOf(mergeRange), sheet);
+				RegionUtil.setBorderRight(CellStyle.BORDER_THIN, CellRangeAddress.valueOf(mergeRange), sheet);
+			}
+			
+			//create header
+			rowNum = 3;
+			colNum = 0;
+			
+			List<String> header = new ArrayList<String>();
+			header.add("Chá»‰ tiÃªu");
+			header.add("Ká»³");
+			header.add("Thá»�i gian");
+			header.add("So sÃ¡nh vá»›i ká»³ trÆ°á»›c");
+			header.add("So sÃ¡nh vá»›i cÃ¹ng ká»³ nÄƒm trÆ°á»›c");
+			header.add("Dá»± bÃ¡o nÄƒm tiáº¿p theo â€“ HÃ m Trend");
+			header.add("Dá»± bÃ¡o nÄƒm tiáº¿p theo â€“ HÃ m Forecast"); //header.add("Sá»‘ liá»‡u nÄƒm hiá»‡n thá»�i");
+			
+			row = sheet.createRow(rowNum);
+             
+            for(int i = 0; i < header.size(); i++){
+            	if(i == 2){
+            		cell = row.createCell(colNum);
+    				cell.setCellValue(header.get(i));
+    				cell.setCellStyle(styles.get("header"));
+    				colNum += lstDataKy.size() - 1;
+ 					mergeRange = "$" + CellReference.convertNumToColString(i) + "$4" + ":$"
+ 							+ CellReference.convertNumToColString(colNum) + "$4";
+ 					sheet.addMergedRegion(CellRangeAddress.valueOf(mergeRange));
+ 					
+ 					colNum++;
+ 					continue;
+ 				}
+            	
+				cell = row.createCell(colNum);
+				cell.setCellValue(header.get(i));
+				cell.setCellStyle(styles.get("header"));
+				colNum++;
+			}
+			
+			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+			
+			//Tao luong ghi
+			ServletOutputStream out = response.getOutputStream();
+			workbook.write(out);
+
+			out.flush();
+			
+			out.close();
+			workbook.close();
+			is.close();	
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
+}

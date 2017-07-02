@@ -1,0 +1,235 @@
+/**
+ * Created by cmcsoft on 6/2/2017.
+ */
+'use strict';
+var myApp = angular.module('myApp');
+
+myApp.controller('tbsQtacDongiaNhapkhauController', ['$scope',
+                                                    '$PopupMessage',
+                                                    'pagerService',
+                                                    '$uibModal',
+                                                    '$location',
+                                                    'contextPath',
+                                                    'tbsQtacDongiaNhapkhauService',
+                                                    function($scope,
+                                                             $PopupMessage,
+                                                             pagerService,
+                                                             $uibModal,
+                                                             $location,
+                                                             contextPath,
+                                                             tbsQtacDongiaNhapkhauService){
+
+        $scope.listData = [];
+
+        $scope.totalItems = 0;
+        $scope.currentPage = 1;
+        $scope.maxSize = 5;
+        $scope.pageSize = 10;
+
+        var idDelete = "";
+
+        $scope.dto = {
+            id             :"",
+            mathongke      : "",
+            dongialonnhat  : "",
+            dongianhonhat  : ""
+        }
+
+        init();
+
+        $scope.doSearch = function(currentPage, pageSize){
+            if( $scope.dto.mathongke === "" && $scope.dto.dongialonnhat === "" && $scope.dto.dongianhonhat === ""){
+                getListtbsQtacDongiaNhapkhau();
+            } else {
+                search(currentPage, pageSize);
+            }
+        }
+
+        $scope.pageChanged = function(){
+            search($scope.currentPage, $scope.pageSize);
+        }
+
+        $scope.doAdd = function () {
+            if($scope.dto.id !== ""){
+                reloadForm();
+                $PopupMessage.Error("Không thể thực hiện được thao tác này.");
+            }
+            if ($scope.dto.mathongke === ""){
+                $PopupMessage.Error("Hãy nhập mã thống kê!.");
+                return;
+            }
+            if ($scope.dto.dongialonnhat === ""){
+                $PopupMessage.Error("Hãy nhập đơn giá lớn nhất!.");
+                return;
+            }
+            if ($scope.dto.dongianhonhat === ""){
+                $PopupMessage.Error("Hãy nhập đơn giá nhỏ nhất!.");
+                return;
+            }
+            addData($scope.dto);
+        }
+
+        $scope.doUpdate = function () {
+            if($scope.dto.id === ""){
+                $PopupMessage.Error("Không thể thực hiện được thao tác này.");
+                return;
+            }
+            upDateData($scope.dto);
+        }
+
+        $scope.doEditRow = function(id) {
+            // check exist.
+            copyData ($scope.listData ,id);
+        }
+
+        $scope.doDelete = function (id) {
+            idDelete = id;
+            $PopupMessage.Confirm('Ban có chắc muốn xóa bản ghi', deleteData, null);
+        }
+
+        function getDataById(id) {
+            tbsQtacDongiaNhapkhauService.GettbsQtacDongiaNhapkhauById(id)
+                .then(
+                    function (deferred) {
+                        if(deferred !== null){
+                            copyData ($scope.listData ,id);
+                        }else {
+                            $PopupMessage.Error("Dữ liệu đã bị xóa bởi một người sử dụng khác!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Có lỗi trong quá trình xử lý thông tin!");
+                    }
+
+                );
+        }
+
+        function deleteData() {
+            tbsQtacDongiaNhapkhauService.DoDeletetbsQtacDongiaNhapkhau(idDelete)
+                .then(
+                    function (deferred) {
+                        if(deferred === 1){
+                            $PopupMessage.Success("Xóa bỏ thông tin thành công!");
+                            getListtbsQtacDongiaNhapkhau();
+                            reloadForm();
+                        } else {
+                            $PopupMessage.Error("Có lỗi trong quá trình xóa bỏ thông tin.!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Có lỗi trong quá trình xóa bỏ thông tin.!");
+                    }
+                );
+        }
+
+        function addData(data) {
+            tbsQtacDongiaNhapkhauService.DoAddtbsQtacDongiaNhapkhau(data)
+                .then(
+                    function (deferred) {
+                        if(deferred === 1){
+                            $PopupMessage.Success("Thêm mới thông tin thành công!");
+                            getListtbsQtacDongiaNhapkhau();
+                            reloadForm();
+                        }else {
+                            $PopupMessage.Error("Có lỗi trong quá trình thêm mới thông tin.!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Có lỗi trong quá trình thêm mới thông tin.!");
+                        console.error("Có lỗi trong quá trình thêm mới thông tin.!");
+                    }
+                );
+        }
+
+        function upDateData(data) {
+            tbsQtacDongiaNhapkhauService.DoUpdatetbsQtacDongiaNhapkhau(data)
+                .then(
+                    function (deferred) {
+                        if(deferred === 1){
+                            $PopupMessage.Success("Cập nhật thông tin thành công!");
+                            getListTbsQtacDnTrigiaNhapkhau();
+                        }else {
+                            $PopupMessage.Error("Có lỗi trong quá trình cập nhật thông tin.!");
+                        }
+                        reloadForm();
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Có lỗi trong quá trình cập nhật thông tin.!");
+                        console.error("Có lỗi trong quá trình cập nhật thông tin.!");
+                    }
+                );
+        }
+
+        function copyData (listData ,idCopy){
+            for (var i = 0; i < listData.length; i++){
+                if(listData[i].id === idCopy){
+                    $scope.dto = angular.copy(listData[i]);
+                    break;
+                }
+            }
+        }
+
+        function init() {
+            getListtbsQtacDongiaNhapkhau();
+        }
+
+        function getListtbsQtacDongiaNhapkhau() {
+            tbsQtacDongiaNhapkhauService.GetListtbsQtacDongiaNhapkhau()
+                .then(
+                    function (deferred) {
+                        if (deferred !== null) {
+                            $scope.listData = deferred.content;
+                            $scope.totalItems = deferred.totalItems;
+                        }
+                    },
+                    function (errResponse) {
+                        console.error("Có lỗi trong quá trình lấy dữ liệu");
+                    }
+                );
+        }
+
+        function search(currentPage, pageSize) {
+            var formData = thietLapData($scope.dto.mathongke, $scope.dto.dongialonnhat, $scope.dto.dongianhonhat, currentPage, pageSize);
+            tbsQtacDongiaNhapkhauService.SearchtbsQtacDongiaNhapkhau(formData)
+                .then(
+                    function (deferred) {
+                        if (deferred.length > 0){
+                            $scope.listData = deferred;
+                        } else {
+                            $PopupMessage.Error("Không có kết quả tìm kiếm!");
+                        }
+                    },
+                    function (errResponse) {
+                        $PopupMessage.Error("Không có kết quả tìm kiếm!");
+                    }
+
+                );
+        }
+
+        function thietLapData(mathongke, dongialonnhat, dongianhonhat, currentPage, pageSize) {
+
+            if(typeof currentPage == 'undefined' || currentPage == ''){
+                currentPage = $scope.currentPage;
+            }
+            if(typeof pageSize == 'undefined'){
+                pageSize = $scope.pageSize;
+            }
+            var formData = {};
+            formData.mathongke = mathongke;
+            formData.dongialonnhat = dongialonnhat;
+            formData.dongianhonhat = dongianhonhat;
+            formData.currentPage = currentPage;
+            formData.pageSize = pageSize;
+
+            return formData;
+        }
+
+        function reloadForm() {
+            $scope.dto = {
+                id            :"",
+                mathongke     : "",
+                dongialonnhat : "",
+                dongianhonhat : ""
+            }
+        }
+    }]);

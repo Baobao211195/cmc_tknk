@@ -1,0 +1,15 @@
+@CHARSET "ISO-8859-1";
+
+.filelbl {
+	margin-left: 12px;
+}
+
+.lable-file {
+	margin-left: -237px;
+	font-weight: 100 !important;
+	margin-top: 24px !important;
+}
+
+.btn-file {
+	margin-left: -32px;
+}

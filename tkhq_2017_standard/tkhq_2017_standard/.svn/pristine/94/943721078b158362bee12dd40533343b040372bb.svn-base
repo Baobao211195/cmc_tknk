@@ -1,0 +1,186 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<div ng-controller="PhanHoiQuyTrinhXLDLController">
+	<%@ include file="../PhanHoiQuyTrinhXLDL/PhanHoiQuyTrinhXLDL.jsp"%>
+</div>
+<div class="row">
+	<div class="fade-in-out" ng-show="showLoading">
+		<uib-progressbar class="progress-striped active progressBar"
+			type="info"></uib-progressbar>
+	</div>
+</div>
+<style>
+.col-md-4{
+padding-right: 1px;
+padding-left: 5px;
+}
+</style>
+<div style="border: 0px !important;" ng-hide="showChart1" class="modal-body">
+	<div class="generic-container">
+		<fieldset class="form-group form-wrapper">
+			<form class="form-search">
+				<div class="row">
+					<div class="col-md-4">
+						<label class="col-md-4">Trạng thái</label>
+						<div class="col-md-8">
+							<select class="form-control"
+								ng-options="item as item.Ten for item in lstTrangThai"
+								ng-model="cmbTrangThai"></select>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<label class="col-md-4">Mặt hàng</label>
+						<div class="col-md-8">
+							<select class="form-control"
+								ng-options="item as item.ten for item in lstMatHang"
+								ng-model="cmbMatHang"></select>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<label class="col-md-4">Thị trường</label>
+						<div class="col-md-8">
+							<select class="form-control"
+								ng-options="item as item.ten for item in lstThiTruong"
+								ng-model="cmbThiTruong"></select>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<label class="col-md-4">Cục Hải quan</label>
+						<div class="col-md-8">
+							<select class="form-control"
+								ng-options="item as item.ten for item in lstCucHQ"
+								ng-model="cmbCucHQ" ng-change="CucHQSelected(cmbCucHQ)"></select>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<label class="col-md-4">Chi cục Hải quan</label>
+						<div class="col-md-8">
+							<select class="form-control"
+								ng-options="item as item.ten for item in lstChiCucHQ"
+								ng-model="cmbChiCucHQ"></select>
+						</div>
+					</div>
+				</div>
+			</form>
+		</fieldset>
+	</div>
+	<div class="form-group row form-btn-align" align="center">
+		<button type="submit" id="btnPhanHoi" ng-click="btnXemBC_Click()"
+			class="btn btn-primary">
+			<i class="glyphicon icon-white"></i>Xem báo cáo
+		</button>
+	</div>
+	</br>
+	<div ng-hide="showReport1">
+		<div class="row">
+			<div style="text-align: right">Đơn vị tính: Nghìn USD</div>
+		</div>
+		<!-- <div class="row">
+			<div>Total: {{Scope.totalItems}}</div>
+			<div>
+				<pagination total-items="Scope.totalItems" ng-change="pageChanged()" ng-model="Scope.currentPage" max-size="Scope.maxSize" class="pagination" boundary-links="true" rotate="false"></pagination>
+			</div>
+		</div> -->
+		<div style="width: 100%; min-height: 50px;" class="table-scroll">
+			<table id="tbTongThe" class="table table-bordered table-responsive">
+				<thead>
+					<tr align="center">
+						<th>Chỉ tiêu</th>
+						<th>Kỳ</th>
+						<th colspan="{{lstResult[0].group_data[0].data_ky.data.length}}">Thời
+							gian</th>
+						<th>So sánh với kỳ trước</th>
+						<th>So sánh với cùng kỳ năm trước</th>
+						<th>Số liệu năm hiện thời</th>
+						<th>Dự báo năm tiếp theo – Hàm Trend</th>
+					</tr>
+				</thead>
+				<tbody ng-repeat="row in lstResult">
+					<tr>
+						<td colspan="{{row.group_data[0].data_ky.data.length}}">{{row.group_name}}</td>
+					</tr>
+					<tr ng-repeat-start="row1 in row.group_data">
+						<td rowspan="2">{{row1.sub_name}}</td>
+						<td>Kỳ</td>
+						<td ng-repeat="ky in row1.data_ky.data"
+							ng-class='{red : (ky.gia_tri != null && ky.gia_tri.trim() != "" && ky.gia_tri == row1.data_ky.maxKy && ky.ky != row1.data_ky.tenKY), 
+							yellow : (ky.gia_tri != null && ky.gia_tri.trim() != "" && ky.gia_tri == row1.data_ky.minKy && ky.ky != row1.data_ky.tenKY)}'>
+							<center>{{ky.ky}}</center> <br />
+							<center>{{ky.gia_tri}}</center>
+						</td>
+						<td ng-bind="row1.data_ky.ss_ky_truoc" align="center"></td>
+						<td ng-bind="row1.data_ky.ss_ky_nam_truoc" align="center"></td>
+						<td ng-bind="row1.data_ky.forecast" align="center"></td>
+						<td ng-bind="row1.data_ky.trend" align="center"></td>
+					</tr>
+
+					<tr>
+						<td>Tháng</td>
+						<td ng-repeat="thang in row1.data_thang.data" colspan="2"
+							ng-class='{red : (thang.gia_tri != null && thang.gia_tri.trim() != "" && thang.gia_tri == row1.data_thang.maxThang && thang.thang != row1.data_thang.tenTHANG), 
+							yellow : (thang.gia_tri != null && thang.gia_tri.trim() != "" && thang.gia_tri == row1.data_thang.minThang && thang.thang != row1.data_thang.tenTHANG)}'>
+							<center>{{thang.thang}}</center> <br />
+							<center>{{thang.gia_tri}}</center>
+						</td>
+						<td ng-bind="row1.data_thang.ss_thang_truoc" align="center"></td>
+						<td ng-bind="row1.data_thang.ss_thang_nam_truoc" align="center"></td>
+						<td ng-bind="row1.data_thang.forecast" align="center"></td>
+						<td ng-bind="row1.data_thang.trend" align="center"></td>
+					</tr>
+					<tr ng-repeat-end>
+						<td>AVG</td>
+						<!-- <td ng-class='{green : true}' -->
+						<td class="green" colspan="{{row1.data_ky.data.length +1}}"
+							ng-bind="row1.avg"></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+
+				</tbody>
+			</table>
+
+		</div>
+		</br>
+		<div class="form-group row form-btn-align" align="center">
+			<button type="button" class="btn btn-primary" data-toggle="modal"
+				data-target="#myModal" style="width: 100px;">
+				<i class="glyphicon icon-white"></i> Phản hồi
+			</button>
+			<button type="submit" id="btnKetXuat" ng-click="doExport()"
+				class="btn btn-primary" style="width: 100px;">
+				<i class="glyphicon icon-white"></i> Kết xuất
+			</button>
+			<button type="button" id="btnIn" class="btn btn-primary"
+				ng-click="doExport()" style="width: 100px;">
+				<i class="glyphicon icon-white"></i> In
+			</button>
+			<!-- <button type="button" id="btnClose" class="btn btn-primary"
+			ng-click="btnClose_Click()">
+			<i class="glyphicon icon-white"></i> Đóng
+		</button> -->
+		</div>
+		</br>
+		<div class="form-group row form-btn-align" align="center">
+			<div class="row">
+				<div></div>
+				<div></div>
+
+			</div>
+		</div>
+		<!-- <a href="HTCBBTDBXTLBieuDo" style="text-decoration: underline; font-weight: bold">Biểu đồ</a> -->
+		<br />
+		<div>
+			<a ng-click="showChart()"
+				style="text-decoration: underline; font-weight: bold" class="btn"><span>Biểu
+					đồ</span></a> &nbsp; &nbsp;
+		</div>
+		<br /> <br />
+	</div>
+</div>
+<div ng-show="showChart1">
+	<%@ include file="BieuDo.jsp"%>
+</div>
+

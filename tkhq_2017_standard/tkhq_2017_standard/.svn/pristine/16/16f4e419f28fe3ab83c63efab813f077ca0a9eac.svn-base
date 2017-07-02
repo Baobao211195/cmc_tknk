@@ -1,0 +1,166 @@
+package com.tkhq.cmc.controller.rest;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.tkhq.cmc.common.CExcel;
+import com.tkhq.cmc.common.Constants;
+import com.tkhq.cmc.common.UpLoadFile;
+import com.tkhq.cmc.dto.TbsQtacDnTrigiaNhapkhauDTO;
+import com.tkhq.cmc.mapper.ObjectMapper;
+import com.tkhq.cmc.model.TbsQtacDnTrigiaNhapkhau;
+import com.tkhq.cmc.services.TbsQtacDnTrigiaNhapkhauService;
+
+@RestController
+public class TbsQtacDnTrigiaNhapkhauRestController {
+	private static final Logger log = Logger.getLogger(TbsQtacDnTrigiaNhapkhauRestController.class);
+	
+	@Autowired
+	private TbsQtacDnTrigiaNhapkhauService tbsQtacDnTrigiaNhapkhauService;
+	
+	@RequestMapping(value="/tbsQtacDnTrigiaNhapkhau", method=RequestMethod.GET)
+	public ResponseEntity<TbsQtacDnTrigiaNhapkhauDTO> getAllData (){
+		
+		TbsQtacDnTrigiaNhapkhauDTO dto = new TbsQtacDnTrigiaNhapkhauDTO();
+		
+		List<TbsQtacDnTrigiaNhapkhau> listData = tbsQtacDnTrigiaNhapkhauService.findAll();
+		long totalCount = tbsQtacDnTrigiaNhapkhauService.countTotal(Constants.EMPTY, Constants.ZEZO, Constants.EMPTY);
+		dto.setContent(listData);
+		dto.setTotalItems(totalCount);
+		if(listData == null){
+			return new ResponseEntity<TbsQtacDnTrigiaNhapkhauDTO>(dto, HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<TbsQtacDnTrigiaNhapkhauDTO>(dto, HttpStatus.OK);
+		
+	}
+	
+	@RequestMapping(value="/tbsQtacDnTrigiaNhapkhauById", method=RequestMethod.GET)
+	public ResponseEntity<TbsQtacDnTrigiaNhapkhau> getDataById(String id){
+		TbsQtacDnTrigiaNhapkhau dto = tbsQtacDnTrigiaNhapkhauService.findById(Long.parseLong(id));
+		if(dto == null){
+			return new ResponseEntity<TbsQtacDnTrigiaNhapkhau>(dto, HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<TbsQtacDnTrigiaNhapkhau>(dto, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/delete/tbsQtacDnTrigiaNhapkhau", method=RequestMethod.GET)
+	public ResponseEntity<Integer> doDeleteData(String id){
+		Long idDelete = Long.parseLong(id);
+		TbsQtacDnTrigiaNhapkhau dto = tbsQtacDnTrigiaNhapkhauService.findById(idDelete);
+		if(dto == null){
+			return new ResponseEntity<Integer>(Constants.FAILED, HttpStatus.CONFLICT);
+		}
+		tbsQtacDnTrigiaNhapkhauService.delete(idDelete);
+		return new  ResponseEntity<Integer>(Constants.SUCCESS, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/add/tbsQtacDnTrigiaNhapkhau", method=RequestMethod.POST)
+	public ResponseEntity<Integer> doAddData(@RequestBody TbsQtacDnTrigiaNhapkhau tbsqtacdntrigianhapkhau){
+		try {
+			tbsQtacDnTrigiaNhapkhauService.insert(tbsqtacdntrigianhapkhau);
+			return new  ResponseEntity<Integer>(Constants.SUCCESS, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<Integer>(Constants.FAILED, HttpStatus.CONFLICT);
+		}
+	}
+	
+	@RequestMapping(value="/update/tbsQtacDnTrigiaNhapkhau", method=RequestMethod.POST)
+	public ResponseEntity<Integer> doUpdateData(@RequestBody TbsQtacDnTrigiaNhapkhauDTO paramDto){
+		try {
+			TbsQtacDnTrigiaNhapkhau dto = tbsQtacDnTrigiaNhapkhauService.findById(paramDto.getId());
+			if (dto == null){
+				return new ResponseEntity<Integer>(Constants.FAILED, HttpStatus.CONFLICT);
+			}
+			tbsQtacDnTrigiaNhapkhauService.update(paramDto);
+			return new  ResponseEntity<Integer>(Constants.SUCCESS, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<Integer>(Constants.FAILED, HttpStatus.CONFLICT);
+		}
+	}
+	
+	@RequestMapping(value="/search/tbsQtacDnTrigiaNhapkhau", method=RequestMethod.POST)
+	public ResponseEntity<TbsQtacDnTrigiaNhapkhauDTO> SearchData(@RequestBody TbsQtacDnTrigiaNhapkhauDTO tbsqtacdntrigianhapkhaudto){
+		
+		TbsQtacDnTrigiaNhapkhauDTO dto = null;
+		List<TbsQtacDnTrigiaNhapkhau> listData = null;
+		try {
+			int minRow = (tbsqtacdntrigianhapkhaudto.getCurrentPage() - 1) * tbsqtacdntrigianhapkhaudto.getPageSize();
+			int maxRow = tbsqtacdntrigianhapkhaudto.getPageSize();
+			
+			long totalCount = tbsQtacDnTrigiaNhapkhauService.countTotal(tbsqtacdntrigianhapkhaudto.getMasodn(), 
+					tbsqtacdntrigianhapkhaudto.getTrigianhapkhau(),tbsqtacdntrigianhapkhaudto.getTenDn());
+			
+			if (totalCount == 0) {
+
+				dto = new TbsQtacDnTrigiaNhapkhauDTO();
+				dto.setContent(new ArrayList<TbsQtacDnTrigiaNhapkhauDTO>());
+				dto.setCurrentPage(Constants.CURRENT_PAGE);
+				dto.setMaxPage(Constants.MAX_PAGE);
+				dto.setPageSize(Constants.PAGE_SIZE_10);
+				dto.setTotalItems(Constants.ZEZO);
+				return new ResponseEntity<TbsQtacDnTrigiaNhapkhauDTO>(dto, HttpStatus.ACCEPTED);
+			}
+			listData = tbsQtacDnTrigiaNhapkhauService.searchData(tbsqtacdntrigianhapkhaudto.getMasodn(),tbsqtacdntrigianhapkhaudto.getTrigianhapkhau(),
+																tbsqtacdntrigianhapkhaudto.getTenDn(), minRow, maxRow);
+
+			int maxPage = (int) Math.ceil(totalCount / Integer.valueOf(tbsqtacdntrigianhapkhaudto.getPageSize()));
+			dto = new TbsQtacDnTrigiaNhapkhauDTO();
+
+			dto.setContent(listData);
+	    	dto.setCurrentPage(tbsqtacdntrigianhapkhaudto.getCurrentPage());
+	    	dto.setMaxPage(maxPage);
+	    	dto.setPageSize(Integer.valueOf(Constants.PAGE_SIZE_10));
+	    	dto.setTotalItems(totalCount);
+			return new ResponseEntity<TbsQtacDnTrigiaNhapkhauDTO>(dto, HttpStatus.OK);
+		} catch (Exception e) {
+			dto = new TbsQtacDnTrigiaNhapkhauDTO();
+			dto.setContent(new ArrayList<TbsQtacDnTrigiaNhapkhauDTO>());
+			return new ResponseEntity<TbsQtacDnTrigiaNhapkhauDTO>(dto, HttpStatus.ACCEPTED);
+		}
+	}
+	
+	@RequestMapping(value = "/uploadFileDnTrigiaNhapkhau", method = RequestMethod.POST)
+	public ResponseEntity<Integer> uploadFileDnTrigiaNhapkhau(@RequestParam("fileUpLoad") MultipartFile file) {
+		int insertDuLieuFileFlg  = 0;
+		try {
+			if(!file.isEmpty()){
+				String filePath = UpLoadFile.setFilePath(file);
+				// upload file.
+				UpLoadFile.uploadFile(file, filePath);
+				// Read file excel and insert data into database.
+				
+				List<TbsQtacDnTrigiaNhapkhauDTO> listDto =  CExcel.readToList(filePath, TbsQtacDnTrigiaNhapkhauDTO.class);
+				if (listDto.size() <= 0 ){
+					return new ResponseEntity<Integer>(UpLoadFile.READ_FILE_ERROR, HttpStatus.CONFLICT);
+				}
+				
+				List<TbsQtacDnTrigiaNhapkhau> listEntity = ObjectMapper.mapToListEntity(listDto, TbsQtacDnTrigiaNhapkhau.class);
+				insertDuLieuFileFlg = tbsQtacDnTrigiaNhapkhauService.insertList(listEntity);
+				
+				if(insertDuLieuFileFlg == 1  && new File(filePath).delete()) {
+					return new ResponseEntity<Integer>(insertDuLieuFileFlg, HttpStatus.OK);
+				} else {
+					return new ResponseEntity<Integer>(HttpStatus.CONFLICT);
+				}
+			} else {
+				return new ResponseEntity<Integer>(insertDuLieuFileFlg, HttpStatus.NOT_FOUND);
+			}
+		} catch (IOException e) {
+			log.error("IO exception :" + e.getMessage());
+		}
+		return new ResponseEntity<Integer>(HttpStatus.CONFLICT);
+	}
+}

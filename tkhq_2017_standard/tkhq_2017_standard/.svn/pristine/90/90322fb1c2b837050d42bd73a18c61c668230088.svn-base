@@ -1,0 +1,94 @@
+package com.tkhq.cmc.dao;
+
+import java.util.Collection;
+import java.util.List;
+
+import org.apache.poi.hpsf.Util;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
+import com.tkhq.cmc.model.TbdSysGroups;
+
+@Repository
+public class Tbd_Sys_GroupsDAOImpl extends BaseDAO<String, TbdSysGroups>
+		implements Tbd_Sys_GroupsDAO {
+
+	public List<TbdSysGroups> getAllGroups() {
+
+		Criteria cr = this.getSession().createCriteria(TbdSysGroups.class);
+		List<TbdSysGroups> results = ((List<TbdSysGroups>) cr.list());
+		if (results.size() > 0)
+			return results;
+		else
+			return null;
+	}
+
+	public void insertNewGroup(TbdSysGroups tbdSysGroups) throws Exception {
+		try {
+			this.persist(tbdSysGroups);
+		} catch (Exception ex) {
+			throw ex;
+		}
+	}
+
+	public TbdSysGroups findGroupsById(Integer groupId) {
+		Criteria cr = this.createCriteria();
+		cr.add(Restrictions.eq("groupId", groupId));
+
+		List results = cr.list();
+		if (results.size() > 0)
+			return (TbdSysGroups) results.get(0);
+		else
+			return null;
+	}
+
+	public void updateTbd_sysGroups(TbdSysGroups tbdSysGroups) {
+		try {
+			this.update(tbdSysGroups);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public void deleteById(Integer groupId) {
+		TbdSysGroups entity = new TbdSysGroups();
+		entity.setGroupId(groupId);
+		try {
+			this.delete(entity);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+	}
+
+	public TbdSysGroups findGroupsByCode(String groupCode) {
+		Criteria cr = this.createCriteria();
+		cr.add(Restrictions.eq("groupCode", groupCode));
+
+		List results = cr.list();
+		if (results.size() > 0)
+			return (TbdSysGroups) results.get(0);
+		else
+			return null;
+	}
+
+	@Override
+	public List<TbdSysGroups> searchGroup( String groupCode,
+			String groupName) {
+		Criteria cr = this.createCriteria();
+
+		if (!"".equals(groupName)) {
+			cr.add(Restrictions.ilike("groupName", "%" +groupName + "%"));
+		}
+		if (!"".equals(groupCode)) {
+			cr.add(Restrictions.ilike("groupCode", "%" +groupCode +"%"));
+		}
+		List<TbdSysGroups> results = ((List<TbdSysGroups>) cr.list());
+		if (results.size() > 0)
+			return results;
+		else
+			return null;
+	}
+
+}

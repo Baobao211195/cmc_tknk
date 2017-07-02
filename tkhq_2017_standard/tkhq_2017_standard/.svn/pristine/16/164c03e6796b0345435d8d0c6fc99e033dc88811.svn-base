@@ -1,0 +1,28 @@
+package com.tkhq.cmc.services;
+
+import java.util.List;
+
+import com.tkhq.cmc.dto.HTRaXoatSanPhamTKDTO;
+
+public interface HTRaXoatSanPhamTKService {
+	
+	public List<HTRaXoatSanPhamTKDTO> getListDanhMucBaoCao(String typeNhapXuat);
+	
+	public HTRaXoatSanPhamTKDTO getDanhMucBaoCaoByMaBC (String typeNhapXuat, String maBc);
+	
+	public List<HTRaXoatSanPhamTKDTO> getListCongChucQuanLy(String typeNhapXuat);
+	
+	public List<HTRaXoatSanPhamTKDTO> getListThongTinXuLy(String typeNhapXuat);
+	
+	public HTRaXoatSanPhamTKDTO getThongTinXuLyByMaBaoCao(String maBaoCao, String typeNhapXuat);
+	
+	public int insertThongTinXuLy(HTRaXoatSanPhamTKDTO hTRaXoatSanPhamTKDTO) throws Exception;
+	
+	public int updateThongTinXuLy(String maBaoCao, String lyDo, String tenCongChucQuanLy) throws Exception;
+	
+	
+	public List<HTRaXoatSanPhamTKDTO> getThongTinXuLy(String loaiBC, String trangthai, String ky, String thang, String nam,
+			String nhx);
+	
+	public int doApproval(String approval, String loaiBC, String ky, String thang, String nam, String lydoPD);
+}
